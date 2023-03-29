@@ -1,0 +1,14 @@
+{
+  "name": "aipe",
+  "version": "1.0.0",
+  "description": "AI Prompter Environment",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lukáš Kratochvíl",
+  "license": "ISC",
+  "devDependencies": {
+    "openai": "^3.2.1"
+  }
+}
