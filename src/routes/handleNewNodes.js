@@ -12,10 +12,10 @@ class Node {
 let newNodes; // = unhandled nodes, Node[]
 let handledNodes;
 
-const handleNewNodes = () {
+const handleNewNodes = () => {
     const copiedNewNodes = [...newNodes];
     const copiedHandledNodes = [...handledNodes];
-    const nodesDiff; // ... vytvořit roždíl mezi newNodes a copiedHandledNodes
+    // const nodesDiff; // ... vytvořit roždíl mezi newNodes a copiedHandledNodes
     // ... poslání rozdílu (nodesDiff) na backend ke zpracování
     handledNodes = copiedHandledNodes;   
 }
