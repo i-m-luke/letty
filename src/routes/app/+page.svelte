@@ -1,7 +1,5 @@
 <script lang="ts">
-	import PromptInfo from '$lib/PromptInfo';
 	import Tree from '$lib/components/Tree.svelte';
-	import TreeNode from '$lib/components/TreeNode.svelte';
 	import type TreeNodeInfo from '$lib/components/TreeNodeInfo';
 	import type PageLoadData from './PageLoadData';
 	import { transformPrompmtInfoToNodeInfo, postSavedPrompt } from './script';
@@ -11,8 +9,9 @@
 		data.promptInfoCollection
 	);
 
+	let inputPromptName: string = 'test prompt';
 	let inputPrompt: string = 'test prompt';
-	let selectedNodeId: number = 0;
+	let selectedNodeId: number = nodeInfoCollection[0].objectId;
 </script>
 
 <main>
@@ -26,10 +25,15 @@
 			<Tree bind:value={selectedNodeId} {nodeInfoCollection} />
 		</div>
 		<div class="right-container">
+			<span>PROMPT NAME:</span>
+			<input bind:value={inputPromptName} />
+			<span>PROMPT:</span>
 			<input bind:value={inputPrompt} />
-			<button on:click={() => postSavedPrompt(new PromptInfo(101, 11, inputPrompt, 'text...', []))}>
+
+			<button on:click={() => postSavedPrompt(selectedNodeId, inputPromptName, inputPrompt)}>
 				SAVE PROMPT
 			</button>
+
 			<span>SELECTED NODE ID: {selectedNodeId}</span>
 		</div>
 	</div>

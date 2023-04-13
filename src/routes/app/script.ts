@@ -1,6 +1,7 @@
 import type PromptInfo from '$lib/PromptInfo';
 import TreeNodeInfo from '$lib/components/TreeNodeInfo';
 import { transformCollectionToNodeInfo } from '$lib/transformers';
+import type PostData from './PostData';
 
 // PURE CODE:
 export function transformPrompmtInfoToNodeInfo(
@@ -21,17 +22,17 @@ export function transformPrompmtInfoToNodeInfo(
 }
 
 // IMPURE CODE:
-export const postSavedPrompt: (savedPrompt: PromptInfo) => void = async (
-	savedPrompt: PromptInfo
-) => {
+export const postSavedPrompt = async (parentId: number, promptName: string, prompt: string) => {
+	const postData: PostData = { parentId, promptName, prompt };
+
 	const response = await fetch('/app', {
 		method: 'POST',
-		body: JSON.stringify({ savedPrompt }),
+		body: JSON.stringify(postData),
 		headers: {
 			'Content-Type': 'application/json'
 		}
 	});
 
-	const { id } = await response.json();
-	alert('NEW SAVED PROMPT INFO ID:' + id);
+	const promptInfo = (await response.json()) as PromptInfo;
+	alert('NEW SAVED PROMPT INFO ID:' + promptInfo.id);
 };
