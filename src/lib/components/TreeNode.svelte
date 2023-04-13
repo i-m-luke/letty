@@ -1,13 +1,18 @@
 <script lang="ts">
-	import type { TreeNodeInfo } from './TreeNodeInfo';
+	import type TreeNodeInfo from './TreeNodeInfo';
 
 	export let nodeInfo: TreeNodeInfo;
+	export let value: number;
 
 	let isOpen = false;
 	const isLeafNode = nodeInfo.children.length < 1;
 	$: nodeState = isLeafNode ? '(leaf node)' : isOpen ? '(opened)' : '(closed)';
 
-	const toggleIsOpen: () => boolean = () => (isOpen = !isOpen);
+	const toggleIsOpen: () => void = () => (isOpen = !isOpen);
+	const nodeOnClickEvent: () => void = () => {
+		toggleIsOpen();
+		value = nodeInfo.objectId;
+	};
 </script>
 
 <div class="node-container">
@@ -17,12 +22,14 @@
 				<div class="connection" />
 			</div>
 		{/if}text
-		<span on:click={toggleIsOpen} on:keypress={toggleIsOpen}>{nodeInfo.text} {nodeState}</span>
+		<span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}>
+			{`${nodeInfo.text} ${nodeState}`}
+		</span>
 	</div>
 	{#if isOpen}
 		<div class="child-nodes">
 			{#each nodeInfo.children as childNode}
-				<svelte:self nodeInfo={childNode} />
+				<svelte:self bind:value nodeInfo={childNode} />
 			{/each}
 		</div>
 	{/if}

@@ -1,4 +1,4 @@
-export class TreeNodeInfo {
+export default class TreeNodeInfo {
 	isRootNode: boolean;
 	objectId: number;
 	text: string;

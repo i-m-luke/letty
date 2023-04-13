@@ -1,19 +1,7 @@
-import PromptInfo from './PromptInfo';
-import type AppLoadDataType from './AppLoadDataType';
-// import { v4 as uuidv4 } from 'uuid';
+import FAKE_DB from '$lib/fake-db';
+import type PageLoadData from './PageLoadData';
 
-const fakeDB = {
-	promptInfoCollection: [
-		new PromptInfo(1, 'random number', 'give me a random number', []),
-		new PromptInfo(2, 'random name', 'give me a random name', [])
-	]
-};
-
-export function load(): AppLoadDataType {
-	return {
-		promptInfoCollection: [
-			new PromptInfo(1, 'random number', 'give me a random number', []),
-			new PromptInfo(2, 'random name', 'give me a random name', [])
-		]
-	};
+// Návratný typ fce zajistí type safety
+export function load(): PageLoadData {
+	return { promptInfoCollection: FAKE_DB.promptInfoCollection };
 }
