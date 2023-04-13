@@ -15,7 +15,12 @@ export async function POST({ request }) {
 		childPrompts: []
 	};
 
-	inesertPromptInfoToDB(promptInfo);
+	const promptInfoCollection = FAKE_DB.promptInfoCollection;
+	const parentPromptInfo = findPromptInfo(promptInfo.parentId, promptInfoCollection);
+	if (parentPromptInfo === undefined) {
+		throw new Error(`parent info wasn't found. Parent Info Id: ${promptInfo.parentId}`);
+	}
+	parentPromptInfo.childPrompts.push(promptInfo);
 
 	return json(promptInfo, { status: 201 });
 }
@@ -23,23 +28,14 @@ export async function POST({ request }) {
 // FAKE DB:
 
 function findPromptInfo(id: number | null, collection: PromptInfo[]): PromptInfo | undefined {
-	debugger
-	
 	let foundPromptInfo = collection.find((promptInfo) => promptInfo.id === id);
 
 	if (foundPromptInfo === undefined) {
 		for (const promptInfo of collection) {
 			foundPromptInfo = findPromptInfo(id, promptInfo.childPrompts);
-			if (foundPromptInfo !== undefined) {
-				return foundPromptInfo;
-			}
+			if (foundPromptInfo !== undefined) break;
 		}
 	}
 
-	return undefined;
-}
-
-function inesertPromptInfoToDB(promptInfo: PromptInfo): void {
-	const foundPromptInfo = findPromptInfo(promptInfo.parentId, FAKE_DB.promptInfoCollection);
-	foundPromptInfo?.childPrompts.push(promptInfo);
+	return foundPromptInfo;
 }

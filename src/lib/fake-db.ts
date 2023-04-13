@@ -7,8 +7,8 @@ type FakeDBType = {
 const FAKE_DB: FakeDBType = {
 	promptInfoCollection: [
 		{
-			parentId: null,
 			id: 1,
+			parentId: null,
 			name: 'random number',
 			prompt: 'give me a random number',
 			childPrompts: [
