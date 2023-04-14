@@ -2,8 +2,8 @@
 - TRIAL / OMEZENÝ POČET PROMPTŮ ? ... BUDE NÁKLADNÉ, API STOJÍ PENÍZE
 - Prompt Engineering is a thing
 - Pricing:
-    a) 5usd + vlastní API key
-    b) přiřazeny API key + nějaký money navíc+ omezení tokenů za den?
+  a) 5usd + vlastní API key
+  b) přiřazeny API key + nějaký money navíc+ omezení tokenů za den?
 - pořídím si GPT4 ... DO KDY MÁ DATA?
 - threading vynechat v první fázi (půjde pouze single Prompting)
 
@@ -26,15 +26,17 @@
     1. TUNNING PROMPTU PRO GENEROVÁNÍ OBRÁZKŮ
 
 # DESIGN
+
     - Svelte / Svelte Kit + Pocket base / MongoDB ?
     - prompty i thready ve stromové diagramové (binary-tree) struktuře
-    - verzování formou gitu
+    - verzování promptů a threadů formou gitu
     - Zaintegrovat analýzy (návštěvnost, doba návštěvy, ...)
+    ....
 
     # UI:
         - Obrazovka bude rozdělená na dvě poloviny: vlevo strom, vpravo workspace
         - workspace půjde přepínat do mezi režimy: a) diagram portů, b) editorem a runnerem promptů
-        - expandování jako je u svelte.dev/tutorial (po straně bude div, který bude mít event pro press) (rozměry se pak uloží do cookies) ... inspirovat se z freecodecamp tut, kde řeší eventy pohybu myši 
+        - expandování jako je u svelte.dev/tutorial (po straně bude div, který bude mít event pro press) (rozměry se pak uloží do cookies) ... inspirovat se z freecodecamp tut, kde řeší eventy pohybu myši
 
     # Workspace - režim editace a runneru promptů:
         - rozdělen na 3 části:
@@ -66,9 +68,8 @@
                 b) timed
             - Timed:
                 - půjde dále nastavit časový interval synchronizace
-                - objeví se "sync"/"save" button, pro manuální provedení 
+                - objeví se "sync"/"save" button, pro manuální provedení
             - Ve chvíli provádění synchronizae se zablokuje UI (aby bylo možné bezpečně odbavit veškeré změny)
-            
 
     # BACKEND:
         # Routing:

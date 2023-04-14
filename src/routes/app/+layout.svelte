@@ -1,0 +1,54 @@
+<script lang="ts">
+	import Tree from '$lib/components/Tree.svelte';
+	import type TreeNodeInfo from '$lib/components/TreeNodeInfo';
+	import type PageLoadData from './PageLoadData';
+	import { transformPrompmtInfoToNodeInfo } from './script';
+	import { selectedNodeId } from '$lib/store';
+
+	export let data: PageLoadData;
+
+	const nodeInfoCollection: TreeNodeInfo[] = transformPrompmtInfoToNodeInfo(data.promptInfoCollection);
+	selectedNodeId.set(nodeInfoCollection[0].objectId);
+</script>
+
+<main>
+	<div class="upper-container">
+		<a href="app/settings">SETTINGS</a>
+		<a href="app/main/create-prompt">CREATE PROMPT</a>
+	</div>
+
+	<div class="main-container">
+		<div class="left-container">
+			<span>PROMPT TREE:</span>
+			<Tree bind:value={$selectedNodeId} {nodeInfoCollection} />
+		</div>
+		<div class="right-container">
+			<slot />
+			<!-- WORKSPACE SLOT -->
+		</div>
+	</div>
+</main>
+
+<style>
+	main {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+	}
+
+	.main-container {
+		display: flex;
+		flex-direction: row;
+		height: 100%;
+	}
+
+	.left-container {
+		flex-grow: 1;
+		background-color: aqua;
+	}
+
+	.right-container {
+		flex-grow: 6;
+		background-color: grey;
+	}
+</style>
