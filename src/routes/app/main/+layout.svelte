@@ -12,7 +12,7 @@
 
 <main>
 	<div class="upper-container">
-		<a href="app/settings">SETTINGS</a>
+		<a href="/app/settings">SETTINGS</a>
 		<a href={`/app/main/create-prompt-${selectedNodeId}`}>CREATE PROMPT</a>
 	</div>
 
@@ -22,6 +22,7 @@
 			<Tree bind:value={selectedNodeId} {nodeInfoCollection} />
 		</div>
 		<div class="right-container">
+			<!-- WORKSPACE SLOT -->
 			<slot />
 			<!-- WORKSPACE SLOT -->
 		</div>

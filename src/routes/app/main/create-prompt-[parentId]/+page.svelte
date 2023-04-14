@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { postSavedPrompt } from '../../script';
+	import { postSavedPrompt } from './script';
 
 	export let data;
 
