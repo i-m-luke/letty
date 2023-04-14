@@ -21,7 +21,7 @@
 			<div class="connection-container">
 				<div class="connection" />
 			</div>
-		{/if}text
+		{/if}
 		<span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}>
 			{`${nodeInfo.text} ${nodeState}`}
 		</span>

@@ -1,13 +1,16 @@
 <script lang="ts">
-	import Tree from '$lib/components/Tree.svelte';
 	import type TreeNodeInfo from '$lib/components/TreeNodeInfo';
 	import type LayoutLoadData from './LayoutLoadData';
+	import Tree from '$lib/components/Tree.svelte';
 	import { transformPrompmtInfoToNodeInfo } from './script';
 
 	export let data: LayoutLoadData;
 
 	const nodeInfoCollection: TreeNodeInfo[] = transformPrompmtInfoToNodeInfo(data.promptInfoCollection);
 	let selectedNodeId: number = nodeInfoCollection[0].objectId;
+
+	// const anotherTransformedStuff: TreeNodeInfo[] = transformPrompmtInfoToNodeInfo(data.promptInfoCollection);
+	// let transformedStuffId: number = anotherTransformedStuff[0].objectId;
 </script>
 
 <main>

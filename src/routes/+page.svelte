@@ -1,7 +1,6 @@
-<script lang="ts">
-	export let data: any;
+<script>
+	import { goto } from '$app/navigation';
 </script>
 
 <span>MAIN PAGE</span>
-<span>ENV TEST VALUE: {data.someValue}</span>
-<a href="/app/main">APP</a>
+<button on:click={() => goto('app/main')}>ENTER APP</button>

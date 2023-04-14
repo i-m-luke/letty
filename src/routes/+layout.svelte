@@ -1,3 +1,5 @@
+<!-- GLOBAL STYLES -->
+
 <slot />
 
 <style>
