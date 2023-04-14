@@ -16,7 +16,7 @@ export async function POST({ request }) {
 	};
 
 	const promptInfoCollection = FAKE_DB.promptInfoCollection;
-	const parentPromptInfo = findPromptInfo(promptInfo.parentId, promptInfoCollection);
+	const parentPromptInfo = findPromptInfoById(promptInfo.parentId, promptInfoCollection);
 	if (parentPromptInfo === undefined) {
 		throw new Error(`parent info wasn't found. Parent Info Id: ${promptInfo.parentId}`);
 	}
@@ -27,15 +27,27 @@ export async function POST({ request }) {
 
 // FAKE DB:
 
-function findPromptInfo(id: number | null, collection: PromptInfo[]): PromptInfo | undefined {
-	let foundPromptInfo = collection.find((promptInfo) => promptInfo.id === id);
-
-	if (foundPromptInfo === undefined) {
-		for (const promptInfo of collection) {
-			foundPromptInfo = findPromptInfo(id, promptInfo.childPrompts);
-			if (foundPromptInfo !== undefined) break;
-		}
+// BETTER, BUT NOT TESTED:
+function findPromptInfoById(id: number | null, promptInfoCollection: PromptInfo[]): PromptInfo | undefined {
+	for (const promptInfo of promptInfoCollection) {
+		if (promptInfo.id === id) return promptInfo;
+		const foundPrompt = findPromptInfoById(id, promptInfo.childPrompts);
+		if (foundPrompt !== undefined) return foundPrompt;
 	}
 
-	return foundPromptInfo;
+	return undefined;
 }
+
+// BAD, BUT WORKING (TESTED):
+// function findPromptInfo(id: number | null, collection: PromptInfo[]): PromptInfo | undefined {
+// 	let foundPromptInfo = collection.find((promptInfo) => promptInfo.id === id);
+
+// 	if (foundPromptInfo === undefined) {
+// 		for (const promptInfo of collection) {
+// 			foundPromptInfo = findPromptInfo(id, promptInfo.childPrompts);
+// 			if (foundPromptInfo !== undefined) break;
+// 		}
+// 	}
+
+// 	return foundPromptInfo;
+// }
