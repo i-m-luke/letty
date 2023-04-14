@@ -31,7 +31,6 @@
     - prompty i thready ve stromové diagramové (binary-tree) struktuře
     - verzování promptů a threadů formou gitu
     - Zaintegrovat analýzy (návštěvnost, doba návštěvy, ...)
-    ....
 
     # UI:
         - Obrazovka bude rozdělená na dvě poloviny: vlevo strom, vpravo workspace

@@ -1,7 +1,7 @@
 import type PromptInfo from '$lib/PromptInfo';
 
-type PageLoadData = {
+type LayoutLoadData = {
 	promptInfoCollection: PromptInfo[];
 };
 
-export default PageLoadData;
+export default LayoutLoadData;

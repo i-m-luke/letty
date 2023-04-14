@@ -1,7 +1,7 @@
 import FAKE_DB from '$lib/fake-db';
-import type PageLoadData from './PageLoadData';
+import type LayoutLoadData from './LayoutLoadData';
 
 // Návratný typ fce zajistí type safety
-export function load(): PageLoadData {
+export function load(): LayoutLoadData {
 	return { promptInfoCollection: FAKE_DB.promptInfoCollection };
 }

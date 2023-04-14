@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Tree from '$lib/components/Tree.svelte';
 	import type TreeNodeInfo from '$lib/components/TreeNodeInfo';
-	import type PageLoadData from './PageLoadData';
+	import type LayoutLoadData from './LayoutLoadData';
 	import { transformPrompmtInfoToNodeInfo } from './script';
 	import { selectedNodeId } from '$lib/store';
 
-	export let data: PageLoadData;
+	export let data: LayoutLoadData;
 
 	const nodeInfoCollection: TreeNodeInfo[] = transformPrompmtInfoToNodeInfo(data.promptInfoCollection);
 	selectedNodeId.set(nodeInfoCollection[0].objectId);
@@ -14,7 +14,7 @@
 <main>
 	<div class="upper-container">
 		<a href="app/settings">SETTINGS</a>
-		<a href="app/main/create-prompt">CREATE PROMPT</a>
+		<a href={`app/main/create-prompt${$selectedNodeId}`}>CREATE PROMPT</a>
 	</div>
 
 	<div class="main-container">
