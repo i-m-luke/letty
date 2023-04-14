@@ -1,7 +1,7 @@
 import type PromptInfo from '$lib/PromptInfo';
 import TreeNodeInfo from '$lib/components/TreeNodeInfo';
 import { transformCollectionToNodeInfo } from '$lib/transformers';
-import type PostData from './main/create-prompt[parentId]/PostData';
+import type PostData from './main/create-prompt-[parentId]/PostData';
 
 // PURE CODE:
 export function transformPrompmtInfoToNodeInfo(promptInfoCollections: PromptInfo[]): TreeNodeInfo[] {

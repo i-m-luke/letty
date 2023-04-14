@@ -3,24 +3,23 @@
 	import type TreeNodeInfo from '$lib/components/TreeNodeInfo';
 	import type LayoutLoadData from './LayoutLoadData';
 	import { transformPrompmtInfoToNodeInfo } from './script';
-	import { selectedNodeId } from '$lib/store';
 
 	export let data: LayoutLoadData;
 
 	const nodeInfoCollection: TreeNodeInfo[] = transformPrompmtInfoToNodeInfo(data.promptInfoCollection);
-	selectedNodeId.set(nodeInfoCollection[0].objectId);
+	let selectedNodeId: number = nodeInfoCollection[0].objectId;
 </script>
 
 <main>
 	<div class="upper-container">
 		<a href="app/settings">SETTINGS</a>
-		<a href={`app/main/create-prompt${$selectedNodeId}`}>CREATE PROMPT</a>
+		<a href={`/app/main/create-prompt-${selectedNodeId}`}>CREATE PROMPT</a>
 	</div>
 
 	<div class="main-container">
 		<div class="left-container">
 			<span>PROMPT TREE:</span>
-			<Tree bind:value={$selectedNodeId} {nodeInfoCollection} />
+			<Tree bind:value={selectedNodeId} {nodeInfoCollection} />
 		</div>
 		<div class="right-container">
 			<slot />

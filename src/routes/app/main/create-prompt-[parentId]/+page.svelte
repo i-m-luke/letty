@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { postSavedPrompt } from '../../script';
-	import { selectedNodeId } from '$lib/store'; // ASI BY BYLO LEPŠÍ ŘEŠIT PŘES ROUTE PARAMETR
 
 	export let data;
 
@@ -18,5 +17,5 @@
 		SAVE PROMPT
 	</button>
 
-	<span>SELECTED NODE ID: {selectedNodeId}</span>
+	<span>SELECTED NODE ID: {data.selectedNodeId}</span>
 </main>
