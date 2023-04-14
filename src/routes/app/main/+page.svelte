@@ -1,6 +1,11 @@
 <!-- EMPTY PAGE FOR RENDERING PURPOSE -->
 
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import Tree from '$lib/components/Tree.svelte';
+
+	const nodeOnClickAction = (id: number) => goto(`/app/main/show-prompt-${id}`);
+
 	const isMobile: boolean = true;
 </script>
 
@@ -9,7 +14,9 @@
     TREE VALUE BINDING SE BUDE ŘEŠIT PRAVDĚPODOBNĚ SKRZE STORE
 
     {#if isMobile}
-        <span>PROMPT TREE:</span>
-        <Tree bind:value={selectedNodeId} {nodeInfoCollection} />
-    {/if} 
+        <div class="left-container">
+            <span>PROMPT TREE:</span>
+            <Tree {nodeOnClickAction} {nodeInfoCollection} />
+        </div>
+    {/if}
 -->

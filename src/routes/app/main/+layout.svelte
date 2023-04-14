@@ -3,6 +3,7 @@
 	import type LayoutLoadData from './LayoutLoadData';
 	import Tree from '$lib/components/Tree.svelte';
 	import { transformPrompmtInfoToNodeInfo } from './script';
+	import { goto } from '$app/navigation';
 
 	export let data: LayoutLoadData;
 
@@ -12,13 +13,14 @@
 	// const anotherTransformedStuff: TreeNodeInfo[] = transformPrompmtInfoToNodeInfo(data.promptInfoCollection);
 	// let transformedStuffId: number = anotherTransformedStuff[0].objectId;
 
-	const isMobile: boolean = true; // TODO: Vyřešit nějak skrze build-in feature (asi někden a $app/environment)
+	const nodeOnClickAction = (id: number) => goto(`/app/main/show-prompt-${id}`);
+
+	const isMobile: boolean = false; // TODO: Vyřešit nějak skrze build-in feature (asi někden a $app/environment)
 </script>
 
 <main>
 	<div class="upper-container">
 		<a href="/app/settings">SETTINGS</a>
-		<a href={`/app/main/show-prompt-${selectedNodeId}`}>SHOW PROMPT</a>
 	</div>
 
 	<div class="main-container">
@@ -29,7 +31,7 @@
 		{#if !isMobile}
 			<div class="left-container">
 				<span>PROMPT TREE:</span>
-				<Tree bind:value={selectedNodeId} {nodeInfoCollection} />
+				<Tree {nodeOnClickAction} {nodeInfoCollection} />
 			</div>
 		{/if}
 

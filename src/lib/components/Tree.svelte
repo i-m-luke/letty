@@ -3,9 +3,9 @@
 	import TreeNode from './TreeNode.svelte';
 
 	export let nodeInfoCollection: TreeNodeInfo[];
-	export let value: number;
+	export let nodeOnClickAction = (id: number) => {};
 </script>
 
 {#each nodeInfoCollection as nodeInfo}
-	<TreeNode bind:value {nodeInfo} />
+	<TreeNode {nodeOnClickAction} {nodeInfo} />
 {/each}
