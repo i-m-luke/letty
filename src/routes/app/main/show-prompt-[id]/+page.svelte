@@ -18,4 +18,13 @@
 	</button>
 
 	<span>SELECTED NODE ID: {data.selectedNodeId}</span>
+	<button>CLONE</button>
+	<!-- Slouží pro naklonování aktuálně navoleného uzlu -->
 </main>
+
+<style>
+	main {
+		display: flex;
+		flex-direction: column;
+	}
+</style>

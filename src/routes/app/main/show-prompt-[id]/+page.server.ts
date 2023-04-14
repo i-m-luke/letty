@@ -1,5 +1,5 @@
 export function load({ params }) {
 	return {
-		selectedNodeId: Number(params.parentId)
+		selectedNodeId: Number(params.id)
 	};
 }

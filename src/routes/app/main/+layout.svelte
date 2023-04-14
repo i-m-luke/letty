@@ -11,19 +11,28 @@
 
 	// const anotherTransformedStuff: TreeNodeInfo[] = transformPrompmtInfoToNodeInfo(data.promptInfoCollection);
 	// let transformedStuffId: number = anotherTransformedStuff[0].objectId;
+
+	const isMobile: boolean = true; // TODO: Vyřešit nějak skrze build-in feature (asi někden a $app/environment)
 </script>
 
 <main>
 	<div class="upper-container">
 		<a href="/app/settings">SETTINGS</a>
-		<a href={`/app/main/create-prompt-${selectedNodeId}`}>CREATE PROMPT</a>
+		<a href={`/app/main/show-prompt-${selectedNodeId}`}>SHOW PROMPT</a>
 	</div>
 
 	<div class="main-container">
-		<div class="left-container">
-			<span>PROMPT TREE:</span>
-			<Tree bind:value={selectedNodeId} {nodeInfoCollection} />
-		</div>
+		{#if isMobile}
+			<!-- ZOBRAZIT LIŠTU S TLAČÍTKEM TREE (aby bylo možno se dostat zpět na strom)  -->
+		{/if}
+
+		{#if !isMobile}
+			<div class="left-container">
+				<span>PROMPT TREE:</span>
+				<Tree bind:value={selectedNodeId} {nodeInfoCollection} />
+			</div>
+		{/if}
+
 		<div class="right-container">
 			<!-- WORKSPACE SLOT -->
 			<slot />
