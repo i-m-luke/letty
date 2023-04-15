@@ -36,6 +36,7 @@
         - Obrazovka bude rozdělená na dvě poloviny: vlevo strom, vpravo workspace
         - workspace půjde přepínat do mezi režimy: a) diagram portů, b) editorem a runnerem promptů
         - expandování jako je u svelte.dev/tutorial (po straně bude div, který bude mít event pro press) (rozměry se pak uloží do cookies) ... inspirovat se z freecodecamp tut, kde řeší eventy pohybu myši
+        - rework PromptTree: Strom bude obsahovat folders (TreeFolder) obsahující nodes (TreeNode)
 
     # Workspace - režim editace a runneru promptů:
         - rozdělen na 3 části:
