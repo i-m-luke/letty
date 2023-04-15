@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { postSavedPrompt } from './script';
+	import { postSavedPrompt } from './$page-logic';
 
 	export let data;
 

@@ -1,9 +1,18 @@
 import type PromptInfo from '$lib/PromptInfo';
+import type LayoutLoadData from './LayoutLoadData';
+import type LayoutData from './LayoutData';
 import TreeNodeInfo from '$lib/components/TreeNodeInfo';
 import { transformCollectionToNodeInfo } from '$lib/transformers';
 
 // PURE CODE:
-export function transformPrompmtInfoToNodeInfo(promptInfoCollections: PromptInfo[]): TreeNodeInfo[] {
+
+export function transformData(layoutLoadData: LayoutLoadData): LayoutData {
+	return {
+		treeNodeInfoCollection: transformPrompmtInfoToNodeInfo(layoutLoadData.promptInfoCollection)
+	};
+}
+
+function transformPrompmtInfoToNodeInfo(promptInfoCollections: PromptInfo[]): TreeNodeInfo[] {
 	return transformCollectionToNodeInfo<PromptInfo>(
 		(promptInfo: PromptInfo) =>
 			new TreeNodeInfo(

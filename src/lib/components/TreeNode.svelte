@@ -11,7 +11,7 @@
 	const toggleIsOpen: () => void = () => (isOpen = !isOpen);
 	const nodeOnClickEvent: () => void = () => {
 		toggleIsOpen();
-		nodeOnClickAction(nodeInfo.objectId);
+		nodeOnClickAction(nodeInfo.id);
 	};
 </script>
 

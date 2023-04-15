@@ -5,7 +5,7 @@ import type PromptInfo from '$lib/PromptInfo';
 export const postSavedPrompt = async (parentId: number, promptName: string, prompt: string) => {
 	const postData: PostData = { parentId, promptName, prompt };
 
-	const response = await fetch('/app', {
+	const response = await fetch(`/app/main/prompt-x`, {
 		method: 'POST',
 		body: JSON.stringify(postData),
 		headers: {
