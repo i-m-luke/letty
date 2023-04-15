@@ -16,7 +16,7 @@
 
 	<div class="root-container">
 		{#if $isMobile}
-			<!-- ZOBRAZIT LIŠTU S TLAČÍTKEM TREE (aby bylo možno se dostat zpět na strom v režimu mobilu)  -->
+			<!-- ZOBRAZIT LIŠTU S TLAČÍTKEM "TREE" (aby bylo možno se dostat zpět na strom v režimu mobilu)  -->
 		{/if}
 
 		{#if !$isMobile}

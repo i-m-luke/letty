@@ -1,3 +1,5 @@
+<!-- MOVE TO COMPONENTS ??? -->
+
 <script lang="ts">
 	import type TreeNodeInfo from '$lib/components/TreeNodeInfo';
 	import Tree from '$lib/components/Tree.svelte';
@@ -8,6 +10,9 @@
 </script>
 
 <span>PROMPT TREE:</span>
+
+<!-- Nepoužít nodeOnClickAction event.target? -->
+
 <Tree
 	nodeOnClickAction={() => goto(`/app/main/prompt-${selectedNodeId}`)}
 	{nodeInfoCollection}

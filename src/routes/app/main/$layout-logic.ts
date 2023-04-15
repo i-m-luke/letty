@@ -8,18 +8,18 @@ import { transformCollectionToNodeInfo } from '$lib/transformers';
 
 export function transformData(layoutLoadData: LayoutLoadData): LayoutData {
 	return {
-		treeNodeInfoCollection: transformPrompmtInfoToNodeInfo(layoutLoadData.promptInfoCollection)
+		treeNodeInfoCollection: transformPromptInfoToNodeInfo(layoutLoadData.promptInfoCollection)
 	};
 }
 
-function transformPrompmtInfoToNodeInfo(promptInfoCollections: PromptInfo[]): TreeNodeInfo[] {
+function transformPromptInfoToNodeInfo(promptInfoCollections: PromptInfo[]): TreeNodeInfo[] {
 	return transformCollectionToNodeInfo<PromptInfo>(
 		(promptInfo: PromptInfo) =>
 			new TreeNodeInfo(
 				false,
 				promptInfo.id,
 				promptInfo.name,
-				promptInfo.childPrompts.length > 0 ? transformPrompmtInfoToNodeInfo(promptInfo.childPrompts) : []
+				promptInfo.childPrompts.length > 0 ? transformPromptInfoToNodeInfo(promptInfo.childPrompts) : []
 			),
 		promptInfoCollections
 	);
