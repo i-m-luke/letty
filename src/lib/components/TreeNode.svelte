@@ -2,7 +2,8 @@
 	import type TreeNodeInfo from './TreeNodeInfo';
 
 	export let nodeInfo: TreeNodeInfo;
-	export let nodeOnClickAction = (id: number) => {};
+	export let value: number;
+	export let nodeOnClickAction = () => {};
 
 	let isOpen = false;
 	const isLeafNode = nodeInfo.children.length < 1;
@@ -10,8 +11,9 @@
 
 	const toggleIsOpen: () => void = () => (isOpen = !isOpen);
 	const nodeOnClickEvent: () => void = () => {
+		value = nodeInfo.id;
 		toggleIsOpen();
-		nodeOnClickAction(nodeInfo.id);
+		nodeOnClickAction();
 	};
 </script>
 
@@ -29,7 +31,7 @@
 	{#if isOpen}
 		<div class="child-nodes">
 			{#each nodeInfo.children as childNode}
-				<svelte:self {nodeOnClickAction} nodeInfo={childNode} />
+				<svelte:self bind:value {nodeOnClickAction} nodeInfo={childNode} />
 			{/each}
 		</div>
 	{/if}

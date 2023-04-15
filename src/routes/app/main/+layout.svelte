@@ -1,15 +1,12 @@
 <script lang="ts">
 	import type LayoutLoadData from './LayoutLoadData';
 	import type LayoutData from './LayoutData';
-	import Tree from '$lib/components/Tree.svelte';
+	import PromptTree from './PromptTree.svelte';
 	import { transformData } from './$layout-logic';
-	import { goto } from '$app/navigation';
 	import { isMobile } from '$lib/store';
 
 	export let data: LayoutLoadData;
 	const tData: LayoutData = transformData(data);
-
-	const nodeOnClickAction = (id: number) => goto(`/app/main/prompt-${id}`);
 </script>
 
 <main>
@@ -17,19 +14,18 @@
 		<a href="/app/settings">SETTINGS</a>
 	</div>
 
-	<div class="main-container">
+	<div class="root-container">
 		{#if $isMobile}
-			<!-- ZOBRAZIT LIŠTU S TLAČÍTKEM TREE (aby bylo možno se dostat zpět na strom)  -->
+			<!-- ZOBRAZIT LIŠTU S TLAČÍTKEM TREE (aby bylo možno se dostat zpět na strom v režimu mobilu)  -->
 		{/if}
 
 		{#if !$isMobile}
-			<div class="left-container">
-				<span>PROMPT TREE:</span>
-				<Tree {nodeOnClickAction} nodeInfoCollection={tData.treeNodeInfoCollection} />
+			<div class="side-container">
+				<PromptTree nodeInfoCollection={tData.treeNodeInfoCollection} />
 			</div>
 		{/if}
 
-		<div class="right-container">
+		<div class="main-container">
 			<!-- WORKSPACE SLOT -->
 			<slot />
 			<!-- WORKSPACE SLOT -->
@@ -44,18 +40,18 @@
 		height: 100vh;
 	}
 
-	.main-container {
+	.root-container {
 		display: flex;
 		flex-direction: row;
 		height: 100%;
 	}
 
-	.left-container {
+	.side-container {
 		flex-grow: 1;
 		background-color: aqua;
 	}
 
-	.right-container {
+	.main-container {
 		flex-grow: 6;
 		background-color: grey;
 	}

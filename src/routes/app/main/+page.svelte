@@ -1,13 +1,12 @@
 <!-- EMPTY PAGE FOR RENDERING PURPOSE -->
 
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import Tree from '$lib/components/Tree.svelte';
-	import { transformData } from './$page-logic';
 	import type PageData from './PageData';
 	import type PageLoadData from './PageLoadData';
-
+	import { goto } from '$app/navigation';
 	import { isMobile } from '$lib/store';
+	import { transformData } from './$page-logic';
+	import PromptTree from './PromptTree.svelte';
 
 	export let data: PageLoadData;
 	const tData: PageData = transformData(data);
@@ -16,10 +15,5 @@
 </script>
 
 {#if $isMobile}
-	<!-- 
-        TŘEBA VYJMOUT DO VLASTNÍ KOMPONENT
-        TREE VALUE BINDING SE BUDE ŘEŠIT PRAVDĚPODOBNĚ SKRZE STORE
-    -->
-	<span>PROMPT TREE:</span>
-	<Tree {nodeOnClickAction} nodeInfoCollection={tData.treeNodeInfoCollection} />
+	<PromptTree nodeInfoCollection={tData.treeNodeInfoCollection} />
 {/if}
