@@ -29,7 +29,7 @@
 
     - Svelte / Svelte Kit + Pocket base / MongoDB ?
     - prompty i thready ve stromové diagramové (binary-tree) struktuře
-    - verzování promptů a threadů formou gitu
+    - verzování formou gitu
     - Zaintegrovat analýzy (návštěvnost, doba návštěvy, ...)
 
     # UI:
@@ -68,7 +68,7 @@
         - thread by se dal znovu vystavět skrze prompt, který by obsahoval veškeré prompty které uživatel zadal v rámci daného threadu
         - toto by ale bylo velice nákladné (při dotazu o 34k tokený by tato operace stála 20 Kč (1000 * 20 = 20k))
         - Thread: neposílat veškeré předešlé messages, ale skrze AI vytvořit shrnutí (komprimaci) a poté s touto komprimací pracovat (viz. https://www.lesswrong.com/posts/bNCDexejSZpkuu3yz/you-can-use-gpt-4-to-create-prompt-injections-against-gpt-4)
-        - u openai API requestu provést priming skrze messages u chatCompletion.create 
+        - u openai API requestu provést priming skrze messages u chatCompletion.create
 
     # Features:
         # Kombinování a řetězení promptů:
@@ -94,6 +94,14 @@
         # Route testing:
             - na express lze snadno (zeptat se chbota), pomocí middleware route, viz. nalezený článek
             - Jak ale řešit na SVELTEkit
+        # Uchovávání stromové sturktury:
+            - viz řešení větve "develop-storing-prompt-info"
+            a) jako JSON: { id: 1, parentId: undefined, childPrompts: [
+                id: 11, parentId: 1, childPrompts: []
+            ]}
+            b) v podobě itemu a relací:
+                - každý item by měl id, childrenIds ... případně userId, aby bylo možné vyfiltrovat uzli daného uživatele
+                - podle childrenIds by se pak sestavila struktura
 
 # NÁZEV PRODUKTU
 
