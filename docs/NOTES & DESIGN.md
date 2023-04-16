@@ -120,3 +120,5 @@ AIP [ejp] - AI Prompter - PRIME PROMPT PROFIT
     - nechat vygenerovat AI (midjourney, ...)
     - případně vytvoři skicu a podlé ní nechat vytvořit
     - nějaké návrhy jsou již připraveny viz adr. logo
+
+    ...
