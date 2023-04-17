@@ -1,7 +1,7 @@
 import FAKE_DB from '$lib/fake-db.js';
 import { json } from '@sveltejs/kit';
 import type PostData from './PostData';
-import type PromptInfo from '$lib/PromptInfo';
+import type { PromptInfo } from '$lib/types';
 
 let lastId: number = 100;
 
@@ -12,7 +12,7 @@ export async function POST({ request }) {
 		parentId: data.parentId,
 		name: data.promptName,
 		prompt: data.prompt,
-		childPrompts: []
+		chidren: []
 	};
 
 	const promptInfoCollection = FAKE_DB.promptInfoCollection;
@@ -20,7 +20,7 @@ export async function POST({ request }) {
 	if (parentPromptInfo === undefined) {
 		throw new Error(`parent info wasn't found. Parent Info Id: ${promptInfo.parentId}`);
 	}
-	parentPromptInfo.childPrompts.push(promptInfo);
+	parentPromptInfo.chidren.push(promptInfo);
 
 	return json(promptInfo, { status: 201 });
 }
@@ -31,7 +31,7 @@ export async function POST({ request }) {
 function findPromptInfoById(id: number | null, promptInfoCollection: PromptInfo[]): PromptInfo | undefined {
 	for (const promptInfo of promptInfoCollection) {
 		if (promptInfo.id === id) return promptInfo;
-		const foundPrompt = findPromptInfoById(id, promptInfo.childPrompts);
+		const foundPrompt = findPromptInfoById(id, promptInfo.chidren);
 		if (foundPrompt !== undefined) return foundPrompt;
 	}
 

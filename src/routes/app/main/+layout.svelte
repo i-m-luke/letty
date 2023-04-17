@@ -1,27 +1,37 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { TreeMode } from '$lib/enums';
+	import { isMobile, activeTreeMode } from '$lib/store';
 	import type LayoutLoadData from './LayoutLoadData';
 	import type LayoutData from './LayoutData';
-	import PromptTree from './PromptTree.svelte';
+	import MainTree from './MainTree.svelte';
 	import { transformData } from './$layout-logic';
-	import { isMobile } from '$lib/store';
 
 	export let data: LayoutLoadData;
 	const tData: LayoutData = transformData(data);
+
+	$: toggleTreeModeButtonText = $activeTreeMode === TreeMode.Prompt ? 'Thread' : 'Prompt';
+	const toggleTreeMode = () => {
+		$activeTreeMode = $activeTreeMode === TreeMode.Prompt ? TreeMode.Thread : TreeMode.Prompt;
+		goto('/app/main');
+	};
 </script>
 
 <main>
 	<div class="upper-container">
 		<a href="/app/settings">SETTINGS</a>
+		<span>||</span>
+		<button on:click={toggleTreeMode}>SWITCH TO {toggleTreeModeButtonText}</button>
+		{#if $isMobile}
+			<span>||</span>
+			<button on:click={() => goto('/app/main')}>SHOW TREE</button>
+		{/if}
 	</div>
 
 	<div class="root-container">
-		{#if $isMobile}
-			<!-- ZOBRAZIT LIŠTU S TLAČÍTKEM "TREE" (aby bylo možno se dostat zpět na strom v režimu mobilu)  -->
-		{/if}
-
 		{#if !$isMobile}
 			<div class="side-container">
-				<PromptTree nodeInfoCollection={tData.treeNodeInfoCollection} />
+				<MainTree {tData} />
 			</div>
 		{/if}
 

@@ -13,6 +13,7 @@ export function load(): LayoutLoadData {
 	}
 	return {
 		promptInfoCollection: FAKE_DB.promptInfoCollection,
+		threadInfoCollection: FAKE_DB.threadInfoCollection,
 		envSomeValue: SOME_VALUE
 	};
 }

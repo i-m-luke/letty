@@ -69,6 +69,11 @@
         - toto by ale bylo velice nákladné (při dotazu o 34k tokený by tato operace stála 20 Kč (1000 * 20 = 20k))
         - Thread: neposílat veškeré předešlé messages, ale skrze AI vytvořit shrnutí (komprimaci) a poté s touto komprimací pracovat (viz. https://www.lesswrong.com/posts/bNCDexejSZpkuu3yz/you-can-use-gpt-4-to-create-prompt-injections-against-gpt-4)
         - u openai API requestu provést priming skrze messages u chatCompletion.create
+        # Reagování na messages:
+            - dva způsoby reagování:
+                a) u zprávy, na kterou bude chtít uživatel reagovat, klikne na "react" a přidá otázku. pod danou zprávou se začne provádět thread (jako kdy na FB reaguješ na komentář). Půjde navolt možnost, kdy se při reakci do messages přidají veškeré navazující (předešlé zprávy)
+                b) onznačí se více zpráv na které bude chtít uživatel reagovat, v tomto případě se otevře nové okno
+            - viz img/react-to-messages.jpg
 
     # Features:
         # Kombinování a řetězení promptů:
@@ -85,6 +90,14 @@
                 - půjde dále nastavit časový interval synchronizace
                 - objeví se "sync"/"save" button, pro manuální provedení
             - Ve chvíli provádění synchronizae se zablokuje UI (aby bylo možné bezpečně odbavit veškeré změny)
+
+    # AI API:
+        - používat offiko od open ai nebo chagpt (od transitive-bullshit)
+        - nestudovat repozitár transitive-bullshit/chatgpt:
+            - zjistit, jak dělá, aby mohl reagovat na konkrétní messages (pomocí parentMessageId)
+            - ref: https://github.com/transitive-bullshit/chatgpt-api/blob/main/src/chatgpt-api.ts
+            - nejspíš si bokem uchovává odeslané zprávy a přiděluje jim id
+            - poté použije chatCompletion (open ai api) a danou zprávu přidá do messages
 
     # BACKEND:
         # Routing:
