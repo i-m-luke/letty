@@ -1,10 +1,10 @@
 <!-- EMPTY PAGE FOR RENDERING PURPOSE -->
 
 <script lang="ts">
+	import { isMobile } from '$lib/store';
 	import type PageData from './PageData';
 	import type PageLoadData from './PageLoadData';
 	import MainTree from './MainTree.svelte';
-	import { isMobile } from '../../../lib/store';
 	import { transformData } from './$page-logic';
 
 	export let data: PageLoadData;
