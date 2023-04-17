@@ -28,32 +28,16 @@
 # DESIGN
 
     - Svelte / Svelte Kit + Pocket base / MongoDB ?
-    - prompty i thready ve stromové diagramové (binary-tree) struktuře
-    - verzování formou gitu
     - Zaintegrovat analýzy (návštěvnost, doba návštěvy, ...)
 
     # UI:
         - Obrazovka bude rozdělená na dvě poloviny: vlevo strom, vpravo workspace
         - workspace půjde přepínat do mezi režimy: a) diagram portů, b) editorem a runnerem promptů
         - expandování jako je u svelte.dev/tutorial (po straně bude div, který bude mít event pro press) (rozměry se pak uloží do cookies) ... inspirovat se z freecodecamp tut, kde řeší eventy pohybu myši
-        - rework PromptTree: Strom bude obsahovat folders (TreeFolder) obsahující nodes (TreeNode)
+        - rework Tree komponenty: Strom bude obsahovat folders (TreeFolder) obsahující nodes (TreeNode)
 
-    # Řešení workspace:
-        a) komponentami:
-            - viz současné řešení
-            - ve skriptu by se podle stavu pehodila komponenta pro dany workspace (např CreatePromptWorkspaceComponent, EditPromptWorkspaceComponent, ...)
-            - pros: projekt by nebyl zaplavený route adresáři, v url by se nevypisovala cesta route
-            - cons: horší loading dat a API routování
-        b) routováním?:
-            - viz řešení větve "rework-to-pages"
-            - takhle je to řešeno například u homepage youtube: postraní panel je stále stejný, ale podle navolené položky se mění oblast konentu
-            - pro každý workspace by existovala page
-            - page by dědila z layoutu strom v levé části
-            - route app by na page.server.ts měla v load fci ošetření autentizace (provedla by se pokaždé po načtení nějakého route)
-            - pros: lepší routování, loading dat, atd ...
-
-    # Workspace - režim editace a runneru promptů:
-        - rozdělen na 3 části:
+    # Prompt route page:
+        - rozdělena na 3 části:
             1. Konfigurace promptu: parametrizace
             2. Text promptu ... + tlačítko "run" ?? ... kam umístit?
             3. Výsledek (odpověď) ... + tlačítko "run" ?? ... kam umístit?

@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { postSavedPrompt } from './$page-logic';
-
-	export let data;
 
 	let inputPromptName: string = 'test prompt';
 	let inputPrompt: string = 'test prompt';
+
+	const selectedNodeId = Number($page.params.id);
 </script>
 
 <main>
@@ -13,11 +14,11 @@
 	<span>PROMPT:</span>
 	<input bind:value={inputPrompt} />
 
-	<button on:click={() => postSavedPrompt(data.selectedNodeId, inputPromptName, inputPrompt)}>
+	<button on:click={() => postSavedPrompt(selectedNodeId, inputPromptName, inputPrompt)}>
 		SAVE PROMPT
 	</button>
 
-	<span>SELECTED NODE ID: {data.selectedNodeId}</span>
+	<span>SELECTED NODE ID: {selectedNodeId}</span>
 	<button>CLONE</button>
 	<!-- Slouží pro naklonování aktuálně navoleného uzlu -->
 </main>

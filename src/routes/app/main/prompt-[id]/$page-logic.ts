@@ -1,5 +1,5 @@
 import type PostData from './PostData';
-import type PromptInfo from '$lib/PromptInfo';
+import type { PromptInfo } from '$lib/types';
 
 // IMPURE CODE:
 export const postSavedPrompt = async (parentId: number, promptName: string, prompt: string) => {
