@@ -10,6 +10,7 @@
 	export let tData: LayoutData;
 	let selectedNodeId: number;
 
+	// NOTE: Bude zaměněno za store, aby bylo možno provést update při vytvoření nového promptu/threadu
 	$: nodeInfoCollection =
 		$activeTreeMode === TreeMode.Prompt
 			? tData.promptTreeNodeInfoCollection

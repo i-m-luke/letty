@@ -1,4 +1,4 @@
-import type { PromptData, ThreadData, DBNodeItem, ThreadInfo, PromptInfo } from '$lib/types';
+import type { PromptData, ThreadData, DBNodeItem, ThreadInfo, PromptInfo } from '$types';
 
 //#region TODO: NODE DB
 
@@ -11,9 +11,27 @@ const DB: DBType = {
 	promptCollection: [
 		{
 			id: 1,
-			childrenIds: [11, 12, 13],
+			childrenIds: [],
 			data: {
 				name: 'prompt 1',
+				prompt: 'some prompt'
+			},
+			id: 2,
+			childrenIds: [21, 22],
+			data: {
+				name: 'prompt 2',
+				prompt: 'some prompt'
+			},
+			id: 21,
+			childrenIds: [],
+			data: {
+				name: 'prompt 2-1',
+				prompt: 'some prompt'
+			},
+			id: 22,
+			childrenIds: [],
+			data: {
+				name: 'prompt 2-2',
 				prompt: 'some prompt'
 			}
 		}
@@ -21,13 +39,41 @@ const DB: DBType = {
 	threadCollection: [
 		{
 			id: 1,
-			childrenIds: [11, 12, 13],
+			childrenIds: [11, 12],
 			data: {
 				name: 'thread 1'
+			},
+			id: 11,
+			childrenIds: [111],
+			data: {
+				name: 'thread 1-1'
+			},
+			id: 12,
+			childrenIds: [],
+			data: {
+				name: 'thread 1-2'
+			},
+			id: 111,
+			childrenIds: [],
+			data: {
+				name: 'thread 1-1-1'
 			}
 		}
 	]
 };
+
+function insertNode<TData>(
+	nodeColl: DBNodeItem<TData>[],
+	node: DBNodeItem<TData>,
+	parentNodeId: number | undefined
+) {
+	const copiedNode: DBNodeItem<TData> = { ...node };
+	const copiedNodeColl: DBNodeItem<TData>[] = [...nodeColl, copiedNode];
+
+	parentNodeId !== undefined
+		? copiedNodeColl.find((node) => node.id === parentNodeId)?.childrenIds
+		: copiedNodeColl.push(copiedNode);
+}
 
 //#endregion
 
