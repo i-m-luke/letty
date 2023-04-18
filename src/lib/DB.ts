@@ -1,12 +1,40 @@
-import type { ThreadInfo, PromptInfo } from './types';
-import type DBNodeItem from './DBNodeItem';
+import type { PromptData, ThreadData, DBNodeItem, ThreadInfo, PromptInfo } from '$lib/types';
+
+//#region TODO: NODE DB
+
+type DBType = {
+	promptCollection: DBNodeItem<PromptData>[];
+	threadCollection: DBNodeItem<ThreadData>[];
+};
+
+const DB: DBType = {
+	promptCollection: [
+		{
+			id: 1,
+			childrenIds: [11, 12, 13],
+			data: {
+				name: 'prompt 1',
+				prompt: 'some prompt'
+			}
+		}
+	],
+	threadCollection: [
+		{
+			id: 1,
+			childrenIds: [11, 12, 13],
+			data: {
+				name: 'thread 1'
+			}
+		}
+	]
+};
+
+//#endregion
 
 type FakeDBType = {
 	promptInfoCollection: PromptInfo[];
 	threadInfoCollection: ThreadInfo[];
 };
-
-//#region TODO: NODE DB
 
 const FAKE_DB: FakeDBType = {
 	promptInfoCollection: [
@@ -83,18 +111,6 @@ const FAKE_DB: FakeDBType = {
 		}
 	]
 };
-
-type NodeFakeDB = {
-	promptCollection: DBNodeItem<PromptInfo>[];
-	threadCollection: DBNodeItem<ThreadInfo>[];
-};
-
-const NODE_DB: NodeFakeDB = {
-	promptCollection: [],
-	threadCollection: []
-};
-
-//#endregion
 
 function findPromptInfo(id: number | null, collection: PromptInfo[]): PromptInfo | undefined {
 	let foundPromptInfo = collection.find((promptInfo) => promptInfo.id === id);

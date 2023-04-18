@@ -1,7 +1,7 @@
 import type LayoutLoadData from './LayoutLoadData';
 import { SOME_VALUE } from '$env/static/private';
 import { redirect } from '@sveltejs/kit';
-import FAKE_DB from '$lib/fake-db';
+import FAKE_DB from '$lib/DB';
 
 let loggedIn = false;
 

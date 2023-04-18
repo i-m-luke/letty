@@ -1,4 +1,4 @@
-import FAKE_DB from '$lib/fake-db.js';
+import FAKE_DB from '$lib/DB.js';
 import { json } from '@sveltejs/kit';
 import type PostData from './PostData';
 import type { PromptInfo } from '$lib/types';
