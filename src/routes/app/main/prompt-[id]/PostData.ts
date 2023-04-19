@@ -1,5 +1,5 @@
 type PostData = {
-	parentId: number;
+	parentId: string;
 	promptName: string;
 	prompt: string;
 };

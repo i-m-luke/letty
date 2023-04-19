@@ -5,7 +5,7 @@
 	let inputPromptName: string = 'test prompt';
 	let inputPrompt: string = 'test prompt';
 
-	const selectedNodeId = Number($page.params.id);
+	const selectedNodeId: string = $page.params.id;
 </script>
 
 <main>

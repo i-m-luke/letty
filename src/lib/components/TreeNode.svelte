@@ -2,7 +2,7 @@
 	import type TreeNodeInfo from './TreeNodeInfo';
 
 	export let nodeInfo: TreeNodeInfo;
-	export let value: number;
+	export let value: string;
 	export let nodeOnClickAction = () => {};
 
 	let isOpen = false;

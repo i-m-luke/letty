@@ -2,7 +2,7 @@
 	import type TreeNodeInfo from './TreeNodeInfo';
 	import TreeNode from './TreeNode.svelte';
 
-	export let selectedNodeId: number = -1;
+	export let selectedNodeId: string = '';
 	export let nodeInfoCollection: TreeNodeInfo[];
 	export let nodeOnClickAction = () => {};
 </script>

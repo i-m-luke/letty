@@ -1,14 +1,15 @@
 import FAKE_DB from '$lib/DB.js';
 import { json } from '@sveltejs/kit';
 import type PostData from './PostData';
-import type { PromptInfo } from '$lib/types';
+import type { PromptInfo } from '$types';
+import { v4 as uuid } from 'uuid';
 
 let lastId: number = 100;
 
 export async function POST({ request }) {
 	const data = (await request.json()) as PostData;
 	const promptInfo: PromptInfo = {
-		id: ++lastId,
+		id: uuid(),
 		parentId: data.parentId,
 		name: data.promptName,
 		prompt: data.prompt,
@@ -28,7 +29,7 @@ export async function POST({ request }) {
 // FAKE DB:
 
 // BETTER, BUT NOT TESTED:
-function findPromptInfoById(id: number | null, promptInfoCollection: PromptInfo[]): PromptInfo | undefined {
+function findPromptInfoById(id: string | null, promptInfoCollection: PromptInfo[]): PromptInfo | undefined {
 	for (const promptInfo of promptInfoCollection) {
 		if (promptInfo.id === id) return promptInfo;
 		const foundPrompt = findPromptInfoById(id, promptInfo.chidren);

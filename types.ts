@@ -1,8 +1,8 @@
 // alias module
 
 export type PromptInfo = {
-	id: number;
-	parentId: number | null; // ... null je fuj!
+	id: string;
+	parentId: string | null; // ... null je fuj!
 	name: string;
 	prompt: string;
 	chidren: PromptInfo[];
@@ -21,10 +21,4 @@ export type PromptData = {
 
 export type ThreadData = {
 	name: string;
-};
-
-export type DBNodeItem<TData> = {
-	id: number;
-	childrenIds: number[];
-	data: TData;
 };

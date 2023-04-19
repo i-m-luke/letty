@@ -27,8 +27,9 @@
 
 # DESIGN
 
-    - Svelte / Svelte Kit + Pocket base / MongoDB ?
-    - Zaintegrovat analýzy (návštěvnost, doba návštěvy, ...)
+    - Svelte Kit
+    - Database?: MongoDB --> PocketBase ???
+    - Zaintegrovat analýzy (návštěvnost, doba návštěvy, atd ...)
 
     # UI:
         - Obrazovka bude rozdělená na dvě poloviny: vlevo strom, vpravo workspace

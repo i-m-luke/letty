@@ -1,8 +1,8 @@
 import type PostData from './PostData';
-import type { PromptInfo } from '$lib/types';
+import type { PromptInfo } from '$types';
 
 // IMPURE CODE:
-export const postSavedPrompt = async (parentId: number, promptName: string, prompt: string) => {
+export const postSavedPrompt = async (parentId: string, promptName: string, prompt: string) => {
 	const postData: PostData = { parentId, promptName, prompt };
 
 	const response = await fetch(`/app/main/prompt-x`, {
