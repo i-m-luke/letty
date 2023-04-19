@@ -5,6 +5,34 @@ import { v4 as uuid } from 'uuid';
 	- Node musí obshaovat userId, aby bylo z db možno vyfiltrovat nodes daného uživatele
 */
 
+//#region DAO pattern
+
+interface IDAOData {
+	id: string;
+}
+
+interface IDAO {
+	getAll: () => IDAOData[];
+	getById: () => IDAOData;
+	insert: (data: IDAOData) => void;
+	update: (data: IDAOData) => void;
+	delete: (data: IDAOData) => void;
+}
+
+type _DBNode<TData> = {} & IDAOData;
+
+/**
+ * db: MongoDB instance
+ */
+class DBNodeDAO implements IDAO {
+	db: any;
+	constructor(db: any) {
+		this.db = db;
+	}
+}
+
+//#endregion
+
 const userId = uuid();
 
 type DBType = {
