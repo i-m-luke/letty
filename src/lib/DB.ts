@@ -7,28 +7,40 @@ import { v4 as uuid } from 'uuid';
 
 //#region DAO pattern
 
-interface IDAOData {
-	id: string;
-}
+abstract class BaseDAO<TData> {
+	protected db: any;
 
-interface IDAO {
-	getAll: () => IDAOData[];
-	getById: () => IDAOData;
-	insert: (data: IDAOData) => void;
-	update: (data: IDAOData) => void;
-	delete: (data: IDAOData) => void;
-}
-
-type _DBNode<TData> = {} & IDAOData;
-
-/**
- * db: MongoDB instance
- */
-class DBNodeDAO implements IDAO {
-	db: any;
 	constructor(db: any) {
 		this.db = db;
 	}
+
+	abstract getAll(): TData[];
+	abstract getById(id: string): TData;
+	abstract insert(data: TData): void;
+	abstract update(data: TData): void;
+	abstract delete(data: TData): void;
+}
+
+type SomeData = {};
+/**
+ * db: MongoDB instance
+ */
+class DBNodeDAO extends BaseDAO<SomeData> {
+	constructor(db: any) {
+		super(db);
+	}
+
+	getAll(): SomeData[] {
+		return [];
+	}
+
+	getById(id: string): SomeData {
+		return {};
+	}
+
+	insert(data: SomeData): void {}
+	update(data: SomeData): void {}
+	delete(data: SomeData): void {}
 }
 
 //#endregion
