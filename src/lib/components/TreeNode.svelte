@@ -6,7 +6,7 @@
 	export let nodeOnClickAction = () => {};
 
 	let isOpen = false;
-	const isLeafNode = nodeInfo.children.length < 1;
+	$: isLeafNode = nodeInfo.children.length < 1;
 	$: nodeState = isLeafNode ? '(leaf node)' : isOpen ? '(opened)' : '(closed)';
 
 	const toggleIsOpen: () => void = () => (isOpen = !isOpen);
