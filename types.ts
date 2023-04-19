@@ -21,4 +21,12 @@ export type PromptData = {
 
 export type ThreadData = {
 	name: string;
+	messages: string[];
+};
+
+export type DBNode<TData> = {
+	id: string;
+	userId: string;
+	parentId?: string;
+	data: TData;
 };

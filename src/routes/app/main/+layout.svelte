@@ -13,7 +13,6 @@
 	$: toggleTreeModeButtonText = $activeTreeMode === TreeMode.Prompt ? 'Thread' : 'Prompt';
 	const toggleTreeMode = () => {
 		$activeTreeMode = $activeTreeMode === TreeMode.Prompt ? TreeMode.Thread : TreeMode.Prompt;
-		goto('/app/main');
 	};
 </script>
 

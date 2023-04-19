@@ -1,7 +1,7 @@
 import type LayoutLoadData from './LayoutLoadData';
 import { SOME_VALUE } from '$env/static/private';
 import { redirect } from '@sveltejs/kit';
-import FAKE_DB from '$lib/DB';
+import { DB } from '$lib/DB';
 
 let loggedIn = false;
 
@@ -11,9 +11,9 @@ export function load(): LayoutLoadData {
 		loggedIn = true; // LOL X-D
 		throw redirect(307, '/app/login'); // TODO: Přidat správný status code
 	}
+
 	return {
-		promptInfoCollection: FAKE_DB.promptInfoCollection,
-		threadInfoCollection: FAKE_DB.threadInfoCollection,
-		envSomeValue: SOME_VALUE
+		promptInfoCollection: DB.promptCollection,
+		threadInfoCollection: DB.threadCollection
 	};
 }
