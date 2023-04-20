@@ -5,12 +5,13 @@
 	export let value: string;
 	export let nodeOnClickAction = () => {};
 
-	let isOpen = false;
+	let isOpen: boolean = false;
+
 	$: isLeafNode = nodeInfo.children.length < 1;
 	$: nodeState = isLeafNode ? '(leaf node)' : isOpen ? '(opened)' : '(closed)';
 
 	const toggleIsOpen: () => void = () => (isOpen = !isOpen);
-	const nodeOnClickEvent: () => void = () => {
+	const nodeOnClickEvent = (): void => {
 		value = nodeInfo.id;
 		toggleIsOpen();
 		nodeOnClickAction();

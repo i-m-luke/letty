@@ -7,10 +7,28 @@ import { v4 as uuid } from 'uuid';
 
 //#region DAO pattern
 
-abstract class BaseDAO<TData> {
-	protected db: any;
+interface IDB {
+	findAll: () => Object[];
+	find(object: Object): Object;
+	insertOne(object: Object): void;
+}
 
-	constructor(db: any) {
+class _MongoDB implements IDB {
+	findAll(): Object[] {
+		return [];
+	}
+
+	find(object: Object): Object {
+		return {};
+	}
+
+	insertOne(object: Object) {}
+}
+
+abstract class BaseDAO<TData> {
+	protected db: IDB;
+
+	constructor(db: IDB) {
 		this.db = db;
 	}
 
@@ -42,6 +60,9 @@ class DBNodeDAO extends BaseDAO<SomeData> {
 	update(data: SomeData): void {}
 	delete(data: SomeData): void {}
 }
+
+const mongoDB = new _MongoDB();
+const dbNodeDAO = new DBNodeDAO(mongoDB);
 
 //#endregion
 
