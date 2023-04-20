@@ -13,7 +13,7 @@ export function load(): LayoutLoadData {
 	}
 
 	return {
-		promptInfoCollection: DB.promptCollection,
-		threadInfoCollection: DB.threadCollection
+		promptDataCollection: DB.promptCollection, // promptDataDOA.getAll()
+		threadDataCollection: DB.threadCollection // threadDataDOA.getAll()
 	};
 }

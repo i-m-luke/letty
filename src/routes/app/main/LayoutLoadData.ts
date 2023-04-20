@@ -1,8 +1,8 @@
 import type { ThreadData, PromptData, DBNode } from '$types';
 
 type LayoutLoadData = {
-	promptInfoCollection: DBNode<PromptData>[];
-	threadInfoCollection: DBNode<ThreadData>[];
+	promptDataCollection: DBNode<PromptData>[];
+	threadDataCollection: DBNode<ThreadData>[];
 };
 
 export default LayoutLoadData;

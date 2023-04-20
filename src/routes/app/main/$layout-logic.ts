@@ -16,11 +16,11 @@ export function transformData(layoutLoadData: LayoutLoadData): LayoutData {
 
 	return {
 		promptTreeNodeInfoCollection: transformToTreeInfo(
-			layoutLoadData.promptInfoCollection,
+			layoutLoadData.promptDataCollection,
 			promptDataToTreeNodeData
 		),
 		threadTreeNodeInfoCollection: transformToTreeInfo(
-			layoutLoadData.threadInfoCollection,
+			layoutLoadData.threadDataCollection,
 			threadDataToTreeNodeData
 		)
 	};
