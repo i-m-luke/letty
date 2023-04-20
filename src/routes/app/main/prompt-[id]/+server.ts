@@ -3,7 +3,7 @@ import type PostData from './PostData';
 import type { PromptInfo } from '$types';
 import { v4 as uuid } from 'uuid';
 
-// import { db } from "$db"
+// import { db, PromptDataDOA } from "$db"
 // const promptDataDOA = new PromptDataDOA(db);
 
 export async function POST({ request }) {
