@@ -14,7 +14,8 @@ const config = {
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		adapter: adapter(),
 		alias: {
-			$types: path.resolve('./types.ts')
+			$types: path.resolve('./src/types.ts'),
+			$db: path.resolve('./src/db.ts')
 		}
 	}
 };
