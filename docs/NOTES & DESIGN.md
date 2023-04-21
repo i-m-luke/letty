@@ -35,7 +35,14 @@
         - Obrazovka bude rozdělená na dvě poloviny: vlevo strom, vpravo workspace
         - workspace půjde přepínat do mezi režimy: a) diagram portů, b) editorem a runnerem promptů
         - expandování jako je u svelte.dev/tutorial (po straně bude div, který bude mít event pro press) (rozměry se pak uloží do cookies) ... inspirovat se z freecodecamp tut, kde řeší eventy pohybu myši
-        - rework Tree komponenty: Strom bude obsahovat folders (TreeFolder) obsahující nodes (TreeNode)
+        - rework Tree komponenty:
+            - Strom bude obsahovat folders (TreeFolder) obsahující nodes (TreeNode)
+            - folders budou mít "+" btn pro přidávání uzlů
+            - v rohu stromu bude "tree manager" btn (ikonka pastelky):
+                - bude přepínat do režimu správy uzlů
+                - po přepnutí budou u uzlů checkboxy
+                - zobrazí se delete btn
+                - bude možné uzly přesouvat
 
     # Prompt route page:
         - rozdělena na 3 části:
