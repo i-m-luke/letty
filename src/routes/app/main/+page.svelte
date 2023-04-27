@@ -1,5 +1,3 @@
-<!-- EMPTY PAGE FOR RENDERING PURPOSE -->
-
 <script lang="ts">
 	import { isMobile } from '$lib/store';
 	import type PageData from './PageData';
