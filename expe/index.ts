@@ -3,10 +3,12 @@ import {
   OpenAIApi,
   ChatCompletionRequestMessageRoleEnum,
 } from "openai";
+
 import type {
   ChatCompletionRequestMessage,
   CreateChatCompletionRequest,
 } from "openai";
+import { convertToObject } from "typescript";
 
 const CHATGPT_API_KEY = "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";
 const config = new Configuration({
@@ -36,7 +38,7 @@ const defaultCompletionParams: CompletionParams = {
   temperature: 0,
 };
 
-const sendMessage = async (message: string, opts: SendMessageOpts) => {
+const sendMessage = async (message: string, opts?: SendMessageOpts) => {
   const {
     model = defaultCompletionParams.model,
     temperature = defaultCompletionParams.temperature,
@@ -54,7 +56,6 @@ const sendMessage = async (message: string, opts: SendMessageOpts) => {
         return {
           role: ChatCompletionRequestMessageRoleEnum.User,
           content: message.content,
-          // name: "context",
         };
       });
 
@@ -62,7 +63,7 @@ const sendMessage = async (message: string, opts: SendMessageOpts) => {
       {
         role: ChatCompletionRequestMessageRoleEnum.System,
         content:
-          "You are given a context (user:context). While answering a question also use a given context",
+          "Answer question based on your knowledge but also related to given context",
       },
       ...reqContextMessages
     );
@@ -79,11 +80,14 @@ const sendMessage = async (message: string, opts: SendMessageOpts) => {
     messages,
   });
 
-  return completion.data.choices[0].message?.content;
+  return {
+    response: completion.data.choices[0].message?.content,
+    data: completion.data,
+  };
 };
 
 const clientCodeAsync = async () => {
-  const messageInputElemText = "Help me to choose a car to buy";
+  const messageInputElemText = "Help me to choose a new car";
   const selectedContextMessages: ContextMessage[] = [
     {
       content: "I have a car",
@@ -96,10 +100,19 @@ const clientCodeAsync = async () => {
     },
   ];
 
-  const response = await sendMessage(messageInputElemText, {
-    contextMessages: selectedContextMessages,
-  });
-  console.log("RESPONSE:" + response);
+  // with context:
+  // const response = await sendMessage(messageInputElemText, {
+  //   contextMessages: selectedContextMessages,
+  // });
+
+  // without context:
+  const response = await sendMessage(messageInputElemText);
+
+  console.log("RESPONSE: " + response.response);
+  console.log("TOKENS: " + response.data.usage?.total_tokens);
+  console.log(
+    "COST (KČ): " + Number(response.data.usage?.total_tokens) * 0.00132
+  );
 
   // store new message to db
 };

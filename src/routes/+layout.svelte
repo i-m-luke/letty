@@ -10,4 +10,9 @@
     text-decoration: none;
     outline: none;
   }
+
+  :global(.gl-container) {
+    display: flex;
+    flex-direction: column;
+  }
 </style>

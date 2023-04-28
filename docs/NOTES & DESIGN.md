@@ -44,7 +44,6 @@
                 - zobrazí se delete btn
                 - bude možné uzly přesouvat
                 - viz img/tree-manager
-
     # Prompt route page:
         - rozdělena na 3 části:
             1. Konfigurace promptu: parametrizace
