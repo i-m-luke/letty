@@ -54,7 +54,7 @@ const sendMessage = async (message: string, opts: SendMessageOpts) => {
         return {
           role: ChatCompletionRequestMessageRoleEnum.User,
           content: message.content,
-          name: "context",
+          // name: "context",
         };
       });
 
@@ -82,7 +82,7 @@ const sendMessage = async (message: string, opts: SendMessageOpts) => {
   return completion.data.choices[0].message?.content;
 };
 
-const clientCode = async () => {
+const clientCodeAsync = async () => {
   const messageInputElemText = "Help me to choose a car to buy";
   const selectedContextMessages: ContextMessage[] = [
     {
@@ -96,7 +96,7 @@ const clientCode = async () => {
     },
   ];
 
-  const response = sendMessage(messageInputElemText, {
+  const response = await sendMessage(messageInputElemText, {
     contextMessages: selectedContextMessages,
   });
   console.log("RESPONSE:" + response);
@@ -104,4 +104,4 @@ const clientCode = async () => {
   // store new message to db
 };
 
-clientCode();
+clientCodeAsync();
