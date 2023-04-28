@@ -1,0 +1,1 @@
+NOTE: Pro debug použít expe script 

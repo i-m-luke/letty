@@ -2,7 +2,8 @@
 // import { log } from "$logging"
 // import { startDatabase } from "$db"
 
-import { error } from '@sveltejs/kit';
+import { error } from "@sveltejs/kit";
+import openai from "openai";
 
 // startDatabase()
 //      .then(() => log("database is running.."))

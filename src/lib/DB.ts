@@ -7,6 +7,12 @@ import { v4 as uuid } from 'uuid';
 
 //#region DAO pattern
 
+// NOTES: Pro každou HTTP metodu bude jedna metoda na DOA. Pro GET metodu budou dvě (jedná metoda získá vše, druhá konkrétní item).
+// GET: findAll() a find(object: Object)
+// POST: insert(object: Object)
+// PUT: update(object: Object)
+// DELETE: delete(object: Object)
+
 interface IDB {
 	findAll: () => Object[];
 	find(object: Object): Object;
@@ -32,11 +38,11 @@ abstract class BaseDAO<TData> {
 		this.db = db;
 	}
 
-	abstract getAll(): TData[];
-	abstract getById(id: string): TData;
-	abstract insert(data: TData): void;
-	abstract update(data: TData): void;
-	abstract delete(data: TData): void;
+	abstract getAll(): TData[]; // GET
+	abstract getById(id: string): TData; // GET
+	abstract insert(data: TData): void; // POST
+	abstract update(data: TData): void; // PUT
+	abstract delete(data: TData): void; // DELETE
 }
 
 type SomeData = {};
