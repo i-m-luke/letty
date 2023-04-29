@@ -1,31 +1,40 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { postSavedPrompt } from './$page-logic';
+   import { page } from "$app/stores";
+   import PromptBuilder from "./PromptBuilder.svelte";
+   import { postSavedPrompt } from "./$page-logic";
 
-	let inputPromptName: string = 'test prompt';
-	let inputPrompt: string = 'test prompt';
+   let inputPromptName: string = "test prompt";
+   let inputPrompt: string = "test prompt";
 
-	const selectedNodeId: string = $page.params.id;
+   const selectedNodeId: string = $page.params.id;
 </script>
 
 <main>
-	<span>PROMPT NAME:</span>
-	<input bind:value={inputPromptName} />
-	<span>PROMPT:</span>
-	<input bind:value={inputPrompt} />
+   <div>
+      <span>PROMPT NAME:</span>
+      <input bind:value={inputPromptName} />
+      <span>PROMPT:</span>
+      <input bind:value={inputPrompt} />
 
-	<button on:click={() => postSavedPrompt(selectedNodeId, inputPromptName, inputPrompt)}>
-		SAVE PROMPT
-	</button>
+      <button on:click={() => postSavedPrompt(selectedNodeId, inputPromptName, inputPrompt)}>
+         SAVE PROMPT
+      </button>
 
-	<span>SELECTED NODE ID: {selectedNodeId}</span>
-	<button>CLONE</button>
-	<!-- Slouží pro naklonování aktuálně navoleného uzlu -->
+      <span>SELECTED NODE ID: {selectedNodeId}</span>
+      <button>CLONE</button>
+      <!-- Slouží pro naklonování aktuálně navoleného uzlu -->
+   </div>
+   <div>
+      <PromptBuilder />
+   </div>
+   <div>
+      <button>{"<< RUN PROMPT >>"}</button>
+   </div>
 </main>
 
 <style>
-	main {
-		display: flex;
-		flex-direction: column;
-	}
+   main {
+      display: flex;
+      flex-direction: column;
+   }
 </style>

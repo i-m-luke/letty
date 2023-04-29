@@ -1,8 +1,9 @@
+import _PromptSegment from "./PromptSegment.svelte";
 import type { ChatCompletionRequestMessageRoleEnum } from "openai";
 
-type PromptSegmentInfo = {
+export const PromptSegment = _PromptSegment;
+
+export type PromptSegmentState = {
   role: ChatCompletionRequestMessageRoleEnum;
   content: string;
 };
-
-export default PromptSegmentInfo;

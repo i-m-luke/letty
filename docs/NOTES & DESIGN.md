@@ -81,7 +81,16 @@
             - Timed:
                 - půjde dále nastavit časový interval synchronizace
                 - objeví se "sync"/"save" button, pro manuální provedení
-            - Ve chvíli provádění synchronizae se zablokuje UI (aby bylo možné bezpečně odbavit veškeré změny)
+            - Blokování UI při synchronizaci:
+                - Ve chvíli provádění synchronizae se zablokují kontroly UI (všechny kontroly, nebou pouze ty, u kterých bude aktuálně prováděna synch?)
+                - z důvodu bezpečného odbavení veškerých změn
+                - ve stavu aplikace bude ležet objekt "changes" (bude obsahovat neodbavené změny na daných kontrolech, např. nově PromptTreeNodeInfo)
+                - postup:
+                    1. zablokuje se UI (aby nebylo možné aktualizovat neodbavené změny) (kontroly nezešenou, pouze nebudou v danou chvíli reagovat na eventy) + vizálně se zobrazí (progress bar kulatá ikonka), že se provádí sync
+                    2. naklonují se neodbavené změny
+                    3. vyprázdní se objekt nedobavených změn
+                    4. odblokuje se UI
+                    5. provede se async fce pro nahrání změn na backend
 
     # AI API:
         - používat offiko od open ai nebo chagpt (od transitive-bullshit)

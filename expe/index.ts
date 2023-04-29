@@ -6,9 +6,9 @@ import {
 
 import type {
   ChatCompletionRequestMessage,
-  CreateChatCompletionRequest,
+  CreateChatCompletionResponse,
 } from "openai";
-import { convertToObject } from "typescript";
+import { log } from "./logging"; // facade pattern
 
 const CHATGPT_API_KEY = "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";
 const config = new Configuration({
@@ -32,13 +32,21 @@ type SendMessageOpts = {
   temperature?: number | null;
 };
 
+type SendMessageResult = {
+  response: string | undefined;
+  data: CreateChatCompletionResponse;
+};
+
 // default completion params
 const defaultCompletionParams: CompletionParams = {
   model: "gpt-3.5-turbo",
   temperature: 0,
 };
 
-const sendMessage = async (message: string, opts?: SendMessageOpts) => {
+const sendMessage = async (
+  message: string,
+  opts?: SendMessageOpts
+): Promise<SendMessageResult> => {
   const {
     model = defaultCompletionParams.model,
     temperature = defaultCompletionParams.temperature,
@@ -51,21 +59,18 @@ const sendMessage = async (message: string, opts?: SendMessageOpts) => {
 
   if (contextMessages) {
     const safeContextMessages = [...contextMessages];
-    const reqContextMessages: ChatCompletionRequestMessage[] =
-      safeContextMessages.map((message) => {
-        return {
-          role: ChatCompletionRequestMessageRoleEnum.User,
-          content: message.content,
-        };
-      });
-
     messages.push(
       {
         role: ChatCompletionRequestMessageRoleEnum.System,
         content:
           "Answer question based on your knowledge but also related to given context",
       },
-      ...reqContextMessages
+      ...safeContextMessages.map((message) => {
+        return {
+          role: ChatCompletionRequestMessageRoleEnum.User,
+          content: message.content,
+        };
+      })
     );
   }
 
@@ -86,6 +91,12 @@ const sendMessage = async (message: string, opts?: SendMessageOpts) => {
   };
 };
 
+const logResult = (response: SendMessageResult) => {
+  log("RESPONSE: " + response.response);
+  log("TOKENS: " + response.data.usage?.total_tokens);
+  log("COST (KČ): " + Number(response.data.usage?.total_tokens) * 0.00132);
+};
+
 const clientCodeAsync = async () => {
   const messageInputElemText = "Help me to choose a new car";
   const selectedContextMessages: ContextMessage[] = [
@@ -100,19 +111,15 @@ const clientCodeAsync = async () => {
     },
   ];
 
-  // with context:
-  // const response = await sendMessage(messageInputElemText, {
-  //   contextMessages: selectedContextMessages,
-  // });
-
   // without context:
-  const response = await sendMessage(messageInputElemText);
+  const response01 = await sendMessage(messageInputElemText);
+  logResult(response01);
 
-  console.log("RESPONSE: " + response.response);
-  console.log("TOKENS: " + response.data.usage?.total_tokens);
-  console.log(
-    "COST (KČ): " + Number(response.data.usage?.total_tokens) * 0.00132
-  );
+  // with context:
+  const response02 = await sendMessage(messageInputElemText, {
+    contextMessages: selectedContextMessages,
+  });
+  logResult(response02);
 
   // store new message to db
 };
