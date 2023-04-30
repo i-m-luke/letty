@@ -1,23 +1,24 @@
 <script lang="ts">
-	import Select from '$lib/components/Select.svelte';
-	import SelectOptionInfo from '$lib/components/SelectOptionInfo';
+   import { Select, SelectOptionInfo } from "$lib/components/Select";
 
-	let selectedValue: OptionData;
-	$: selectedValueText = selectedValue
-		? `ID: ${selectedValue.id}, TEXT: ${selectedValue.text}`
-		: 'NONE';
+   type OptionData = {
+      id: number;
+      text: string;
+   };
 
-	type OptionData = {
-		id: number;
-		text: string;
-	};
+   let selectedValue: OptionData;
+   $: selectedValueText = selectedValue
+      ? `ID: ${selectedValue.id}, TEXT: ${selectedValue.text}`
+      : "NONE";
 
-	const selectOptions: SelectOptionInfo<OptionData>[] = [
-		new SelectOptionInfo<OptionData>('Timed', { id: 1, text: 'TIMED OPTION' }),
-		new SelectOptionInfo<OptionData>('After every change', { id: 101, text: 'TIMED OPTION' })
-	];
+   const selectOptions: SelectOptionInfo<OptionData>[] = [
+      new SelectOptionInfo<OptionData>("Timed", { id: 1, text: "TIMED OPTION" }),
+      new SelectOptionInfo<OptionData>("After every change", {
+         id: 101,
+         text: "AFTER EVERY CHANGE OPTION",
+      }),
+   ];
 </script>
 
 <Select bind:value={selectedValue} label="Synchronize type" options={selectOptions} />
-<span>Selected synchronize option: </span>
-<span>{selectedValueText}</span>
+<span>Selected synchronize option: {selectedValueText}</span>

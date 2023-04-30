@@ -1,7 +1,7 @@
 import type { PromptData, ThreadData } from "$types";
 import type LayoutLoadData from "./LayoutLoadData";
 import type LayoutData from "./LayoutData";
-import type TreeNodeData from "$lib/components/TreeNodeData";
+import type { TreeNodeData } from "$lib/components/Tree";
 import { transformToTreeInfo } from "$lib/transformers";
 
 // PURE CODE:

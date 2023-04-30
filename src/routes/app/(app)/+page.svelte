@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isMobile } from '$lib/store';
+	import { isMobile } from '$lib/global-state';
 	import type PageData from './PageData';
 	import type PageLoadData from './PageLoadData';
 	import MainTree from './MainTree.svelte';

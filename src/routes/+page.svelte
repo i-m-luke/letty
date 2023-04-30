@@ -1,11 +1,10 @@
 <script>
    import { goto } from "$app/navigation";
-   import PromptBuilder from "./app/main/prompt-[id]/PromptBuilder.svelte";
 </script>
 
 <span>MAIN PAGE</span>
 <div class="gl-container">
    <div class="container-item">
-      <button on:click={() => goto("app/main")}>ENTER APP</button>
+      <button on:click={() => goto("/app")}>ENTER APP</button>
    </div>
 </div>

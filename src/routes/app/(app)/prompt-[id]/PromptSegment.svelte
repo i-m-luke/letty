@@ -1,14 +1,14 @@
 <script lang="ts">
    import { ChatCompletionRequestMessageRoleEnum } from "openai";
-   import type { PromptSegmentState } from "./";
-   import Select from "$lib/components/Select.svelte";
-   import type { Writable } from "svelte/store";
+   import type PromptSegmentState from "./PromptSegmentState";
+   import Select from "$lib/components/Select";
 
-   export let state: Writable<PromptSegmentState>;
+   export let state: PromptSegmentState;
    let role: ChatCompletionRequestMessageRoleEnum = ChatCompletionRequestMessageRoleEnum.User;
    let content: string = "";
 
-   $: $state = { role, content };
+   $: state.role = role;
+   $: state.content = content;
 
    const roleOptions = [
       {
