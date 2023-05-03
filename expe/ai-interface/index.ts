@@ -83,15 +83,15 @@ export const sendMessage = async (
   };
 };
 
-export const sendSingleMessage = (message: string) => {
-  return sendMessage(message);
+export const sendSingleMessage = async (message: string) => {
+  return await sendMessage(message);
 };
 
-export const sendMessageWithContext = (
+export const sendMessageWithContext = async (
   message: string,
   contextMessages: string[]
 ) => {
-  return sendMessage(message, {
+  return await sendMessage(message, {
     contextMessages: contextMessages.map((cMessage) => {
       return { content: cMessage };
     }),

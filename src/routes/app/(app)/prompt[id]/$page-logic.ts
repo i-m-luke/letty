@@ -2,14 +2,14 @@ import type PostData from "./PostData";
 import type { PromptInfo } from "$types";
 
 // IMPURE CODE:
-export const postSavedPrompt = async (
+export const fetchPOST = async (
   parentId: string,
   promptName: string,
   prompt: string
 ) => {
   const postData: PostData = { parentId, promptName, prompt };
 
-  const response = await fetch(`/app/prompt-x`, {
+  const response = await fetch(`/app/prompt-`, {
     method: "POST",
     body: JSON.stringify(postData),
     headers: {

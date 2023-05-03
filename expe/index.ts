@@ -14,6 +14,7 @@ const logResult = (response: SendMessageResult) => {
   log("COST (KČ): " + Number(response.data.usage?.total_tokens) * 0.00132);
 };
 
+// NOTE: Pro vscode debugging použít expe skript
 const main = async () => {
   const messageInputElemText = "Help me to choose a new car";
   const selectedContextMessages: ContextMessage[] = [

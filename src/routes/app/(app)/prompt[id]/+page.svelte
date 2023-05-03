@@ -2,14 +2,14 @@
    import { page } from "$app/stores";
    import PromptBuilder from "./PromptBuilder.svelte";
    import type PromptSegmentState from "./PromptSegmentState";
-   import { postSavedPrompt } from "./$page-logic";
+   import { fetchPOST } from "./$page-logic";
    import { writable, type Writable } from "svelte/store";
 
+   // export let data;
    let inPromptName: string = "test prompt";
    let inPromptText: string = "test prompt";
    let isBuilderVisible: boolean = false;
 
-   const selectedNodeId: string = $page.params.id;
    const promptBuilderState: Writable<PromptSegmentState[]> = writable([]);
 </script>
 
@@ -20,11 +20,11 @@
       <span>PROMPT:</span>
       <input bind:value={inPromptText} />
 
-      <button on:click={() => postSavedPrompt(selectedNodeId, inPromptName, inPromptText)}>
+      <button on:click={() => fetchPOST($page.params.id, inPromptName, inPromptText)}>
          SAVE PROMPT
       </button>
 
-      <span>SELECTED NODE ID: {selectedNodeId}</span>
+      <span>SELECTED NODE ID: {$page.params.id}</span>
       <button>CLONE</button>
       <!-- Slouží pro naklonování aktuálně navoleného uzlu -->
    </div>

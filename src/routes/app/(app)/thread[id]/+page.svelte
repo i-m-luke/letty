@@ -7,7 +7,12 @@
       { question: "some question #1", answer: "... :-)" },
       { question: "some question #2", answer: "... :-(" },
    ];
+
+   export let data;
+   const { name, messages } = data.threadData;
 </script>
+
+thread name: {name}, thread messages: {messages}
 
 <div class="container">
    <QADisplay {qaItems} />
