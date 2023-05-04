@@ -1,29 +1,31 @@
+import type { Db as DB } from "mongodb";
 import BaseDAO from "./BaseDAO";
-import type IDB from "./IDB";
-import type { ThreadData } from "$types";
+import type { ThreadData, DBNode } from "$types";
 
-export default class TheradDAO extends BaseDAO<ThreadData> {
-  constructor(db: IDB) {
-    super(db);
+export default class TheradDAO extends BaseDAO<DBNode<ThreadData>> {
+  constructor(db: DB) {
+    super(db, "threads");
   }
 
-  getAll(): ThreadData[] {
-    return [];
+  async getAll(): Promise<DBNode<ThreadData>[]> {
+    const data: unknown[] = await this.collection.find({}).toArray();
+    return data.map((d) => d as DBNode<ThreadData>);
   }
 
-  getById(id: string): ThreadData {
-    return { name: "test", messages: [] }; // this.db.find()
+  async getById(id: string): Promise<DBNode<ThreadData>> {
+    const data: unknown = await this.collection.find({ id: id });
+    return data as DBNode<ThreadData>;
   }
 
-  insert(data: ThreadData): void {
+  async insert(data: DBNode<ThreadData>): Promise<void> {
     // todo: return id ??
   }
 
-  update(data: ThreadData): void {
+  async update(data: DBNode<ThreadData>): Promise<void> {
     // todo: chybí id
   }
 
-  delete(data: ThreadData): void {
+  async delete(data: DBNode<ThreadData>): Promise<void> {
     // todo: chybí id
   }
 }

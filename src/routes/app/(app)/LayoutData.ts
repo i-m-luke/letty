@@ -1,8 +1,8 @@
-import type TreeNodeInfo from '$lib/components/TreeNodeInfo';
+import type { TreeNodeInfo } from "$lib/components/Tree";
 
 type LayoutData = {
-	promptTreeNodeInfoCollection: TreeNodeInfo[];
-	threadTreeNodeInfoCollection: TreeNodeInfo[];
+  promptTreeNodeInfoCollection: TreeNodeInfo[];
+  threadTreeNodeInfoCollection: TreeNodeInfo[];
 };
 
 export default LayoutData;

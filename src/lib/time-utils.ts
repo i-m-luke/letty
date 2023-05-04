@@ -1,5 +1,4 @@
 import { onDestroy, onMount } from "svelte";
-import type { Script } from "vm";
 
 export function onInterval(callback: () => {}, milliseconds: number) {
   const interval = setInterval(callback, milliseconds);

@@ -1,13 +1,9 @@
-// vytvořit pomoci facade patternu logovací fce, kterou bude v případě nutnosti možné nahradit za jiné logvání (pro začátek použiji console.log)
-// import { log } from "$logging"
-// import { startDatabase } from "$db"
+import { startDatabase } from "$db";
+import { log } from "$lib/logging";
 
-import { error } from "@sveltejs/kit";
-import openai from "openai";
-
-// startDatabase()
-//      .then(() => log("database is running.."))
-//      .catch((err) => log("error while starting database. error: " + err))
+await startDatabase()
+  .then(() => log("Database is running.."))
+  .catch((err) => log("Error while starting database. Error: " + err));
 
 // export function handle()
 

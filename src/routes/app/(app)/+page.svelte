@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { isMobile } from '$lib/global-state';
-	import type PageData from './PageData';
-	import type PageLoadData from './PageLoadData';
-	import MainTree from './MainTree.svelte';
-	import { transformData } from './$page-logic';
+   import { isMobile } from "$lib/global-state";
+   import type PageData from "./PageData";
+   import type PageLoadData from "./PageLoadData";
+   import AppMainTree from "./AppMainTree.svelte";
+   import { transformData } from "./$page-logic";
 
-	export let data: PageLoadData;
-	const tData: PageData = transformData(data);
+   export let data: PageLoadData;
+   const tData: PageData = transformData(data);
 </script>
 
 {#if $isMobile}
-	<MainTree {tData} />
+   <AppMainTree {tData} />
 {/if}

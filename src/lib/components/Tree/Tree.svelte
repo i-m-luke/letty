@@ -1,11 +1,12 @@
 <script lang="ts">
    import { TreeNode, type TreeNodeInfo } from "./";
+   import type AdditionalButtonInfo from "$lib/components/AdditionalButtonInfo";
 
-   export let selectedNodeId: string = "";
    export let nodeInfoCollection: TreeNodeInfo[];
-   export let nodeOnClickAction = () => {};
+   export let nodeOnClickAction = (nodeInfo: TreeNodeInfo) => {};
+   export let additionalButtons: AdditionalButtonInfo[] = [];
 </script>
 
 {#each nodeInfoCollection as nodeInfo}
-   <TreeNode bind:value={selectedNodeId} {nodeOnClickAction} {nodeInfo} />
+   <TreeNode {nodeOnClickAction} {nodeInfo} {additionalButtons} />
 {/each}

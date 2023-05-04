@@ -1,0 +1,14 @@
+[
+  {
+    "id": "1",
+    "parentId": "",
+    "userId": "101",
+    "data": {}
+  },
+  {
+    "id": "2",
+    "parentId": "1",
+    "userId": "101",
+    "data": {}
+  }
+]

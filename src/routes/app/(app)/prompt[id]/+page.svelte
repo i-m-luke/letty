@@ -5,7 +5,6 @@
    import { fetchPOST } from "./$page-logic";
    import { writable, type Writable } from "svelte/store";
 
-   // export let data;
    let inPromptName: string = "test prompt";
    let inPromptText: string = "test prompt";
    let isBuilderVisible: boolean = false;
@@ -26,7 +25,6 @@
 
       <span>SELECTED NODE ID: {$page.params.id}</span>
       <button>CLONE</button>
-      <!-- Slouží pro naklonování aktuálně navoleného uzlu -->
    </div>
    <div>
       <button on:click={() => (isBuilderVisible = !isBuilderVisible)}>

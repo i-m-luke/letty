@@ -1,9 +1,10 @@
 <script lang="ts">
    import type { TreeNodeInfo } from "./";
+   import type AdditionalButtonInfo from "$lib/components/AdditionalButtonInfo";
 
    export let nodeInfo: TreeNodeInfo;
-   export let value: string;
-   export let nodeOnClickAction = () => {};
+   export let nodeOnClickAction = (nodeInfo: TreeNodeInfo) => {};
+   export let additionalButtons: AdditionalButtonInfo[] = [];
 
    let isOpen: boolean = false;
 
@@ -11,10 +12,9 @@
    $: nodeState = isLeafNode ? "(leaf node)" : isOpen ? "(opened)" : "(closed)";
 
    const toggleIsOpen: () => void = () => (isOpen = !isOpen);
-   const nodeOnClickEvent = (): void => {
-      value = nodeInfo.id;
+   const nodeOnClickEvent = (event: Event): void => {
       toggleIsOpen();
-      nodeOnClickAction();
+      nodeOnClickAction(nodeInfo);
    };
 </script>
 
@@ -28,11 +28,14 @@
       <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}>
          {`${nodeInfo.text} ${nodeState}`}
       </span>
+      {#each additionalButtons as { text, onClickAction }}
+         <button on:click={onClickAction}>{text}</button>
+      {/each}
    </div>
    {#if isOpen}
       <div class="child-nodes">
          {#each nodeInfo.children as childNode}
-            <svelte:self bind:value {nodeOnClickAction} nodeInfo={childNode} />
+            <svelte:self {nodeOnClickAction} nodeInfo={childNode} {additionalButtons} />
          {/each}
       </div>
    {/if}

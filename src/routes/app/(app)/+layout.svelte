@@ -1,27 +1,18 @@
 <script lang="ts">
    import { goto } from "$app/navigation";
-   import { TreeMode } from "$lib/enums";
-   import { isMobile, activeTreeMode } from "$lib/global-state";
+   import { isMobile } from "$lib/global-state";
    import type LayoutLoadData from "./LayoutLoadData";
    import type LayoutData from "./LayoutData";
-   import MainTree from "./MainTree.svelte";
+   import AppMainTree from "./AppMainTree.svelte";
    import { transformData } from "./$layout-logic";
 
    export let data: LayoutLoadData;
    const tData: LayoutData = transformData(data);
-
-   $: toggleTreeModeButtonText = $activeTreeMode === TreeMode.Prompt ? "Thread" : "Prompt";
-   const toggleTreeMode = () => {
-      $activeTreeMode = $activeTreeMode === TreeMode.Prompt ? TreeMode.Thread : TreeMode.Prompt;
-      goto("/app");
-   };
 </script>
 
 <main>
    <div class="upper-container">
       <a href="/app/settings">SETTINGS</a>
-      <span>||</span>
-      <button on:click={toggleTreeMode}>SWITCH TO {toggleTreeModeButtonText}</button>
       {#if $isMobile}
          <span>||</span>
          <button on:click={() => goto("/app")}>SHOW TREE</button>
@@ -31,7 +22,7 @@
    <div class="root-container">
       {#if !$isMobile}
          <div class="side-container">
-            <MainTree {tData} />
+            <AppMainTree {tData} />
          </div>
       {/if}
 
