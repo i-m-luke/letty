@@ -29,13 +29,13 @@ export const transformToTreeNodeInfo = <TDBNodeData>(
 ): TreeNodeInfo => {
   const treeNodeInfoPrototype: TreeNodeInfo = {
     isRootNode: false,
-    id: dbNode.id,
+    id: dbNode._id,
     ...transformDBNodeDataFn(dbNode.data),
     children: [],
   };
 
   const dbNodeSubnodes = dbNodes.filter(
-    (_dbNode) => _dbNode.parentId === dbNode.id
+    (_dbNode) => _dbNode.parentId === dbNode._id
   );
   if (dbNodeSubnodes !== undefined) {
     return {

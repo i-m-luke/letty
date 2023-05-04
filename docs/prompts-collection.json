@@ -1,0 +1,18 @@
+[
+  {
+    "parentId": "",
+    "userId": "101",
+    "data": {
+      "name": "prompt-1",
+      "prompt": "some prompt 1"
+    }
+  },
+  {
+    "parentId": "1",
+    "userId": "101",
+    "data": {
+      "name": "prompt-2",
+      "prompt": "some prompt 1"
+    }
+  }
+]

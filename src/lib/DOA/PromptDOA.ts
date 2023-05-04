@@ -9,11 +9,11 @@ export default class PromptDOA extends BaseDAO<DBNode<PromptData>> {
 
   async getAll(): Promise<DBNode<PromptData>[]> {
     const data: unknown[] = await this.collection.find({}).toArray();
-    return data.map((d) => d as DBNode<PromptData>);
+    return data.map((data) => data as DBNode<PromptData>);
   }
 
   async getById(id: string): Promise<DBNode<PromptData>> {
-    const data: unknown = await this.collection.find({ id: id });
+    const data: unknown = this.collection.find({ id: id });
     return data as DBNode<PromptData>;
   }
 

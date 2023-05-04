@@ -1,4 +1,4 @@
-import type { Db as DB } from "mongodb";
+import type { Db as DB, ObjectId } from "mongodb";
 import BaseDAO from "./BaseDAO";
 import type { ThreadData, DBNode } from "$types";
 
@@ -13,7 +13,7 @@ export default class TheradDAO extends BaseDAO<DBNode<ThreadData>> {
   }
 
   async getById(id: string): Promise<DBNode<ThreadData>> {
-    const data: unknown = await this.collection.find({ id: id });
+    const data: unknown = this.collection.find({ id: id });
     return data as DBNode<ThreadData>;
   }
 

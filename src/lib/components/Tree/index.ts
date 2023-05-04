@@ -16,18 +16,18 @@ export class TreeNodeData {
 
 export class TreeNodeInfo extends TreeNodeData {
   isRootNode: boolean;
-  id: string;
   children: TreeNodeInfo[] = [];
+  data?: any;
 
   constructor(
     isRootNode: boolean,
-    id: string,
     text: string,
-    children: TreeNodeInfo[]
+    children: TreeNodeInfo[],
+    data?: any
   ) {
     super(text);
     this.isRootNode = isRootNode;
-    this.id = id;
     this.children = children;
+    this.data = data;
   }
 }

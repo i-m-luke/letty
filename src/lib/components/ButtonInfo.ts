@@ -1,4 +1,4 @@
-export default class AdditionalButtonInfo {
+export default class ButtonInfo {
   text: string;
   onClickAction: () => void;
   constructor(text: string, onClickAction: () => void) {

@@ -1,4 +1,10 @@
 import { log } from "./logging"; // facade pattern
+import ThreadDOA from "../src/lib/DOA/ThreadDOA";
+import PromptDOA from "../src/lib/DOA/PromptDOA";
+import { MongoClient } from "mongodb";
+
+const DB_URL = "mongodb://127.0.0.1:27017/";
+const DB_NAME = "QA";
 
 import {
   sendMessage,
@@ -7,6 +13,17 @@ import {
   sendSingleMessage,
   sendMessageWithContext,
 } from "./ai-interface";
+
+const client = new MongoClient(DB_URL + DB_NAME);
+
+export const startDatabase = (): Promise<MongoClient> => {
+  log("Starting mongo database...");
+  return client.connect();
+};
+
+startDatabase();
+const promptDOA = new PromptDOA(client.db());
+const threadDOA = new ThreadDOA(client.db());
 
 const logResult = (response: SendMessageResult) => {
   log("RESPONSE: " + response.response);

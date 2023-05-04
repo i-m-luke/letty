@@ -1,5 +1,7 @@
 // alias module
 
+import type { ObjectId } from "mongodb";
+
 export type PromptInfo = {
   id: string;
   parentId: string | null; // ... null je fuj!
@@ -25,7 +27,7 @@ export type ThreadData = {
 };
 
 export type DBNode<TData> = {
-  id: string;
+  _id: string;
   userId: string;
   parentId?: string;
   data: TData;

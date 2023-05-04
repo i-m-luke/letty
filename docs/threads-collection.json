@@ -1,0 +1,21 @@
+[
+  {
+    "parentId": "",
+    "userId": "101",
+    "data": {
+      "name": "thread-1",
+      "messages": [
+        { "q": "what?", "a": "... :-X" },
+        { "q": "how?", "a": "... :-)" }
+      ]
+    }
+  },
+  {
+    "parentId": "1",
+    "userId": "101",
+    "data": {
+      "name": "thread-2",
+      "messages": [{ "q": "...?", "a": "... :-D" }]
+    }
+  }
+]

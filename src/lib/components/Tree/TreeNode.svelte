@@ -1,10 +1,10 @@
 <script lang="ts">
    import type { TreeNodeInfo } from "./";
-   import type AdditionalButtonInfo from "$lib/components/AdditionalButtonInfo";
+   import type ButtonInfo from "$lib/components/ButtonInfo";
 
    export let nodeInfo: TreeNodeInfo;
-   export let nodeOnClickAction = (nodeInfo: TreeNodeInfo) => {};
-   export let additionalButtons: AdditionalButtonInfo[] = [];
+   export let nodeOnClickAction = (nodeData: any) => {};
+   export let additionalButtons: ButtonInfo[] = [];
 
    let isOpen: boolean = false;
 
@@ -12,9 +12,9 @@
    $: nodeState = isLeafNode ? "(leaf node)" : isOpen ? "(opened)" : "(closed)";
 
    const toggleIsOpen: () => void = () => (isOpen = !isOpen);
-   const nodeOnClickEvent = (event: Event): void => {
+   const nodeOnClickEvent = (): void => {
       toggleIsOpen();
-      nodeOnClickAction(nodeInfo);
+      nodeOnClickAction(nodeInfo.data);
    };
 </script>
 
