@@ -1,6 +1,6 @@
 // alias module
 
-import type { ObjectId } from "mongodb";
+import type { WithId, Document } from "mongodb";
 
 export type PromptInfo = {
   id: string;
@@ -17,13 +17,18 @@ export type ThreadInfo = {
 };
 
 export type PromptData = {
+  _id: string;
   name: string;
   prompt: string;
 };
 
 export type ThreadData = {
+  _id: string;
   name: string;
-  messages: string[];
+  messages: {
+    a: string;
+    q: string;
+  }[];
 };
 
 export type DBNode<TData> = {
@@ -32,3 +37,5 @@ export type DBNode<TData> = {
   parentId?: string;
   data: TData;
 };
+
+export type DBItem<Data> = WithId<Document> & Data;

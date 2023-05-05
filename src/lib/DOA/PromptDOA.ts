@@ -1,20 +1,10 @@
 import type { Db as DB } from "mongodb";
-import BaseDAO from "./BaseDAO";
 import type { PromptData, DBNode } from "$types";
+import { BaseDBNodeDOA } from "./BaseDBNodeDAO";
 
-export default class PromptDOA extends BaseDAO<DBNode<PromptData>> {
+export default class PromptDOA extends BaseDBNodeDOA<PromptData> {
   constructor(db: DB) {
     super(db, "prompts");
-  }
-
-  async getAll(): Promise<DBNode<PromptData>[]> {
-    const data: unknown[] = await this.collection.find({}).toArray();
-    return data.map((data) => data as DBNode<PromptData>);
-  }
-
-  async getById(id: string): Promise<DBNode<PromptData>> {
-    const data: unknown = this.collection.find({ id: id });
-    return data as DBNode<PromptData>;
   }
 
   async insert(data: DBNode<PromptData>): Promise<void> {

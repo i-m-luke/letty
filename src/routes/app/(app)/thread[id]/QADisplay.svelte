@@ -3,7 +3,7 @@
    import type QAItem from "./QAItem";
 
    export let qaItems: QAItem[];
-   let toTokensValue: string;
+   let toTokensValue: string = "ZERO TOKENS USED";
 </script>
 
 <TextOutput bind:value={toTokensValue} />
@@ -11,8 +11,6 @@
 <span />
 {#each qaItems as { question, answer }}
    <div class="container-item">
-      <!-- <TextOutput text={answer} />
-      <TextOutput text={question} /> -->
       <span class="item answer">A: {answer}</span>
       <span class="item question">Q: {question}</span>
    </div>

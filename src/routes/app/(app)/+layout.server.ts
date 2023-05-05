@@ -20,7 +20,6 @@ export async function load(): Promise<LayoutLoadData> {
   const promptDataCollection = promptDOA.getAll();
   const threadDataCollection = threadDOA.getAll();
 
-  // NOTE: Nejsou navracena žádná data ... :-/ ... strom je prázdný
   return {
     promptDataCollection: (await promptDataCollection).map((data) => {
       return { ...data, _id: String(data._id) };

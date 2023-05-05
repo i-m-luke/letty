@@ -1,18 +1,26 @@
 <script lang="ts">
+   import { page } from "$app/stores";
    import QADisplay from "./QADisplay.svelte";
    import type QAItem from "./QAItem";
    import QArea from "./QArea.svelte";
 
-   let qaItems: QAItem[] = [
-      { question: "some question #1", answer: "... :-)" },
-      { question: "some question #2", answer: "... :-(" },
-   ];
-
    export let data;
-   const { name, messages } = data.threadData;
+
+   // TODO: REWORK
+   // TODO: Fixnout update UI (data se po kliku na uzel nemění)
+
+   let { name, messages } = data.threadDataCollection.find((data) => data._id === $page.params.id)
+      ?.data ?? { name: "unkown name", messages: [] };
+
+   let qaItems: QAItem[] = messages.map((message) => {
+      return {
+         question: message.q,
+         answer: message.a,
+      };
+   });
 </script>
 
-thread name: {name}, thread messages: {messages}
+<span>{name}</span>
 
 <div class="container">
    <QADisplay {qaItems} />

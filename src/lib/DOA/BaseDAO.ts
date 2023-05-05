@@ -9,9 +9,9 @@ export default abstract class BaseDAO<TData> {
     this.collection = db.collection(collectionName);
   }
 
-  abstract getAll(): Promise<TData[]>; // GET
-  abstract getById(id: string): Promise<TData>; // GET
-  abstract insert(data: TData): void; // POST
-  abstract update(data: TData): void; // PUT
-  abstract delete(data: TData): void; // DELETE
+  abstract getAll(): Promise<TData[]>; // GET http request
+  abstract getById(id: string): Promise<TData>; // GET http request
+  abstract insert(data: TData): void; // POST http request
+  abstract update(data: TData): void; // PUT http request
+  abstract delete(data: TData): void; // DELETE http request
 }

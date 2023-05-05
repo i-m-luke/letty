@@ -12,7 +12,7 @@ export const transformToTreeInfo = <TDBNodeData>(
   dbNodes: DBNode<TDBNodeData>[],
   transformDBNodeDataFn: (dbNodeData: TDBNodeData) => TreeNodeData
 ): TreeNodeInfo[] => {
-  const rootDBNodes = dbNodes.filter((dbNode) => dbNode.parentId === undefined);
+  const rootDBNodes = dbNodes.filter((dbNode) => dbNode.parentId === "");
   return rootDBNodes.map((rootDBNode) =>
     transformToTreeNodeInfo<TDBNodeData>(
       rootDBNode,
@@ -29,7 +29,9 @@ export const transformToTreeNodeInfo = <TDBNodeData>(
 ): TreeNodeInfo => {
   const treeNodeInfoPrototype: TreeNodeInfo = {
     isRootNode: false,
-    id: dbNode._id,
+    data: {
+      id: dbNode._id,
+    },
     ...transformDBNodeDataFn(dbNode.data),
     children: [],
   };

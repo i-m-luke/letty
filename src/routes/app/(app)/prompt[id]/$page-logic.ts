@@ -9,7 +9,7 @@ export const fetchPOST = async (
 ) => {
   const postData: PostData = { parentId, promptName, prompt };
 
-  const response = await fetch(`/app/prompt-`, {
+  const response = await fetch(`/app/prompt`, {
     method: "POST",
     body: JSON.stringify(postData),
     headers: {
