@@ -1,8 +1,8 @@
 import type { Db as DB } from "mongodb";
 import type { ThreadData, DBNode } from "$types";
-import { BaseDBNodeDOA } from "./BaseDBNodeDAO";
+import { BaseDBNodeDAO } from "./BaseDBNodeDAO";
 
-export default class TheradDAO extends BaseDBNodeDOA<ThreadData> {
+export default class TheradDAO extends BaseDBNodeDAO<ThreadData> {
   constructor(db: DB) {
     super(db, "threads");
   }

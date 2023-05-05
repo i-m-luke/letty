@@ -23,8 +23,13 @@
 <span>{name}</span>
 
 <div class="container">
-   <QADisplay {qaItems} />
-   <QArea />
+   <form action="sendMessage">
+      <QADisplay {qaItems} />
+      <QArea />
+
+      <!-- page.server.ts bude form action "sendMessage", která bude využívat funkce z "src/ai-interface" -->
+      <button>{"<< SEND MESSAGE >>"}</button>
+   </form>
 </div>
 
 <style>

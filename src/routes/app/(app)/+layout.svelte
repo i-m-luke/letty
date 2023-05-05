@@ -20,6 +20,7 @@
    </div>
 
    <div class="root-container">
+      <!-- TODO: Na mobilu se tree bude skrývat a půjde jej rozbalit skrze tlačítko [ >> ] -->
       {#if !$isMobile}
          <div class="side-container">
             <AppMainTree {tData} />

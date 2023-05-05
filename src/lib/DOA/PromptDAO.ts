@@ -1,8 +1,8 @@
 import type { Db as DB } from "mongodb";
 import type { PromptData, DBNode } from "$types";
-import { BaseDBNodeDOA } from "./BaseDBNodeDAO";
+import { BaseDBNodeDAO } from "./BaseDBNodeDAO";
 
-export default class PromptDOA extends BaseDBNodeDOA<PromptData> {
+export default class PromptDAO extends BaseDBNodeDAO<PromptData> {
   constructor(db: DB) {
     super(db, "prompts");
   }

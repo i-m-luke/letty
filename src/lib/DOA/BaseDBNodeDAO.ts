@@ -2,7 +2,7 @@ import type { Db as DB } from "mongodb";
 import type { DBNode, DBItem } from "$types";
 import BaseDAO from "./BaseDAO";
 
-export abstract class BaseDBNodeDOA<Data> extends BaseDAO<DBNode<Data>> {
+export abstract class BaseDBNodeDAO<Data> extends BaseDAO<DBNode<Data>> {
   constructor(db: DB, collectionName: string) {
     super(db, collectionName);
   }
