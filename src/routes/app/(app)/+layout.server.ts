@@ -1,12 +1,14 @@
 import type LayoutLoadData from "./LayoutLoadData";
 import { redirect } from "@sveltejs/kit";
 import { writable, type Writable } from "svelte/store";
-import type { TreeNodeInfo } from "$lib/components/Tree";
+import type { TreeNodeInfo, TreeNodeData } from "$lib/components/Tree";
 import db from "$db";
-import PromptDAO from "$lib/DOA/PromptDAO";
 import ThreadDOA from "$lib/DOA/ThreadDAO";
+import ThreadFoldersDAO from "$lib/DOA/ThreadFoldersDAO";
+import { transformToTreeInfo } from "$lib/transformers";
+import type { FolderData } from "$types";
 
-const promptDAO = new PromptDAO(db);
+const threadFoldersDAO = new ThreadFoldersDAO(db);
 const threadDAO = new ThreadDOA(db);
 
 let loggedIn = false;
@@ -19,20 +21,21 @@ export async function load(): Promise<LayoutLoadData> {
     throw redirect(307, "/app/login"); // TODO: Přidat správný status code
   }
 
+  const threadDataCollection = threadDAO.getAll();
+  const threadFolders = threadFoldersDAO.getAll();
+
+  const transformThreadData = (folderData: FolderData): TreeNodeData => {
+    return;
+  };
+
+  const threadTreeInfo = transformToTreeInfo(threadFolders);
+
+  // TODO: Prompt tree
+
   const promptTreeState: Writable<TreeNodeInfo[]> = writable([]);
   const threadTreeState: Writable<TreeNodeInfo[]> = writable([]);
 
-  const promptDataCollection = promptDAO.getAll();
-  const threadDataCollection = threadDAO.getAll();
-
   return {
-    promptDataCollection: (await promptDataCollection).map((data) => {
-      return { ...data, _id: String(data._id) };
-    }),
-    threadDataCollection: (await threadDataCollection).map((data) => {
-      return { ...data, _id: String(data._id) };
-    }),
-    // Bude navraceno namísto promptDataCollection (thread)
     promptTreeState,
     threadTreeState,
   };

@@ -16,6 +16,11 @@ export type ThreadInfo = {
   children: ThreadInfo[];
 };
 
+export type FolderData = {
+  name: string;
+  itemsIds: string[];
+};
+
 export type PromptData = {
   _id: string;
   name: string;

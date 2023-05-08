@@ -1,43 +1,31 @@
 [
   {
-    "parentId": "",
     "userId": "101",
-    "data": {
-      "name": "thread-1",
-      "messages": [
-        { "q": "what?", "a": "... :-X" },
-        { "q": "how?", "a": "... :-)" }
-      ]
-    }
+    "name": "thread-1",
+    "messages": [
+      { "q": "what?", "a": "... :-X" },
+      { "q": "how?", "a": "... :-)" }
+    ]
   },
   {
-    "parentId": "",
     "userId": "101",
-    "data": {
-      "name": "thread-2",
-      "messages": [
-        { "q": "...?", "a": "... :-D" },
-        { "q": "...?", "a": "... :-**" }
-      ]
-    }
+    "name": "thread-2",
+    "messages": [
+      { "q": "...?", "a": "... :-D" },
+      { "q": "...?", "a": "... :-**" }
+    ]
   },
   {
-    "parentId": "",
     "userId": "101",
-    "data": {
-      "name": "thread-3",
-      "messages": [
-        { "q": "...?", "a": "..." },
-        { "q": "...?!!", "a": "...!!" }
-      ]
-    }
+    "name": "thread-3",
+    "messages": [
+      { "q": "...?", "a": "..." },
+      { "q": "...?!!", "a": "...!!" }
+    ]
   },
   {
-    "parentId": "",
     "userId": "101",
-    "data": {
-      "name": "thread-4",
-      "messages": [{ "q": "...?", "a": "..." }]
-    }
+    "name": "thread-4",
+    "messages": [{ "q": "...?", "a": "..." }]
   }
 ]
