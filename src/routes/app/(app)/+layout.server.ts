@@ -1,5 +1,7 @@
 import type LayoutLoadData from "./LayoutLoadData";
-import { redirect, json } from "@sveltejs/kit";
+import { redirect } from "@sveltejs/kit";
+import { writable, type Writable } from "svelte/store";
+import type { TreeNodeInfo } from "$lib/components/Tree";
 import db from "$db";
 import PromptDAO from "$lib/DOA/PromptDAO";
 import ThreadDOA from "$lib/DOA/ThreadDAO";
@@ -17,6 +19,9 @@ export async function load(): Promise<LayoutLoadData> {
     throw redirect(307, "/app/login"); // TODO: Přidat správný status code
   }
 
+  const promptTreeState: Writable<TreeNodeInfo[]> = writable([]);
+  const threadTreeState: Writable<TreeNodeInfo[]> = writable([]);
+
   const promptDataCollection = promptDAO.getAll();
   const threadDataCollection = threadDAO.getAll();
 
@@ -27,5 +32,8 @@ export async function load(): Promise<LayoutLoadData> {
     threadDataCollection: (await threadDataCollection).map((data) => {
       return { ...data, _id: String(data._id) };
     }),
+    // Bude navraceno namísto promptDataCollection (thread)
+    promptTreeState,
+    threadTreeState,
   };
 }
