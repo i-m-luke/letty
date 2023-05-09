@@ -5,9 +5,10 @@
    import type { Writable } from "svelte/store";
    import { fetchPromptPOST, fetchPromptDELETE } from "./$page-logic";
    import { fetchThreadPOST, fetchThreadDELETE } from "./$page-logic";
+   import type { PromptData, ThreadData } from "$types";
 
-   export let threadTreeState: Writable<TreeNodeInfo[]>;
-   export let promptTreeState: Writable<TreeNodeInfo[]>;
+   export let threadTreeState: Writable<TreeNodeInfo<ThreadData>[]>;
+   export let promptTreeState: Writable<TreeNodeInfo<PromptData>[]>;
 
    const threadTreeNodeAdditionalButtons = [
       new ButtonInfo("ADD", fetchThreadPOST),
@@ -24,7 +25,7 @@
 {#if $threadTreeState.length > 0}
    <span>THREADING:</span>
    <Tree
-      nodeOnClickAction={(nodeData) => goto(`/app/thread${nodeData.id}`)}
+      nodeOnClickAction={(nodeData) => goto(`/app/thread${nodeData._id}`)}
       nodeInfoCollection={$threadTreeState}
       additionalButtons={threadTreeNodeAdditionalButtons}
    />
@@ -33,7 +34,7 @@
 {#if $promptTreeState.length > 0}
    <span>PROMPTING:</span>
    <Tree
-      nodeOnClickAction={(nodeData) => goto(`/app/prompt${nodeData.id}`)}
+      nodeOnClickAction={(nodeData) => goto(`/app/prompt${nodeData._id}`)}
       nodeInfoCollection={$promptTreeState}
       additionalButtons={promptTreeNodeAdditionalButtons}
    />

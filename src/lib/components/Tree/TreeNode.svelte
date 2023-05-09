@@ -2,13 +2,15 @@
    import type { TreeNodeInfo } from "./";
    import type ButtonInfo from "$lib/components/ButtonInfo";
 
-   export let nodeInfo: TreeNodeInfo;
+   type TNodeData = $$Generic;
+
+   export let nodeInfo: TreeNodeInfo<TNodeData>;
    export let nodeOnClickAction = (nodeData: any) => {};
    export let additionalButtons: ButtonInfo[] = [];
 
    let isOpen: boolean = false;
 
-   $: isLeafNode = nodeInfo.children.length < 1;
+   $: isLeafNode = nodeInfo.childNodes.length < 1;
    $: nodeState = isLeafNode ? "(leaf node)" : isOpen ? "(opened)" : "(closed)";
 
    const toggleIsOpen: () => void = () => (isOpen = !isOpen);
@@ -20,7 +22,7 @@
 
 <div class="node-container">
    <div class="parent-node">
-      {#if !nodeInfo.isRootNode}
+      {#if !nodeInfo.isRoot}
          <div class="connection-container">
             <div class="connection" />
          </div>
@@ -34,7 +36,7 @@
    </div>
    {#if isOpen}
       <div class="child-nodes">
-         {#each nodeInfo.children as childNode}
+         {#each nodeInfo.childNodes as childNode}
             <svelte:self {nodeOnClickAction} nodeInfo={childNode} {additionalButtons} />
          {/each}
       </div>

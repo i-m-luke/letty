@@ -1,5 +1,11 @@
-import type LayoutLoadData from "./LayoutLoadData.js";
-import type { DBNode, FolderData, FolderItem } from "$types";
+import type LayoutLoadData from "./LayoutLoadData";
+import type {
+  ThreadData,
+  DBNode,
+  FolderData,
+  FolderItem,
+  PromptData,
+} from "$types";
 import { TreeNodeInfo } from "$lib/components/Tree/index";
 import { writable } from "svelte/store";
 
@@ -7,11 +13,11 @@ import { writable } from "svelte/store";
 export async function load({ data }): Promise<LayoutLoadData> {
   const { threadData, promptData, threadFolders, promptFolders } = data;
 
-  const threadTreeNodeInfo = transformFolderDBNodeToTreeState(
+  const threadTreeNodeInfo = transformFolderDBNodeToTreeState<ThreadData>(
     threadFolders,
     threadData
   );
-  const promptTreeNodeInfo = transformFolderDBNodeToTreeState(
+  const promptTreeNodeInfo = transformFolderDBNodeToTreeState<PromptData>(
     promptFolders,
     promptData
   );
@@ -22,10 +28,10 @@ export async function load({ data }): Promise<LayoutLoadData> {
   };
 }
 
-const transformFolderDBNodeToTreeState = (
+const transformFolderDBNodeToTreeState = <TTreeNodeData>(
   folderDBNodes: DBNode<FolderData>[],
   folderItems: FolderItem[]
-): TreeNodeInfo[] => {
+): TreeNodeInfo<TTreeNodeData>[] => {
   const rootFolderDBNodes = folderDBNodes.filter(
     (dbNode) => dbNode.parentId === ""
   );
@@ -39,12 +45,12 @@ const transformFolderDBNodeToTreeState = (
   );
 };
 
-const transformFolderDBNodeToTreeNodeInfo = (
+const transformFolderDBNodeToTreeNodeInfo = <TTreeNodeData>(
   parentFolderDbNode: DBNode<FolderData>,
   folderDbNodes: DBNode<FolderData>[],
   folderItems: FolderItem[],
   isRootNode: boolean
-): TreeNodeInfo => {
+): TreeNodeInfo<TTreeNodeData> => {
   const folderSubnodes = folderDbNodes
     .filter((folderDbNode) => folderDbNode.parentId === parentFolderDbNode._id)
     .map((dbNodeSubnode) =>
@@ -67,7 +73,7 @@ const transformFolderDBNodeToTreeNodeInfo = (
 
   return {
     isRootNode,
-    children: [...folderSubnodes, ...folderItemSubnodes],
+    childNodes: [...folderSubnodes, ...folderItemSubnodes],
     text: parentFolderDbNode.data.name,
     data: {
       id: parentFolderDbNode._id,
