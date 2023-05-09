@@ -21,6 +21,11 @@ export type FolderData = {
   itemsIds: string[];
 };
 
+export type FolderItem = {
+  _id: string;
+  name: string;
+};
+
 export type PromptData = {
   _id: string;
   name: string;

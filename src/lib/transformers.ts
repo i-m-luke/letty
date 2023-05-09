@@ -1,5 +1,4 @@
-import type { TreeNodeInfo, TreeNodeData } from "./components/Tree";
-import type { DBNode } from "$types";
+import type { TreeNodeInfo } from "./components/Tree";
 
 export function transformCollectionToNodeInfo<TItem>(
   transformFn: (item: TItem) => TreeNodeInfo,
@@ -7,47 +6,3 @@ export function transformCollectionToNodeInfo<TItem>(
 ) {
   return collection.map(transformFn);
 }
-
-export const transformToTreeInfo = <TDBNodeData>(
-  dbNodes: DBNode<TDBNodeData>[],
-  transformDBNodeDataFn: (dbNodeData: TDBNodeData) => TreeNodeData
-): TreeNodeInfo[] => {
-  const rootDBNodes = dbNodes.filter((dbNode) => dbNode.parentId === "");
-  return rootDBNodes.map((rootDBNode) =>
-    transformToTreeNodeInfo<TDBNodeData>(
-      rootDBNode,
-      dbNodes,
-      transformDBNodeDataFn
-    )
-  );
-};
-
-export const transformToTreeNodeInfo = <TDBNodeData>(
-  dbNode: DBNode<TDBNodeData>,
-  dbNodes: DBNode<TDBNodeData>[],
-  transformDBNodeDataFn: (dbNodeData: TDBNodeData) => TreeNodeData
-): TreeNodeInfo => {
-  const treeNodeInfoPrototype: TreeNodeInfo = {
-    isRootNode: false,
-    data: {
-      id: dbNode._id,
-    },
-    ...transformDBNodeDataFn(dbNode.data),
-    children: [],
-  };
-
-  const dbNodeSubnodes = dbNodes.filter(
-    (_dbNode) => _dbNode.parentId === dbNode._id
-  );
-  if (dbNodeSubnodes !== undefined) {
-    return {
-      ...treeNodeInfoPrototype,
-      isRootNode: true,
-      children: dbNodeSubnodes.map((dbNodeSubnode) =>
-        transformToTreeNodeInfo(dbNodeSubnode, dbNodes, transformDBNodeDataFn)
-      ),
-    };
-  }
-
-  return treeNodeInfoPrototype;
-};

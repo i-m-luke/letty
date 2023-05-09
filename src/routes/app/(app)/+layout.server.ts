@@ -1,42 +1,35 @@
-import type LayoutLoadData from "./LayoutLoadData";
-import { redirect } from "@sveltejs/kit";
-import { writable, type Writable } from "svelte/store";
-import type { TreeNodeInfo, TreeNodeData } from "$lib/components/Tree";
+import type LayoutServerLoadData from "./LayoutServerLoadData";
 import db from "$db";
-import ThreadDOA from "$lib/DOA/ThreadDAO";
+import ThreadDAO from "$lib/DOA/ThreadDAO";
+import PromptDAO from "$lib/DOA/PromptDAO";
 import ThreadFoldersDAO from "$lib/DOA/ThreadFoldersDAO";
-import { transformToTreeInfo } from "$lib/transformers";
-import type { FolderData } from "$types";
+import PromptFoldersDAO from "$lib/DOA/PromptFoldersDAO";
+import type { DBItem } from "$types";
 
+const threadDAO = new ThreadDAO(db);
+const promptDAO = new PromptDAO(db);
 const threadFoldersDAO = new ThreadFoldersDAO(db);
-const threadDAO = new ThreadDOA(db);
-
-let loggedIn = false;
+const promptFoldersDAO = new PromptFoldersDAO(db);
 
 // Návratný typ fce zajistí type safety
-export async function load(): Promise<LayoutLoadData> {
-  // Přesuntou do hooks.server.ts ??? Provádělo by se tak ale i na homepage :-/ ... homepage by se pak musela vyjmout z aplikace
-  if (!loggedIn) {
-    loggedIn = true; // LOL X-D
-    throw redirect(307, "/app/login"); // TODO: Přidat správný status code
-  }
-
-  const threadDataCollection = threadDAO.getAll();
-  const threadFolders = threadFoldersDAO.getAll();
-
-  const transformThreadData = (folderData: FolderData): TreeNodeData => {
-    return;
-  };
-
-  const threadTreeInfo = transformToTreeInfo(threadFolders);
-
-  // TODO: Prompt tree
-
-  const promptTreeState: Writable<TreeNodeInfo[]> = writable([]);
-  const threadTreeState: Writable<TreeNodeInfo[]> = writable([]);
+export async function load(): Promise<LayoutServerLoadData> {
+  const threadDataProm = threadDAO.getAll();
+  const promptDataProm = promptDAO.getAll();
+  const threadFoldersProm = threadFoldersDAO.getAll();
+  const promptFoldersProm = promptFoldersDAO.getAll();
 
   return {
-    promptTreeState,
-    threadTreeState,
+    threadData: (await threadDataProm).map((data) => {
+      return { ...data, _id: String(data._id) };
+    }),
+    promptData: (await promptDataProm).map((data) => {
+      return { ...data, _id: String(data._id) };
+    }),
+    threadFolders: (await threadFoldersProm).map((folder) => {
+      return { ...folder, _id: String(folder._id) };
+    }),
+    promptFolders: (await promptFoldersProm).map((folder) => {
+      return { ...folder, _id: String(folder._id) };
+    }),
   };
 }

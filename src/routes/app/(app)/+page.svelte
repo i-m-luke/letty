@@ -1,14 +1,11 @@
 <script lang="ts">
    import { isMobile } from "$lib/global-state";
-   import type PageData from "./PageData";
-   import type PageLoadData from "./PageLoadData";
+   import type LayoutLoadData from "./LayoutLoadData";
    import AppMainTree from "./AppMainTree.svelte";
-   import { transformData } from "./$page-logic";
 
-   export let data: PageLoadData;
-   const tData: PageData = transformData(data);
+   export let data: LayoutLoadData;
 </script>
 
 {#if $isMobile}
-   <AppMainTree {tData} />
+   <AppMainTree promptTreeState={data.promptTreeState} threadTreeState={data.threadTreeState} />
 {/if}

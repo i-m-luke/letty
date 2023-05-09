@@ -6,17 +6,10 @@ export default Tree;
 
 export const TreeNode = _TreeNode;
 
-export class TreeNodeData {
-  text: string;
-
-  constructor(text: string) {
-    this.text = text;
-  }
-}
-
-export class TreeNodeInfo extends TreeNodeData {
+export class TreeNodeInfo {
   isRootNode: boolean;
   children: TreeNodeInfo[] = [];
+  text: string;
   data?: any;
 
   constructor(
@@ -25,9 +18,9 @@ export class TreeNodeInfo extends TreeNodeData {
     children: TreeNodeInfo[],
     data?: any
   ) {
-    super(text);
     this.isRootNode = isRootNode;
     this.children = children;
+    this.text = text;
     this.data = data;
   }
 }

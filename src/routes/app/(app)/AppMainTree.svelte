@@ -1,13 +1,14 @@
 <script lang="ts">
-   import type LayoutData from "./LayoutData";
+   import type LayoutLoadData from "./LayoutLoadData";
    import { goto } from "$app/navigation";
-   import Tree from "$lib/components/Tree";
+   import Tree, { TreeNodeInfo } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
+   import type { Writable } from "svelte/store";
    import { fetchPromptPOST, fetchPromptDELETE } from "./$page-logic";
    import { fetchThreadPOST, fetchThreadDELETE } from "./$page-logic";
 
-   export let tData: LayoutData;
-   let { promptTreeNodeInfoCollection, threadTreeNodeInfoCollection } = tData;
+   export let threadTreeState: Writable<TreeNodeInfo[]>;
+   export let promptTreeState: Writable<TreeNodeInfo[]>;
 
    const threadTreeNodeAdditionalButtons = [
       new ButtonInfo("ADD", fetchThreadPOST),
@@ -21,20 +22,20 @@
 
 <span>TREE:</span>
 
-{#if threadTreeNodeInfoCollection.length > 0}
+{#if $threadTreeState.length > 0}
    <span>THREADING:</span>
    <Tree
       nodeOnClickAction={(nodeData) => goto(`/app/thread${nodeData.id}`)}
-      nodeInfoCollection={threadTreeNodeInfoCollection}
+      nodeInfoCollection={$threadTreeState}
       additionalButtons={threadTreeNodeAdditionalButtons}
    />
 {/if}
 
-{#if promptTreeNodeInfoCollection.length > 0}
+{#if $promptTreeState.length > 0}
    <span>PROMPTING:</span>
    <Tree
       nodeOnClickAction={(nodeData) => goto(`/app/prompt${nodeData.id}`)}
-      nodeInfoCollection={promptTreeNodeInfoCollection}
+      nodeInfoCollection={$promptTreeState}
       additionalButtons={promptTreeNodeAdditionalButtons}
    />
 {/if}

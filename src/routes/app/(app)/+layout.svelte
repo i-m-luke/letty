@@ -4,10 +4,8 @@
    import type LayoutLoadData from "./LayoutLoadData";
    import type LayoutData from "./LayoutData";
    import AppMainTree from "./AppMainTree.svelte";
-   import { transformData } from "./$layout-logic";
 
    export let data: LayoutLoadData;
-   const tData: LayoutData = transformData(data);
 </script>
 
 <main>
@@ -23,7 +21,10 @@
       <!-- TODO: Na mobilu se tree bude skrývat a půjde jej rozbalit skrze tlačítko [ >> ] -->
       {#if !$isMobile}
          <div class="side-container">
-            <AppMainTree {tData} />
+            <AppMainTree
+               promptTreeState={data.promptTreeState}
+               threadTreeState={data.threadTreeState}
+            />
          </div>
       {/if}
 
