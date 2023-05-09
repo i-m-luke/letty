@@ -4,7 +4,6 @@ import ThreadDAO from "$lib/DOA/ThreadDAO";
 import PromptDAO from "$lib/DOA/PromptDAO";
 import ThreadFoldersDAO from "$lib/DOA/ThreadFoldersDAO";
 import PromptFoldersDAO from "$lib/DOA/PromptFoldersDAO";
-import type { DBItem } from "$types";
 
 const threadDAO = new ThreadDAO(db);
 const promptDAO = new PromptDAO(db);

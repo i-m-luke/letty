@@ -6,15 +6,23 @@ import { writable } from "svelte/store";
 // data: data předaná z +layout.server.ts
 export async function load({ data }): Promise<LayoutLoadData> {
   const { threadData, promptData, threadFolders, promptFolders } = data;
-  const threadTreeNodeInfo = transformToTreeInfo(threadFolders, threadData);
-  const promptTreeNodeInfo = transformToTreeInfo(promptFolders, promptData);
+
+  const threadTreeNodeInfo = transformFolderDBNodeToTreeState(
+    threadFolders,
+    threadData
+  );
+  const promptTreeNodeInfo = transformFolderDBNodeToTreeState(
+    promptFolders,
+    promptData
+  );
+
   return {
     threadTreeState: writable(threadTreeNodeInfo),
     promptTreeState: writable(promptTreeNodeInfo),
   };
 }
 
-const transformToTreeInfo = (
+const transformFolderDBNodeToTreeState = (
   folderDBNodes: DBNode<FolderData>[],
   folderItems: FolderItem[]
 ): TreeNodeInfo[] => {
@@ -32,13 +40,13 @@ const transformToTreeInfo = (
 };
 
 const transformFolderDBNodeToTreeNodeInfo = (
-  folderDbNode: DBNode<FolderData>,
+  parentFolderDbNode: DBNode<FolderData>,
   folderDbNodes: DBNode<FolderData>[],
   folderItems: FolderItem[],
   isRootNode: boolean
 ): TreeNodeInfo => {
   const folderSubnodes = folderDbNodes
-    .filter((_dbNode) => _dbNode.parentId === folderDbNode._id)
+    .filter((folderDbNode) => folderDbNode.parentId === parentFolderDbNode._id)
     .map((dbNodeSubnode) =>
       transformFolderDBNodeToTreeNodeInfo(
         dbNodeSubnode,
@@ -48,20 +56,21 @@ const transformFolderDBNodeToTreeNodeInfo = (
       )
     );
 
-  const folderItemSubnodes = folderDbNode.data.itemsIds.map((itemId) => {
-    const item = folderItems.find((item) => item._id === itemId) ?? {
-      name: "UNKNOWN",
-      _id: "UNKNOWN",
-    };
-    return new TreeNodeInfo(false, item.name, [], { id: item._id });
-  });
+  const folderItemSubnodes = folderItems
+    .filter((folderItem) =>
+      parentFolderDbNode.data.itemsIds.includes(folderItem._id)
+    )
+    .map(
+      (folderItem) =>
+        new TreeNodeInfo(false, folderItem.name, [], { id: folderItem._id })
+    );
 
   return {
     isRootNode,
     children: [...folderSubnodes, ...folderItemSubnodes],
-    text: folderDbNode.data.name,
+    text: parentFolderDbNode.data.name,
     data: {
-      id: folderDbNode._id,
+      id: parentFolderDbNode._id,
     },
   };
 };

@@ -1,5 +1,4 @@
 <script lang="ts">
-   import type LayoutLoadData from "./LayoutLoadData";
    import { goto } from "$app/navigation";
    import Tree, { TreeNodeInfo } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";

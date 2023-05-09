@@ -1,0 +1,34 @@
+[
+  {
+    "userId": "101",
+    "parentId": "",
+    "data": {
+      "name": "first folder",
+      "itemsIds": []
+    }
+  },
+  {
+    "userId": "101",
+    "parentId": "",
+    "data": {
+      "name": "second folder",
+      "itemsIds": []
+    }
+  },
+  {
+    "userId": "101",
+    "parentId": "",
+    "data": {
+      "name": "third folder",
+      "itemsIds": []
+    }
+  },
+  {
+    "userId": "101",
+    "parentId": "",
+    "data": {
+      "name": "fourth folder",
+      "itemsIds": []
+    }
+  }
+]
