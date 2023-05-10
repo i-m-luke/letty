@@ -14,13 +14,13 @@ export class TreeNodeInfo<TNodeData> {
   data?: TNodeData;
 
   constructor(
-    isRootNode: boolean,
+    isRoot: boolean,
     text: string,
-    children: TreeNodeInfo<TNodeData>[],
+    childNodes: TreeNodeInfo<TNodeData>[],
     data?: TNodeData
   ) {
-    this.isRoot = isRootNode;
-    this.childNodes = children;
+    this.isRoot = isRoot;
+    this.childNodes = childNodes;
     this.text = text;
     this.data = data;
   }

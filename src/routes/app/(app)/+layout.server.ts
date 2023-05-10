@@ -1,9 +1,9 @@
 import type LayoutServerLoadData from "./LayoutServerLoadData";
 import db from "$db";
-import ThreadDAO from "$lib/DOA/ThreadDAO";
-import PromptDAO from "$lib/DOA/PromptDAO";
-import ThreadFoldersDAO from "$lib/DOA/ThreadFoldersDAO";
-import PromptFoldersDAO from "$lib/DOA/PromptFoldersDAO";
+import ThreadDAO from "$lib/DAO/ThreadDAO";
+import PromptDAO from "$lib/DAO/PromptDAO";
+import ThreadFoldersDAO from "$lib/DAO/ThreadFoldersDAO";
+import PromptFoldersDAO from "$lib/DAO/PromptFoldersDAO";
 
 const threadDAO = new ThreadDAO(db);
 const promptDAO = new PromptDAO(db);

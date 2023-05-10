@@ -5,6 +5,7 @@ import type {
   FolderData,
   FolderItem,
   PromptData,
+  WithId,
 } from "$types";
 import { TreeNodeInfo } from "$lib/components/Tree/index";
 import { writable } from "svelte/store";
@@ -28,15 +29,13 @@ export async function load({ data }): Promise<LayoutLoadData> {
   };
 }
 
-const transformFolderDBNodeToTreeState = <TTreeNodeData>(
+const transformFolderDBNodeToTreeState = <TTreeNodeData extends WithId>(
   folderDBNodes: DBNode<FolderData>[],
   folderItems: FolderItem[]
 ): TreeNodeInfo<TTreeNodeData>[] => {
-  const rootFolderDBNodes = folderDBNodes.filter(
-    (dbNode) => dbNode.parentId === ""
-  );
+  const rootFolderDBNodes = folderDBNodes.filter((dbNode) => dbNode.parentId === "");
   return rootFolderDBNodes.map((rootFolderDBNode) =>
-    transformFolderDBNodeToTreeNodeInfo(
+    transformFolderDBNodeToTreeNodeInfo<TTreeNodeData>(
       rootFolderDBNode,
       folderDBNodes,
       folderItems,
@@ -45,7 +44,7 @@ const transformFolderDBNodeToTreeState = <TTreeNodeData>(
   );
 };
 
-const transformFolderDBNodeToTreeNodeInfo = <TTreeNodeData>(
+const transformFolderDBNodeToTreeNodeInfo = <TTreeNodeData extends WithId>(
   parentFolderDbNode: DBNode<FolderData>,
   folderDbNodes: DBNode<FolderData>[],
   folderItems: FolderItem[],
@@ -54,7 +53,7 @@ const transformFolderDBNodeToTreeNodeInfo = <TTreeNodeData>(
   const folderSubnodes = folderDbNodes
     .filter((folderDbNode) => folderDbNode.parentId === parentFolderDbNode._id)
     .map((dbNodeSubnode) =>
-      transformFolderDBNodeToTreeNodeInfo(
+      transformFolderDBNodeToTreeNodeInfo<TTreeNodeData>(
         dbNodeSubnode,
         folderDbNodes,
         folderItems,
@@ -68,15 +67,17 @@ const transformFolderDBNodeToTreeNodeInfo = <TTreeNodeData>(
     )
     .map(
       (folderItem) =>
-        new TreeNodeInfo(false, folderItem.name, [], { id: folderItem._id })
+        new TreeNodeInfo<TTreeNodeData>(false, folderItem.name, [], {
+          _id: parentFolderDbNode._id,
+        } as TTreeNodeData)
     );
 
-  return {
+  return new TreeNodeInfo<TTreeNodeData>(
     isRootNode,
-    childNodes: [...folderSubnodes, ...folderItemSubnodes],
-    text: parentFolderDbNode.data.name,
-    data: {
-      id: parentFolderDbNode._id,
-    },
-  };
+    parentFolderDbNode.data.name,
+    [...folderSubnodes, ...folderItemSubnodes],
+    {
+      _id: parentFolderDbNode._id,
+    } as TTreeNodeData
+  );
 };

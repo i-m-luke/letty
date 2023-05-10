@@ -5,7 +5,7 @@
    type TNodeData = $$Generic;
 
    export let nodeInfo: TreeNodeInfo<TNodeData>;
-   export let nodeOnClickAction = (nodeData: any) => {};
+   export let nodeOnClickAction: (nodeData: TNodeData) => void = () => {};
    export let additionalButtons: ButtonInfo[] = [];
 
    let isOpen: boolean = false;
@@ -16,7 +16,7 @@
    const toggleIsOpen: () => void = () => (isOpen = !isOpen);
    const nodeOnClickEvent = (): void => {
       toggleIsOpen();
-      nodeOnClickAction(nodeInfo.data);
+      nodeOnClickAction(nodeInfo.data as TNodeData);
    };
 </script>
 

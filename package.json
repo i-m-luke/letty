@@ -32,7 +32,7 @@
     "ts-node": "^10.9.1"
   },
   "prettier": {
-    "printWidth": 80,
+    "printWidth": 85,
     "overrides": [
       {
         "files": [
