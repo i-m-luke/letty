@@ -3,20 +3,18 @@
    import Tree, { TreeNodeInfo } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
    import type { Writable } from "svelte/store";
-   import { fetchPromptPOST, fetchPromptDELETE } from "./$page-logic";
-   import { fetchThreadPOST, fetchThreadDELETE } from "./$page-logic";
    import type { PromptData, ThreadData } from "$types";
 
    export let threadTreeState: Writable<TreeNodeInfo<ThreadData>[]>;
    export let promptTreeState: Writable<TreeNodeInfo<PromptData>[]>;
 
    const threadTreeNodeAdditionalButtons = [
-      new ButtonInfo("ADD", fetchThreadPOST),
-      new ButtonInfo("REMOVE", fetchThreadDELETE),
+      new ButtonInfo("ADD", { formActionName: "/app/create-thread" }),
+      new ButtonInfo("REMOVE", { formActionName: "/app/delete-thread" }),
    ];
    const promptTreeNodeAdditionalButtons = [
-      new ButtonInfo("ADD", fetchPromptPOST),
-      new ButtonInfo("REMOVE", fetchPromptDELETE),
+      new ButtonInfo("ADD", { formActionName: "/app/create-prompt" }),
+      new ButtonInfo("REMOVE", { formActionName: "/app/delete-thread" }),
    ];
 </script>
 

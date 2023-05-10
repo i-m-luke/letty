@@ -21,19 +21,30 @@
 </script>
 
 <div class="node-container">
-   <div class="parent-node">
-      {#if !nodeInfo.isRoot}
-         <div class="connection-container">
-            <div class="connection" />
-         </div>
-      {/if}
-      <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}>
-         {`${nodeInfo.text} ${nodeState}`}
-      </span>
-      {#each additionalButtons as { text, onClickAction }}
-         <button on:click={onClickAction}>{text}</button>
-      {/each}
-   </div>
+   <form method="POST">
+      <div class="parent-node">
+         {#if !nodeInfo.isRoot}
+            <div class="connection-container">
+               <div class="connection" />
+            </div>
+         {/if}
+
+         <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}>
+            <span> {`${nodeInfo.text} ${nodeState}`}</span>
+            <input hidden name="node-value" value={nodeInfo} />
+         </span>
+
+         {#each additionalButtons as { text, onClickAction, formActionName }}
+            <button
+               type={formActionName != undefined ? "submit" : "button"}
+               formaction={formActionName ?? ""}
+               on:click={onClickAction ?? function () {}}
+            >
+               {text}
+            </button>
+         {/each}
+      </div>
+   </form>
    {#if isOpen}
       <div class="child-nodes">
          {#each nodeInfo.childNodes as childNode}

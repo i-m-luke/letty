@@ -39,7 +39,7 @@
           "*.svelte"
         ],
         "options": {
-          "printWidth": 100,
+          "printWidth": 130,
           "tabWidth": 3
         }
       }
