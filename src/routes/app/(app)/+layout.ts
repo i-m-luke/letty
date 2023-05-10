@@ -29,9 +29,9 @@ export async function load({ data }): Promise<LayoutLoadData> {
   };
 }
 
-const transformFolderDBNodeToTreeState = <TTreeNodeData extends WithId>(
+const transformFolderDBNodeToTreeState = <TTreeNodeData extends FolderItem>(
   folderDBNodes: DBNode<FolderData>[],
-  folderItems: FolderItem[]
+  folderItems: TTreeNodeData[]
 ): TreeNodeInfo<TTreeNodeData>[] => {
   const rootFolderDBNodes = folderDBNodes.filter((dbNode) => dbNode.parentId === "");
   return rootFolderDBNodes.map((rootFolderDBNode) =>
@@ -44,10 +44,10 @@ const transformFolderDBNodeToTreeState = <TTreeNodeData extends WithId>(
   );
 };
 
-const transformFolderDBNodeToTreeNodeInfo = <TTreeNodeData extends WithId>(
+const transformFolderDBNodeToTreeNodeInfo = <TTreeNodeData extends FolderItem>(
   parentFolderDbNode: DBNode<FolderData>,
   folderDbNodes: DBNode<FolderData>[],
-  folderItems: FolderItem[],
+  folderItems: TTreeNodeData[],
   isRootNode: boolean
 ): TreeNodeInfo<TTreeNodeData> => {
   const folderSubnodes = folderDbNodes
@@ -67,17 +67,11 @@ const transformFolderDBNodeToTreeNodeInfo = <TTreeNodeData extends WithId>(
     )
     .map(
       (folderItem) =>
-        new TreeNodeInfo<TTreeNodeData>(false, folderItem.name, [], {
-          _id: parentFolderDbNode._id,
-        } as TTreeNodeData)
+        new TreeNodeInfo<TTreeNodeData>(false, folderItem.name, [], folderItem)
     );
 
-  return new TreeNodeInfo<TTreeNodeData>(
-    isRootNode,
-    parentFolderDbNode.data.name,
-    [...folderSubnodes, ...folderItemSubnodes],
-    {
-      _id: parentFolderDbNode._id,
-    } as TTreeNodeData
-  );
+  return new TreeNodeInfo<TTreeNodeData>(isRootNode, parentFolderDbNode.data.name, [
+    ...folderSubnodes,
+    ...folderItemSubnodes,
+  ]);
 };

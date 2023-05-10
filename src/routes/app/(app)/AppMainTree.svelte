@@ -9,12 +9,12 @@
    export let promptTreeState: Writable<TreeNodeInfo<PromptData>[]>;
 
    const threadTreeNodeAdditionalButtons = [
-      new ButtonInfo("ADD", { formActionName: "/app/create-thread" }),
-      new ButtonInfo("REMOVE", { formActionName: "/app/delete-thread" }),
+      new ButtonInfo("ADD", { formActionName: "/app?/create-thread" }),
+      new ButtonInfo("REMOVE", { formActionName: "/app?/delete-thread" }),
    ];
    const promptTreeNodeAdditionalButtons = [
-      new ButtonInfo("ADD", { formActionName: "/app/create-prompt" }),
-      new ButtonInfo("REMOVE", { formActionName: "/app/delete-thread" }),
+      new ButtonInfo("ADD", { formActionName: "/app?/create-prompt" }),
+      new ButtonInfo("REMOVE", { formActionName: "/app?/delete-thread" }),
    ];
 </script>
 

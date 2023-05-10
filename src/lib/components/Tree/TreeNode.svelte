@@ -31,7 +31,13 @@
 
          <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}>
             <span> {`${nodeInfo.text} ${nodeState}`}</span>
-            <input hidden name="node-value" value={nodeInfo} />
+            {#if nodeInfo.data != undefined}
+               <!-- Inputs function as input to the form -->
+               {#each Object.entries(nodeInfo.data) as [name, value]}
+                  <!-- PROČ SE VYPISUJE POUZE "_id" a ne např. "name"? -->
+                  <input hidden={true} {name} {value} />
+               {/each}
+            {/if}
          </span>
 
          {#each additionalButtons as { text, onClickAction, formActionName }}

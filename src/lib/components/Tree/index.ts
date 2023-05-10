@@ -13,6 +13,7 @@ export class TreeNodeInfo<TNodeData> {
   childNodes: TreeNodeInfo<TNodeData>[] = [];
   data?: TNodeData;
 
+  // TODO: Rework childNodes and data as Opts
   constructor(
     isRoot: boolean,
     text: string,
