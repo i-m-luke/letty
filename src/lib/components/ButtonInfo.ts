@@ -2,6 +2,7 @@ export default class ButtonInfo {
   text: string;
   formActionName?: string;
   onClickAction?: () => void;
+
   constructor(text: string, opts?: ButtonInfoOpts) {
     this.text = text;
     this.formActionName = opts?.formActionName;

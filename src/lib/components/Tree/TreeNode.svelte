@@ -23,7 +23,8 @@
 </script>
 
 <div class="node-container">
-   <form method="POST" use:enhance>
+   <!-- use:enhance způsobuje, že po provedení form akce se odstraní nodeInfo (objekt je prázdný) -->
+   <form method="POST">
       <div class="parent-node">
          {#if !nodeInfo.isRoot}
             <div class="connection-container">
@@ -34,22 +35,12 @@
          <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}>
             <span> {`${nodeInfo.text} ${nodeState}`}</span>
             {#if nodeInfo.data != undefined}
-               <!-- HOW TO SEND AN OBJECT BY FORM ACTION?? -->
-               <input hidden={true} name="nodeData" value={nodeInfo.data} />
-               <!-- Inputs function as input to the form -->
-               {#each Object.entries(nodeInfo.data) as [name, value]}
-                  <!-- PROČ SE VYPISUJE POUZE "_id" a ne např. "name"? -->
-                  <input hidden={true} {name} {value} />
-               {/each}
+               <input hidden={true} name="nodeData" value={JSON.stringify(nodeInfo.data)} />
             {/if}
          </span>
 
          {#each additionalButtons as { text, onClickAction, formActionName }}
-            <button
-               type={formActionName != undefined ? "submit" : "button"}
-               formaction={formActionName ?? ""}
-               on:click={onClickAction ?? function () {}}
-            >
+            <button type={formActionName != undefined ? "submit" : "button"} formaction={formActionName} on:click={onClickAction}>
                {text}
             </button>
          {/each}

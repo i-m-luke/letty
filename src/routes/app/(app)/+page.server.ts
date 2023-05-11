@@ -1,4 +1,3 @@
-import { json } from "@sveltejs/kit";
 import type { ThreadData } from "$types";
 
 export const actions = {
@@ -7,14 +6,13 @@ export const actions = {
 
     const formData = await request.formData();
     const rawData = Object.fromEntries(formData);
-    const data = rawData as Object as ThreadData;
+    const data = rawData as any;
+    const threadData = data as ThreadData;
+    const nodeData = JSON.parse(data.nodeData ?? "{}");
 
-    console.log("formData:", formData);
-    console.log("rawData:", rawData);
     console.log("data:", data);
-
-    const nodeData = rawData.nodeData as any;
-    console.log("nodeData", nodeData.userId);
+    console.log("data.nodeData:", data.nodeData);
+    console.log("nodeData - parsed:", nodeData);
   },
 
   "delete-thread": async () => {
