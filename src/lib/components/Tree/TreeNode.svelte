@@ -1,6 +1,4 @@
 <script lang="ts">
-   import { enhance } from "$app/forms";
-
    import type { TreeNodeInfo } from "./";
    import type ButtonInfo from "$lib/components/ButtonInfo";
 

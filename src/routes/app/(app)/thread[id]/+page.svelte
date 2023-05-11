@@ -9,12 +9,12 @@
 </script>
 
 <div class="container">
-   <form action="sendMessage">
+   <form>
       <QADisplay {qaItems} />
       <QArea />
 
       <!-- page.server.ts bude form action "sendMessage", která bude využívat funkce z "src/ai-interface" -->
-      <button>{"<< SEND MESSAGE >>"}</button>
+      <button formAction="/app?/send-message">{"<< SEND MESSAGE >>"}</button>
    </form>
 </div>
 

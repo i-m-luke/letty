@@ -13,30 +13,30 @@
 </script>
 
 <main>
-   <div>
-      <span>PROMPT NAME:</span>
-      <input bind:value={inPromptName} />
-      <span>PROMPT:</span>
-      <input bind:value={inPromptText} />
+   <form>
+      <div>
+         <span>PROMPT NAME:</span>
+         <input bind:value={inPromptName} />
+         <span>PROMPT:</span>
+         <input bind:value={inPromptText} />
 
-      <button on:click={() => fetchPOST($page.params.id, inPromptName, inPromptText)}>
-         SAVE PROMPT
-      </button>
+         <button on:click={() => fetchPOST($page.params.id, inPromptName, inPromptText)}> SAVE PROMPT </button>
 
-      <span>SELECTED NODE ID: {$page.params.id}</span>
-      <button>CLONE</button>
-   </div>
-   <div>
-      <button on:click={() => (isBuilderVisible = !isBuilderVisible)}>
-         PROMPT BUILDER: {isBuilderVisible ? "opened" : "closed"}
-      </button>
-      {#if isBuilderVisible}
-         <PromptBuilder state={promptBuilderState} />
-      {/if}
-   </div>
-   <div>
-      <button>{"<< RUN PROMPT >>"}</button>
-   </div>
+         <span>SELECTED NODE ID: {$page.params.id}</span>
+         <button>CLONE</button>
+      </div>
+      <div>
+         <button on:click={() => (isBuilderVisible = !isBuilderVisible)}>
+            PROMPT BUILDER: {isBuilderVisible ? "opened" : "closed"}
+         </button>
+         {#if isBuilderVisible}
+            <PromptBuilder state={promptBuilderState} />
+         {/if}
+      </div>
+      <div>
+         <button formAction="/app?/run-prompt">{"<< RUN PROMPT >>"}</button>
+      </div>
+   </form>
 </main>
 
 <style>
