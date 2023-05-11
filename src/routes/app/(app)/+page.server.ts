@@ -1,15 +1,20 @@
-import type { WithId } from "$types";
+import { json } from "@sveltejs/kit";
+import type { ThreadData } from "$types";
 
 export const actions = {
   "create-thread": async ({ request }) => {
-    console.log("create-thread form action");
-    const data = await request.formData();
-    const id = data.get("_id");
-    const name = data.get("name");
-    const messages = data.get("messages");
-    console.log("node id:" + id);
-    console.log("node name:" + name);
-    console.log("node messages:" + messages);
+    console.log('## FORM ACTION "CRATE-THREAD" ##');
+
+    const formData = await request.formData();
+    const rawData = Object.fromEntries(formData);
+    const data = rawData as Object as ThreadData;
+
+    console.log("formData:", formData);
+    console.log("rawData:", rawData);
+    console.log("data:", data);
+
+    const nodeData = rawData.nodeData as any;
+    console.log("nodeData", nodeData.userId);
   },
 
   "delete-thread": async () => {

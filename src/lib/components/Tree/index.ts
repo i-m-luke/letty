@@ -6,23 +6,22 @@ export default Tree;
 
 export const TreeNode = _TreeNode;
 
-export class TreeNodeInfo<TNodeData> {
-  isRoot: boolean;
-  // isFolder: boolean;
-  text: string;
-  childNodes: TreeNodeInfo<TNodeData>[] = [];
+export type TreeNodeInfoOpts<TNodeData> = {
+  childNodes?: TreeNodeInfo<TNodeData>[];
   data?: TNodeData;
+};
 
-  // TODO: Rework childNodes and data as Opts
-  constructor(
-    isRoot: boolean,
-    text: string,
-    childNodes: TreeNodeInfo<TNodeData>[],
-    data?: TNodeData
-  ) {
+export class TreeNodeInfo<TNodeData> {
+  // isFolder: boolean;
+  isRoot: boolean;
+  text: string;  
+  childNodes: TreeNodeInfo<TNodeData>[] = [];
+  data?: TNodeData = undefined;
+
+  constructor(isRoot: boolean, text: string, opts?: TreeNodeInfoOpts<TNodeData>) {
     this.isRoot = isRoot;
-    this.childNodes = childNodes;
     this.text = text;
-    this.data = data;
+    this.childNodes = opts?.childNodes ?? [];
+    this.data = opts?.data;
   }
 }

@@ -1,4 +1,6 @@
 <script lang="ts">
+   import { enhance } from "$app/forms";
+
    import type { TreeNodeInfo } from "./";
    import type ButtonInfo from "$lib/components/ButtonInfo";
 
@@ -21,7 +23,7 @@
 </script>
 
 <div class="node-container">
-   <form method="POST">
+   <form method="POST" use:enhance>
       <div class="parent-node">
          {#if !nodeInfo.isRoot}
             <div class="connection-container">
@@ -32,6 +34,8 @@
          <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}>
             <span> {`${nodeInfo.text} ${nodeState}`}</span>
             {#if nodeInfo.data != undefined}
+               <!-- HOW TO SEND AN OBJECT BY FORM ACTION?? -->
+               <input hidden={true} name="nodeData" value={nodeInfo.data} />
                <!-- Inputs function as input to the form -->
                {#each Object.entries(nodeInfo.data) as [name, value]}
                   <!-- PROČ SE VYPISUJE POUZE "_id" a ne např. "name"? -->

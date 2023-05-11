@@ -67,11 +67,10 @@ const transformFolderDBNodeToTreeNodeInfo = <TTreeNodeData extends FolderItem>(
     )
     .map(
       (folderItem) =>
-        new TreeNodeInfo<TTreeNodeData>(false, folderItem.name, [], folderItem)
+        new TreeNodeInfo<TTreeNodeData>(false, folderItem.name, { data: folderItem })
     );
 
-  return new TreeNodeInfo<TTreeNodeData>(isRootNode, parentFolderDbNode.data.name, [
-    ...folderSubnodes,
-    ...folderItemSubnodes,
-  ]);
+  return new TreeNodeInfo<TTreeNodeData>(isRootNode, parentFolderDbNode.data.name, {
+    childNodes: [...folderSubnodes, ...folderItemSubnodes],
+  });
 };
