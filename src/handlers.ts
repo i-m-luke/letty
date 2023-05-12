@@ -1,3 +1,5 @@
+import type { Db } from "mongodb";
+
 //#region OOP HANDLER
 
 export interface IHandler {
@@ -31,19 +33,24 @@ export abstract class BaseRouteHandler implements IHandler {
   }
 }
 
-export class AppHandler extends BaseRouteHandler {
-  constructor() {
+export class AppRouteHandler extends BaseRouteHandler {
+  private db: Db;
+
+  // TODO: Replace Db by IDb (interface for testing purposes)
+  constructor(db: Db) {
     super("/app");
+    this.db = db;
   }
 
   override process(): boolean {
     // PROCESS REQUEST ...
+    // TODO: Athtentication db.auth()
     console.log("AppHandler performed");
     return true;
   }
 }
 
-export class ApiHandler extends BaseRouteHandler {
+export class ApiRouteHandler extends BaseRouteHandler {
   constructor() {
     super("/api");
   }

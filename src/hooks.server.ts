@@ -1,16 +1,19 @@
 import { startDatabase } from "$db";
 import { log } from "$lib/logging";
-import { ApiHandler, AppHandler } from "./handlers";
+import { ApiRouteHandler, AppRouteHandler } from "./handlers";
 
 await startDatabase()
   .then(() => log("Database is running.."))
   .catch((err) => log("Error while starting database. Error: " + err));
 
-const appHandler = new AppHandler();
-const apiHandler = new ApiHandler();
-appHandler.setNextHandler(apiHandler);
+// NOTE: Je nutné umístit až za volání "startDatabase"? Nebo je db již inicializovaná?
+import db from "$db";
+
+const appRouteHandler = new AppRouteHandler(db);
+const apiRouteHandler = new ApiRouteHandler();
+appRouteHandler.setNextHandler(apiRouteHandler);
 
 export async function handle({ event, resolve }) {
-  appHandler.handle(event.url.pathname); // TODO: handle should use resolve and return result then
+  appRouteHandler.handle(event.url.pathname); // TODO: handle should use resolve and return result then
   return await resolve(event);
 }
