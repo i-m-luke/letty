@@ -1,39 +1,23 @@
 // IMPURE CODE:
 
-export const fetchThreadPOST = async () => {
-  // TODO
-  const response = await fetch(`/app/thread`, {
-    method: "POST",
-    body: JSON.stringify({}),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-};
+import { POSTType } from "./POSTRequest";
+import type POSTRequest from "./POSTRequest";
 
-export const fetchThreadDELETE = () => {
-  /* delete thread ... */
-};
+export const fetchPOST =
+  (type: POSTType) =>
+  async <TData>(data: TData) => {
+    const req: POSTRequest<TData> = {
+      type,
+      data,
+    };
+    return await fetch(`/app/`, {
+      method: "POST",
+      body: JSON.stringify(req),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
 
-export const fetchThreadPUT = () => {
-  /* rename thread ... */
-};
-
-export const fetchPromptPOST = async () => {
-  // TODO
-  const response = await fetch(`/app/prompt`, {
-    method: "POST",
-    body: JSON.stringify({}),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-};
-
-export const fetchPromptDELETE = () => {
-  /* delete prompt ... */
-};
-
-export const fetchPromptPUT = () => {
-  /* rename prompt ... */
-};
+export const fetchPostCreateThread = fetchPOST(POSTType.CreateThread);
+export const fetchPostCreatePrompt = fetchPOST(POSTType.CreatePrompt);

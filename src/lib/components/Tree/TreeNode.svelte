@@ -5,10 +5,11 @@
    type TNodeData = $$Generic;
 
    export let nodeInfo: TreeNodeInfo<TNodeData>;
-   export let nodeOnClickAction: (nodeData: TNodeData) => void = () => {};
-   export let additionalButtons: ButtonInfo[] = [];
+   export let nodeOnClickAction: ((nodeData: TNodeData) => void) | (() => void) = () => {};
+   export let additionalButtons: ButtonInfo<TNodeData>[] = [];
 
    let isOpen: boolean = false;
+   let data: TNodeData = nodeInfo.data as TNodeData;
 
    $: isLeafNode = nodeInfo.childNodes.length < 1;
    $: nodeState = isLeafNode ? "(leaf node)" : isOpen ? "(opened)" : "(closed)";
@@ -16,7 +17,7 @@
    const toggleIsOpen: () => void = () => (isOpen = !isOpen);
    const nodeOnClickEvent = (): void => {
       toggleIsOpen();
-      nodeOnClickAction(nodeInfo.data as TNodeData);
+      nodeOnClickAction(data);
    };
 </script>
 
@@ -33,12 +34,16 @@
          <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}>
             <span> {`${nodeInfo.text} ${nodeState}`}</span>
             {#if nodeInfo.data != undefined}
-               <input hidden={true} name="nodeData" value={JSON.stringify(nodeInfo.data)} />
+               <input hidden={true} name="nodeData" value={JSON.stringify(data)} />
             {/if}
          </span>
 
          {#each additionalButtons as { text, onClickAction, formActionName }}
-            <button type={formActionName != undefined ? "submit" : "button"} formaction={formActionName} on:click={onClickAction}>
+            <button
+               type={formActionName != undefined ? "submit" : "button"}
+               formaction={formActionName}
+               on:click={() => onClickAction(data)}
+            >
                {text}
             </button>
          {/each}

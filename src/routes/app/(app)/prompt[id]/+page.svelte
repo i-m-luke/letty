@@ -15,16 +15,18 @@
 <main>
    <form>
       <div>
+         <span>SELECTED NODE ID: {$page.params.id}</span>
+      </div>
+
+      <div>
          <span>PROMPT NAME:</span>
          <input bind:value={inPromptName} />
-         <span>PROMPT:</span>
+         <span>PROMPT: </span>
          <input bind:value={inPromptText} />
-
          <button on:click={() => fetchPOST($page.params.id, inPromptName, inPromptText)}> SAVE PROMPT </button>
-
-         <span>SELECTED NODE ID: {$page.params.id}</span>
-         <button>CLONE</button>
+         <button>CLONE PROMPT</button>
       </div>
+
       <div>
          <button on:click={() => (isBuilderVisible = !isBuilderVisible)}>
             PROMPT BUILDER: {isBuilderVisible ? "opened" : "closed"}
@@ -33,6 +35,7 @@
             <PromptBuilder state={promptBuilderState} />
          {/if}
       </div>
+
       <div>
          <button formAction="/app?/run-prompt">{"<< RUN PROMPT >>"}</button>
       </div>

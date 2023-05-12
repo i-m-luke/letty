@@ -1,15 +1,18 @@
 <script lang="ts">
+   import type { PromptData, ThreadData } from "$types";
+   import type { Writable } from "svelte/store";
    import { goto } from "$app/navigation";
    import Tree, { TreeNodeInfo } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
-   import type { Writable } from "svelte/store";
-   import type { PromptData, ThreadData } from "$types";
 
+   // TODO:
+   // Předělat tak, aby node obsahovalo pouze NodeData: { _id: string }
+   // Node nemusí mít data jako messages, prompt, atd.
    export let threadTreeState: Writable<TreeNodeInfo<ThreadData>[]>;
    export let promptTreeState: Writable<TreeNodeInfo<PromptData>[]>;
 
    const threadTreeNodeAdditionalButtons = [
-      new ButtonInfo("ADD", { formActionName: "/app?/create-thread" }),
+      new ButtonInfo<ThreadData>("ADD", { formActionName: "/app?/create-thread" }),
       new ButtonInfo("REMOVE", { formActionName: "/app?/delete-thread" }),
    ];
    const promptTreeNodeAdditionalButtons = [
@@ -17,8 +20,6 @@
       new ButtonInfo("REMOVE", { formActionName: "/app?/delete-thread" }),
    ];
 </script>
-
-<span>TREE:</span>
 
 {#if $threadTreeState.length > 0}
    <span>THREADING:</span>

@@ -12,8 +12,6 @@
    <form>
       <QADisplay {qaItems} />
       <QArea />
-
-      <!-- page.server.ts bude form action "sendMessage", která bude využívat funkce z "src/ai-interface" -->
       <button formAction="/app?/send-message">{"<< SEND MESSAGE >>"}</button>
    </form>
 </div>

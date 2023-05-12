@@ -1,16 +1,17 @@
-export default class ButtonInfo {
+export default class ButtonInfo<TData> {
   text: string;
-  formActionName?: string;
-  onClickAction?: () => void;
+  onClickAction: (data: TData) => void | (() => void);
 
-  constructor(text: string, opts?: ButtonInfoOpts) {
+  formActionName?: string;
+
+  constructor(text: string, opts?: ButtonInfoOpts<TData>) {
     this.text = text;
     this.formActionName = opts?.formActionName;
-    this.onClickAction = opts?.onClickAction;
+    this.onClickAction = opts?.onClickAction ?? (() => {});
   }
 }
 
-export type ButtonInfoOpts = {
-  onClickAction?: () => void;
+export type ButtonInfoOpts<TData> = {
+  onClickAction?: (data: TData) => void | (() => void);
   formActionName?: string;
 };
