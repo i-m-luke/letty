@@ -4,6 +4,7 @@
    import { goto } from "$app/navigation";
    import Tree, { TreeNodeInfo } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
+   import { fetchPostThread, fetchPostPrompt, fetchDeleteThread, fetchDeletePrompt } from "./$page-logic";
 
    // TODO:
    // Předělat tak, aby node obsahovalo pouze NodeData: { _id: string }
@@ -12,12 +13,33 @@
    export let promptTreeState: Writable<TreeNodeInfo<PromptData>[]>;
 
    const threadTreeNodeAdditionalButtons = [
-      new ButtonInfo<ThreadData>("ADD", { formActionName: "/app?/create-thread" }),
-      new ButtonInfo("REMOVE", { formActionName: "/app?/delete-thread" }),
+      new ButtonInfo<ThreadData>("ADD", {
+         onClickAction: (data: ThreadData) => {
+            console.log("node clicked: " + data._id);
+            fetchPostPrompt(data);
+         },
+      }),
+      new ButtonInfo("REMOVE", {
+         onClickAction: (data: ThreadData) => {
+            console.log("node clicked: " + data._id);
+            fetchDeleteThread(data);
+         },
+      }),
    ];
+
    const promptTreeNodeAdditionalButtons = [
-      new ButtonInfo("ADD", { formActionName: "/app?/create-prompt" }),
-      new ButtonInfo("REMOVE", { formActionName: "/app?/delete-thread" }),
+      new ButtonInfo("ADD", {
+         onClickAction: (data: ThreadData) => {
+            console.log("node clicked: " + data._id);
+            fetchPostThread(data);
+         },
+      }),
+      new ButtonInfo("REMOVE", {
+         onClickAction: (data: ThreadData) => {
+            console.log("node clicked: " + data._id);
+            fetchDeletePrompt(data);
+         },
+      }),
    ];
 </script>
 

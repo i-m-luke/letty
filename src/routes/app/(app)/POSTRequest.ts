@@ -1,11 +1,11 @@
-export enum POSTType {
-  CreateThread = "CreateThread",
-  CreatePrompt = "CreatePrompt",
+export enum PostRequestType {
+  Thread = "Thread",
+  Prompt = "Prompt",
 }
 
-type POSTRequest<TData> = {
-  type: POSTType;
-  data: TData;
+type PostRequest = {
+  type: PostRequestType;
+  data: any;
 };
 
-export default POSTRequest;
+export default PostRequest;

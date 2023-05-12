@@ -22,33 +22,24 @@
 </script>
 
 <div class="node-container">
-   <!-- use:enhance způsobuje, že po provedení form akce se odstraní nodeInfo (objekt je prázdný) -->
-   <form method="POST">
-      <div class="parent-node">
-         {#if !nodeInfo.isRoot}
-            <div class="connection-container">
-               <div class="connection" />
-            </div>
-         {/if}
+   <div class="parent-node">
+      {#if !nodeInfo.isRoot}
+         <div class="connection-container">
+            <div class="connection" />
+         </div>
+      {/if}
 
-         <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}>
-            <span> {`${nodeInfo.text} ${nodeState}`}</span>
-            {#if nodeInfo.data != undefined}
-               <input hidden={true} name="nodeData" value={JSON.stringify(data)} />
-            {/if}
-         </span>
+      <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}>
+         <span> {`${nodeInfo.text} ${nodeState}`}</span>
+      </span>
 
-         {#each additionalButtons as { text, onClickAction, formActionName }}
-            <button
-               type={formActionName != undefined ? "submit" : "button"}
-               formaction={formActionName}
-               on:click={() => onClickAction(data)}
-            >
-               {text}
-            </button>
-         {/each}
-      </div>
-   </form>
+      {#each additionalButtons as { text, onClickAction, formActionName }}
+         <button type="button" formaction={formActionName} on:click={() => onClickAction(data)}>
+            {text}
+         </button>
+      {/each}
+   </div>
+
    {#if isOpen}
       <div class="child-nodes">
          {#each nodeInfo.childNodes as childNode}

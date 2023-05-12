@@ -45,7 +45,7 @@ export class AppRouteHandler extends BaseRouteHandler {
   override process(): boolean {
     // PROCESS REQUEST ...
     // TODO: Athtentication db.auth()
-    console.log("AppHandler performed");
+    console.log("hooks.server.ts: AppHandler performed");
     return true;
   }
 }
