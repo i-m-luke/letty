@@ -2,7 +2,6 @@
    import { goto } from "$app/navigation";
    import { isMobile } from "$lib/global-state";
    import type LayoutLoadData from "./LayoutLoadData";
-   import type LayoutData from "./LayoutData";
    import AppMainTree from "./AppMainTree.svelte";
 
    export let data: LayoutLoadData;
@@ -21,10 +20,7 @@
       <!-- TODO: Na mobilu se tree bude skrývat a půjde jej rozbalit skrze tlačítko [ >> ] -->
       {#if !$isMobile}
          <div class="side-container">
-            <AppMainTree
-               promptTreeState={data.promptTreeState}
-               threadTreeState={data.threadTreeState}
-            />
+            <AppMainTree promptTreeState={data.promptTreeState} threadTreeState={data.threadTreeState} />
          </div>
       {/if}
 

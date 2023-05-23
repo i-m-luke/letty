@@ -13,10 +13,11 @@
    export let promptTreeState: Writable<TreeNodeInfo<PromptData>[]>;
 
    const threadTreeNodeAdditionalButtons = [
-      new ButtonInfo<ThreadData>("ADD", {
+      // NOTE: Aby bylo možné vytvořit thread/prompt, je nutné znát ID folder!
+      new ButtonInfo("ADD", {
          onClickAction: (data: ThreadData) => {
             console.log("node clicked: " + data._id);
-            fetchPostPrompt(data);
+            fetchPostThread(data);
          },
       }),
       new ButtonInfo("REMOVE", {
@@ -28,14 +29,15 @@
    ];
 
    const promptTreeNodeAdditionalButtons = [
+      // NOTE: Aby bylo možné vytvořit thread/prompt, je nutné znát ID folder!
       new ButtonInfo("ADD", {
-         onClickAction: (data: ThreadData) => {
+         onClickAction: (data: PromptData) => {
             console.log("node clicked: " + data._id);
-            fetchPostThread(data);
+            fetchPostPrompt(data);
          },
       }),
       new ButtonInfo("REMOVE", {
-         onClickAction: (data: ThreadData) => {
+         onClickAction: (data: PromptData) => {
             console.log("node clicked: " + data._id);
             fetchDeletePrompt(data);
          },
