@@ -6,7 +6,7 @@
 
    export let nodeInfoCollection: TreeNodeInfo<TNodeData>[];
    export let nodeOnClickAction = (nodeData: TNodeData) => {};
-   export let additionalButtons: ButtonInfo[] = [];
+   export let additionalButtons: ButtonInfo<TNodeData>[] = [];
 </script>
 
 {#each nodeInfoCollection as nodeInfo}

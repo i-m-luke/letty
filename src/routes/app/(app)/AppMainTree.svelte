@@ -16,13 +16,11 @@
       // NOTE: Aby bylo možné vytvořit thread/prompt, je nutné znát ID folder!
       new ButtonInfo("ADD", {
          onClickAction: (data: ThreadData) => {
-            console.log("node clicked: " + data._id);
             fetchPostThread(data);
          },
       }),
       new ButtonInfo("REMOVE", {
          onClickAction: (data: ThreadData) => {
-            console.log("node clicked: " + data._id);
             fetchDeleteThread(data);
          },
       }),
@@ -32,13 +30,11 @@
       // NOTE: Aby bylo možné vytvořit thread/prompt, je nutné znát ID folder!
       new ButtonInfo("ADD", {
          onClickAction: (data: PromptData) => {
-            console.log("node clicked: " + data._id);
             fetchPostPrompt(data);
          },
       }),
       new ButtonInfo("REMOVE", {
          onClickAction: (data: PromptData) => {
-            console.log("node clicked: " + data._id);
             fetchDeletePrompt(data);
          },
       }),
