@@ -4,19 +4,25 @@
 
    export let nodeInfo: TreeNodeInfo;
    export let nodeOnClickAction: ((nodeData: TreeNodeInfoData) => void) | (() => void) = () => {};
-   export let additionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
+   export let contentNodeAdditionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
+   export let folderNodeAdditionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
 
    let isOpen: boolean = false;
    let data: TreeNodeInfoData = nodeInfo.data;
+   let childNodes: TreeNodeInfo[] = nodeInfo.childNodes;
 
-   $: isLeafNode = nodeInfo.childNodes.length < 1;
-   $: nodeState = isLeafNode ? "(leaf node)" : isOpen ? "(opened)" : "(closed)";
+   $: nodeState = nodeInfo.isFolder && isOpen ? "(opened)" : "(closed)";
+
+   const additionalButtons: ButtonInfo<TreeNodeInfoData>[] = nodeInfo.isFolder
+      ? folderNodeAdditionalButtons
+      : contentNodeAdditionalButtons;
 
    const toggleIsOpen: () => void = () => (isOpen = !isOpen);
-   const nodeOnClickEvent = (): void => {
-      toggleIsOpen();
-      nodeOnClickAction(data);
-   };
+   const nodeOnClickEvent = nodeInfo.isFolder
+      ? toggleIsOpen
+      : (): void => {
+           nodeOnClickAction(data);
+        };
 </script>
 
 <div class="node-container">
@@ -40,8 +46,8 @@
 
    {#if isOpen}
       <div class="child-nodes">
-         {#each nodeInfo.childNodes as childNode}
-            <svelte:self {nodeOnClickAction} nodeInfo={childNode} {additionalButtons} />
+         {#each childNodes as childNode}
+            <svelte:self {nodeOnClickAction} nodeInfo={childNode} {contentNodeAdditionalButtons} {folderNodeAdditionalButtons} />
          {/each}
       </div>
    {/if}

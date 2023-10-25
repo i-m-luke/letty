@@ -1,30 +1,28 @@
 import type { ThreadData, PromptData } from "$types";
 import type { RouteParams } from "./$types";
-import type PostRequest from "./PostRequest";
-import { PostRequestType } from "./PostRequest";
-import type DeleteRequest from "./DeleteRequest";
-import { DeleteRequestType } from "./DeleteRequest";
+import { RequestType } from "./Request";
+import type Request from "./Request";
 
-export const handlePOST = (request: PostRequest, params: RouteParams) => {
+export const handlePOST = (request: Request, params: RouteParams) => {
   const { type, data } = request;
   switch (type) {
-    case PostRequestType.Prompt:
-      handlePostPromptReq(data as PromptData, params); // TODO: return
+    case RequestType.Prompt:
+      handlePostPromptReq(data as PromptData, params); // TODO: return created item
       break;
-    case PostRequestType.Thread:
-      handlePostThreadReq(data as ThreadData, params); // TODO: return
+    case RequestType.Thread:
+      handlePostThreadReq(data as ThreadData, params); // TODO: return created item
       break;
   }
 };
 
-export const handleDELETE = (request: DeleteRequest, params: RouteParams) => {
+export const handleDELETE = (request: Request, params: RouteParams) => {
   const { type, data } = request;
   switch (type) {
-    case DeleteRequestType.Prompt:
-      handleDeletePromptReq(data as PromptData, params); // TODO: return
+    case RequestType.Prompt:
+      handleDeletePromptReq(data as PromptData, params); // TODO: return item was removed successfully?
       break;
-    case DeleteRequestType.Thread:
-      handleDeleteThreadReq(data as ThreadData, params); // TODO: return
+    case RequestType.Thread:
+      handleDeleteThreadReq(data as ThreadData, params); // TODO: return item was removed successfully?
       break;
   }
 };

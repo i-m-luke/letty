@@ -1,18 +1,15 @@
 // IMPURE CODE:
 
-import { PostRequestType } from "./PostRequest";
-import type PostRequest from "./PostRequest";
-import { DeleteRequestType } from "./DeleteRequest";
-import type DeleteRequest from "./DeleteRequest";
-import type { PromptData, ThreadData } from "$types";
+import { RequestType } from "./Request";
+import type Request from "./Request";
 import type { TreeNodeInfoData } from "$lib/components/Tree";
 
 //#region  POST
 
 export const fetchPOST =
-  <TData>(type: PostRequestType) =>
+  <TData>(type: RequestType) =>
   async (data: TData) => {
-    const req: PostRequest = {
+    const req: Request = {
       type,
       data,
     };
@@ -25,17 +22,17 @@ export const fetchPOST =
     });
   };
 
-export const fetchPostThread = fetchPOST<TreeNodeInfoData>(PostRequestType.Thread);
-export const fetchPostPrompt = fetchPOST<TreeNodeInfoData>(PostRequestType.Prompt);
+export const fetchPostThread = fetchPOST<TreeNodeInfoData>(RequestType.Thread);
+export const fetchPostPrompt = fetchPOST<TreeNodeInfoData>(RequestType.Prompt);
 
 //#endregion
 
 //#region  DELETE
 
 export const fetchDELETE =
-  <TData>(type: DeleteRequestType) =>
+  <TData>(type: RequestType) =>
   async (data: TData) => {
-    const req: DeleteRequest = {
+    const req: Request = {
       type,
       data,
     };
@@ -48,11 +45,7 @@ export const fetchDELETE =
     });
   };
 
-export const fetchDeleteThread = fetchDELETE<TreeNodeInfoData>(
-  DeleteRequestType.Thread
-);
-export const fetchDeletePrompt = fetchDELETE<TreeNodeInfoData>(
-  DeleteRequestType.Prompt
-);
+export const fetchDeleteThread = fetchDELETE<TreeNodeInfoData>(RequestType.Thread);
+export const fetchDeletePrompt = fetchDELETE<TreeNodeInfoData>(RequestType.Prompt);
 
 //#endregion

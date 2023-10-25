@@ -4,9 +4,10 @@
 
    export let nodeInfoCollection: TreeNodeInfo[];
    export let nodeOnClickAction = (nodeData: TreeNodeInfoData) => {};
-   export let additionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
+   export let contentNodeAdditionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
+   export let folderNodeAdditionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
 </script>
 
 {#each nodeInfoCollection as nodeInfo}
-   <TreeNode {nodeOnClickAction} {nodeInfo} {additionalButtons} />
+   <TreeNode {nodeOnClickAction} {nodeInfo} {contentNodeAdditionalButtons} {folderNodeAdditionalButtons} />
 {/each}
