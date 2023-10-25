@@ -3,9 +3,8 @@ import type {
   ThreadData,
   DBNode,
   FolderData,
-  FolderItem,
-  PromptData,
-  WithId,
+  ContentData,
+  PromptData
 } from "$types";
 import { TreeNodeInfo } from "$lib/components/Tree/index";
 import { writable } from "svelte/store";
@@ -29,48 +28,48 @@ export async function load({ data }): Promise<LayoutLoadData> {
   };
 }
 
-const transformFolderDBNodeToTreeState = <TTreeNodeData extends FolderItem>(
-  folderDBNodes: DBNode<FolderData>[],
-  folderItems: TTreeNodeData[]
-): TreeNodeInfo<TTreeNodeData>[] => {
-  const rootFolderDBNodes = folderDBNodes.filter((dbNode) => dbNode.parentId === "");
+const transformFolderDBNodeToTreeState = <TContentData extends ContentData>(
+  folderDbNodes: DBNode<FolderData>[],
+  contentDbNodes: TContentData[]
+): TreeNodeInfo<TContentData>[] => {
+  const rootFolderDBNodes = folderDbNodes.filter((dbNode) => dbNode.parentId === "");
   return rootFolderDBNodes.map((rootFolderDBNode) =>
-    transformFolderDBNodeToTreeNodeInfo<TTreeNodeData>(
+    transformFolderDBNodeToTreeNodeInfo<TContentData>(
       rootFolderDBNode,
-      folderDBNodes,
-      folderItems,
+      folderDbNodes,
+      contentDbNodes,
       true
     )
   );
 };
 
-const transformFolderDBNodeToTreeNodeInfo = <TTreeNodeData extends FolderItem>(
+const transformFolderDBNodeToTreeNodeInfo = <TContentData extends ContentData>(
   parentFolderDbNode: DBNode<FolderData>,
   folderDbNodes: DBNode<FolderData>[],
-  folderItems: TTreeNodeData[],
+  contentDbNodes: TContentData[],
   isRootNode: boolean
-): TreeNodeInfo<TTreeNodeData> => {
+): TreeNodeInfo<TContentData> => {
   const folderSubnodes = folderDbNodes
     .filter((folderDbNode) => folderDbNode.parentId === parentFolderDbNode._id)
     .map((dbNodeSubnode) =>
-      transformFolderDBNodeToTreeNodeInfo<TTreeNodeData>(
+      transformFolderDBNodeToTreeNodeInfo<TContentData>(
         dbNodeSubnode,
         folderDbNodes,
-        folderItems,
+        contentDbNodes,
         false
       )
     );
 
-  const folderItemSubnodes = folderItems
+  const folderItemSubnodes = contentDbNodes
     .filter((folderItem) =>
       parentFolderDbNode.data.itemsIds.includes(folderItem._id)
     )
     .map(
       (folderItem) =>
-        new TreeNodeInfo<TTreeNodeData>(false, folderItem.name, { data: folderItem })
+        new TreeNodeInfo<TContentData>(false, folderItem.name, { data: folderItem })
     );
 
-  return new TreeNodeInfo<TTreeNodeData>(isRootNode, parentFolderDbNode.data.name, {
+  return new TreeNodeInfo<TContentData>(isRootNode, parentFolderDbNode.data.name, {
     childNodes: [...folderSubnodes, ...folderItemSubnodes],
   });
 };

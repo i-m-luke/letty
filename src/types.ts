@@ -15,7 +15,7 @@ export type WithId = {
   _id: string;
 };
 
-export type FolderItem = {
+export type ContentData = {
   name: string;
 } & WithId;
 

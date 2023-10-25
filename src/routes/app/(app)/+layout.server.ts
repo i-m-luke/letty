@@ -1,7 +1,7 @@
 import type LayoutServerLoadData from "./LayoutServerLoadData";
 import db from "$db";
-import ThreadDAO from "$lib/DAO/ThreadDAO";
-import PromptDAO from "$lib/DAO/PromptDAO";
+import ThreadDAO from "$lib/DAO/ThreadDataDAO";
+import PromptDAO from "$lib/DAO/PromptDataDAO";
 import ThreadFoldersDAO from "$lib/DAO/ThreadFoldersDAO";
 import PromptFoldersDAO from "$lib/DAO/PromptFoldersDAO";
 

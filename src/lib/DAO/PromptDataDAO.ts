@@ -2,15 +2,13 @@ import type { Db as DB } from "mongodb";
 import type { DBItem, PromptData } from "$types";
 import BaseDAO from "./BaseDAO";
 
-export default class TheradDAO extends BaseDAO<PromptData> {
+export default class PromptDataDAO extends BaseDAO<PromptData> {
   constructor(db: DB) {
     super(db, "prompts");
   }
 
   async getAll(): Promise<PromptData[]> {
-    const data = (await this.collection
-      .find({})
-      .toArray()) as DBItem<PromptData>[];
+    const data = (await this.collection.find({}).toArray()) as DBItem<PromptData>[];
     return data.map((data) => data as PromptData);
   }
 

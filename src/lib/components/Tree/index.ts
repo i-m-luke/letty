@@ -14,7 +14,7 @@ export type TreeNodeInfoOpts<TNodeData> = {
 export class TreeNodeInfo<TNodeData> {
   // isFolder: boolean;
   isRoot: boolean;
-  text: string;  
+  text: string;
   childNodes: TreeNodeInfo<TNodeData>[] = [];
   data?: TNodeData = undefined;
 
