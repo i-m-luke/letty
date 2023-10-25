@@ -1,12 +1,10 @@
 <script lang="ts">
-   import { TreeNode, type TreeNodeInfo } from "./";
+   import { TreeNode, type TreeNodeInfo, type TreeNodeInfoData } from "./";
    import type ButtonInfo from "$lib/components/ButtonInfo";
 
-   type TNodeData = $$Generic;
-
-   export let nodeInfoCollection: TreeNodeInfo<TNodeData>[];
-   export let nodeOnClickAction = (nodeData: TNodeData) => {};
-   export let additionalButtons: ButtonInfo<TNodeData>[] = [];
+   export let nodeInfoCollection: TreeNodeInfo[];
+   export let nodeOnClickAction = (nodeData: TreeNodeInfoData) => {};
+   export let additionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
 </script>
 
 {#each nodeInfoCollection as nodeInfo}

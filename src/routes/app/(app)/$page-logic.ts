@@ -5,6 +5,7 @@ import type PostRequest from "./PostRequest";
 import { DeleteRequestType } from "./DeleteRequest";
 import type DeleteRequest from "./DeleteRequest";
 import type { PromptData, ThreadData } from "$types";
+import type { TreeNodeInfoData } from "$lib/components/Tree";
 
 //#region  POST
 
@@ -24,8 +25,8 @@ export const fetchPOST =
     });
   };
 
-export const fetchPostThread = fetchPOST<ThreadData>(PostRequestType.Thread);
-export const fetchPostPrompt = fetchPOST<PromptData>(PostRequestType.Prompt);
+export const fetchPostThread = fetchPOST<TreeNodeInfoData>(PostRequestType.Thread);
+export const fetchPostPrompt = fetchPOST<TreeNodeInfoData>(PostRequestType.Prompt);
 
 //#endregion
 
@@ -47,7 +48,11 @@ export const fetchDELETE =
     });
   };
 
-export const fetchDeleteThread = fetchDELETE<ThreadData>(DeleteRequestType.Thread);
-export const fetchDeletePrompt = fetchDELETE<PromptData>(DeleteRequestType.Prompt);
+export const fetchDeleteThread = fetchDELETE<TreeNodeInfoData>(
+  DeleteRequestType.Thread
+);
+export const fetchDeletePrompt = fetchDELETE<TreeNodeInfoData>(
+  DeleteRequestType.Prompt
+);
 
 //#endregion

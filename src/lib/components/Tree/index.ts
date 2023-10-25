@@ -6,22 +6,33 @@ export default Tree;
 
 export const TreeNode = _TreeNode;
 
-export type TreeNodeInfoOpts<TNodeData> = {
-  childNodes?: TreeNodeInfo<TNodeData>[];
-  data?: TNodeData;
+export type TreeNodeInfoOpts = {
+  childNodes?: TreeNodeInfo[];
 };
 
-export class TreeNodeInfo<TNodeData> {
-  // isFolder: boolean;
+export type TreeNodeInfoData = {
+  _id: string;
+};
+
+export class TreeNodeInfo {
   isRoot: boolean;
   text: string;
-  childNodes: TreeNodeInfo<TNodeData>[] = [];
-  data?: TNodeData = undefined;
+  data: TreeNodeInfoData;
+  isFolder: boolean;
 
-  constructor(isRoot: boolean, text: string, opts?: TreeNodeInfoOpts<TNodeData>) {
+  childNodes: TreeNodeInfo[] = [];
+
+  constructor(
+    isRoot: boolean,
+    text: string,
+    data: TreeNodeInfoData,
+    opts?: TreeNodeInfoOpts
+  ) {
     this.isRoot = isRoot;
     this.text = text;
+    this.data = data;
+
     this.childNodes = opts?.childNodes ?? [];
-    this.data = opts?.data;
+    this.isFolder = this.childNodes.length > 0;
   }
 }

@@ -2,25 +2,22 @@
    import type { PromptData, ThreadData } from "$types";
    import type { Writable } from "svelte/store";
    import { goto } from "$app/navigation";
-   import Tree, { TreeNodeInfo } from "$lib/components/Tree";
+   import Tree, { TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
    import { fetchPostThread, fetchPostPrompt, fetchDeleteThread, fetchDeletePrompt } from "./$page-logic";
 
-   // TODO:
-   // Předělat tak, aby node obsahovalo pouze NodeData: { _id: string }
-   // Node nemusí mít data jako messages, prompt, atd.
-   export let threadTreeState: Writable<TreeNodeInfo<ThreadData>[]>;
-   export let promptTreeState: Writable<TreeNodeInfo<PromptData>[]>;
+   export let threadTreeState: Writable<TreeNodeInfo[]>;
+   export let promptTreeState: Writable<TreeNodeInfo[]>;
 
    const threadTreeNodeAdditionalButtons = [
       // NOTE: Aby bylo možné vytvořit thread/prompt, je nutné znát ID folder!
       new ButtonInfo("ADD", {
-         onClickAction: (data: ThreadData) => {
+         onClickAction: (data: TreeNodeInfoData) => {
             fetchPostThread(data);
          },
       }),
       new ButtonInfo("REMOVE", {
-         onClickAction: (data: ThreadData) => {
+         onClickAction: (data: TreeNodeInfoData) => {
             fetchDeleteThread(data);
          },
       }),
@@ -29,12 +26,12 @@
    const promptTreeNodeAdditionalButtons = [
       // NOTE: Aby bylo možné vytvořit thread/prompt, je nutné znát ID folder!
       new ButtonInfo("ADD", {
-         onClickAction: (data: PromptData) => {
+         onClickAction: (data: TreeNodeInfoData) => {
             fetchPostPrompt(data);
          },
       }),
       new ButtonInfo("REMOVE", {
-         onClickAction: (data: PromptData) => {
+         onClickAction: (data: TreeNodeInfoData) => {
             fetchDeletePrompt(data);
          },
       }),

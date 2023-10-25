@@ -4,7 +4,7 @@ import type {
   DBNode,
   FolderData,
   ContentData,
-  PromptData
+  PromptData,
 } from "$types";
 import { TreeNodeInfo } from "$lib/components/Tree/index";
 import { writable } from "svelte/store";
@@ -13,11 +13,11 @@ import { writable } from "svelte/store";
 export async function load({ data }): Promise<LayoutLoadData> {
   const { threadData, promptData, threadFolders, promptFolders } = data;
 
-  const threadTreeNodeInfo = transformFolderDBNodeToTreeState<ThreadData>(
+  const threadTreeNodeInfo = transformFolderDBNodeToTreeState(
     threadFolders,
     threadData
   );
-  const promptTreeNodeInfo = transformFolderDBNodeToTreeState<PromptData>(
+  const promptTreeNodeInfo = transformFolderDBNodeToTreeState(
     promptFolders,
     promptData
   );
@@ -28,13 +28,13 @@ export async function load({ data }): Promise<LayoutLoadData> {
   };
 }
 
-const transformFolderDBNodeToTreeState = <TContentData extends ContentData>(
+const transformFolderDBNodeToTreeState = (
   folderDbNodes: DBNode<FolderData>[],
-  contentDbNodes: TContentData[]
-): TreeNodeInfo<TContentData>[] => {
+  contentDbNodes: ContentData[]
+): TreeNodeInfo[] => {
   const rootFolderDBNodes = folderDbNodes.filter((dbNode) => dbNode.parentId === "");
   return rootFolderDBNodes.map((rootFolderDBNode) =>
-    transformFolderDBNodeToTreeNodeInfo<TContentData>(
+    transformFolderDBNodeToTreeNodeInfo(
       rootFolderDBNode,
       folderDbNodes,
       contentDbNodes,
@@ -43,16 +43,16 @@ const transformFolderDBNodeToTreeState = <TContentData extends ContentData>(
   );
 };
 
-const transformFolderDBNodeToTreeNodeInfo = <TContentData extends ContentData>(
-  parentFolderDbNode: DBNode<FolderData>,
+const transformFolderDBNodeToTreeNodeInfo = (
+  currentFolderDbNode: DBNode<FolderData>,
   folderDbNodes: DBNode<FolderData>[],
-  contentDbNodes: TContentData[],
+  contentDbNodes: ContentData[],
   isRootNode: boolean
-): TreeNodeInfo<TContentData> => {
-  const folderSubnodes = folderDbNodes
-    .filter((folderDbNode) => folderDbNode.parentId === parentFolderDbNode._id)
+): TreeNodeInfo => {
+  const subfolderNodes = folderDbNodes
+    .filter((folderDbNode) => folderDbNode.parentId === currentFolderDbNode._id)
     .map((dbNodeSubnode) =>
-      transformFolderDBNodeToTreeNodeInfo<TContentData>(
+      transformFolderDBNodeToTreeNodeInfo(
         dbNodeSubnode,
         folderDbNodes,
         contentDbNodes,
@@ -60,16 +60,18 @@ const transformFolderDBNodeToTreeNodeInfo = <TContentData extends ContentData>(
       )
     );
 
-  const folderItemSubnodes = contentDbNodes
+  const contentNodes = contentDbNodes
     .filter((folderItem) =>
-      parentFolderDbNode.data.itemsIds.includes(folderItem._id)
+      currentFolderDbNode.data.itemsIds.includes(folderItem._id)
     )
-    .map(
-      (folderItem) =>
-        new TreeNodeInfo<TContentData>(false, folderItem.name, { data: folderItem })
-    );
+    .map(({ name, _id }) => new TreeNodeInfo(false, name, { _id }));
 
-  return new TreeNodeInfo<TContentData>(isRootNode, parentFolderDbNode.data.name, {
-    childNodes: [...folderSubnodes, ...folderItemSubnodes],
-  });
+  return new TreeNodeInfo(
+    isRootNode,
+    currentFolderDbNode.data.name,
+    { _id: currentFolderDbNode._id },
+    {
+      childNodes: [...subfolderNodes, ...contentNodes],
+    }
+  );
 };

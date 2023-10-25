@@ -1,15 +1,13 @@
 <script lang="ts">
-   import type { TreeNodeInfo } from "./";
+   import type { TreeNodeInfo, TreeNodeInfoData } from "./";
    import type ButtonInfo from "$lib/components/ButtonInfo";
 
-   type TNodeData = $$Generic;
-
-   export let nodeInfo: TreeNodeInfo<TNodeData>;
-   export let nodeOnClickAction: ((nodeData: TNodeData) => void) | (() => void) = () => {};
-   export let additionalButtons: ButtonInfo<TNodeData>[] = [];
+   export let nodeInfo: TreeNodeInfo;
+   export let nodeOnClickAction: ((nodeData: TreeNodeInfoData) => void) | (() => void) = () => {};
+   export let additionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
 
    let isOpen: boolean = false;
-   let data: TNodeData = nodeInfo.data as TNodeData;
+   let data: TreeNodeInfoData = nodeInfo.data;
 
    $: isLeafNode = nodeInfo.childNodes.length < 1;
    $: nodeState = isLeafNode ? "(leaf node)" : isOpen ? "(opened)" : "(closed)";
