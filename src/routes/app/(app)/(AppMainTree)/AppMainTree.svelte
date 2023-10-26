@@ -4,8 +4,8 @@
    import { goto } from "$app/navigation";
    import Tree, { TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
-   import { fetchPostThread, fetchPostPrompt, fetchDeleteThread, fetchDeletePrompt } from "./$page-logic";
-   import { addNodeToNode } from "./$AppMainTree-logic";
+   import { fetchPostThread, fetchPostPrompt, fetchDeleteThread, fetchDeletePrompt, removeNodeFromSingleNode } from "./$logic";
+   import { addNodeToMultipleNodes } from "./$logic";
 
    export let threadTreeState: Writable<TreeNodeInfo[]>;
    export let promptTreeState: Writable<TreeNodeInfo[]>;
@@ -15,11 +15,21 @@
    const threadFolderNodeAdditionalButtons = [
       new ButtonInfo("ADD", {
          onClickAction: (data: TreeNodeInfoData) => {
+            // NOTE: Tento node bude navrácent fetch
+            const tempNewTreeNodeInfo = new TreeNodeInfo(false, "NEW NODE", { _id: "NO ID" });
+
+            threadTreeState.update((curr) => {
+               curr[0].childNodes.push(tempNewTreeNodeInfo);
+               return curr;
+            });
+
             // NOTE: Zamyslet se, zda by nebylo lepší, aby fetch navracel kompletní strom (ne jenom "uzel", který se pak dodá to stromu)
-            console.log("TODO: ADD THREAD"); // TODO
-            const tempNewTreeNodeInfo = new TreeNodeInfo(false, "NEW NODE", { _id: "NO ID" }); // NOTE: Tento node bude navrácent fetch
-            threadTreeState.update((current) => current.map((node) => addNodeToNode(data._id, node, tempNewTreeNodeInfo))); // TODO: Vyřešit, aby se přerendroval strom!!!
+            // threadTreeState.update((current) =>
+            //    current.map((node) => addNodeToMultipleNodes(data._id, node, tempNewTreeNodeInfo))
+            // ); // TODO: Vyřešit, aby se přerendroval strom!!!
+
             console.log($threadTreeState);
+            console.log("TODO: ADD THREAD");
          },
       }),
       new ButtonInfo("REMOVE", {

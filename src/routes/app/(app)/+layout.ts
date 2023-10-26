@@ -4,7 +4,7 @@ import { TreeNodeInfo } from "$lib/components/Tree/index";
 import { writable } from "svelte/store";
 
 // data: data předaná z +layout.server.ts
-export async function load({ data }): Promise<LayoutLoadData> {
+export function load({ data }): LayoutLoadData {
   const { threadData, promptData, threadFolders, promptFolders } = data;
 
   const threadTreeNodeInfo = transformFolderDBNodeToTreeState(

@@ -2,7 +2,7 @@
    import { goto } from "$app/navigation";
    import { isMobile } from "$lib/global-state";
    import type LayoutLoadData from "./LayoutLoadData";
-   import AppMainTree from "./AppMainTree.svelte";
+   import AppMainTree from "./(AppMainTree)/AppMainTree.svelte";
 
    export let data: LayoutLoadData;
 </script>
