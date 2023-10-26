@@ -33,9 +33,7 @@
          </div>
       {/if}
 
-      <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}>
-         <span> {`${nodeInfo.text} ${nodeState}`}</span>
-      </span>
+      <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}> {`${nodeInfo.text} ${nodeState}`}</span>
 
       {#each additionalButtons as { text, onClickAction, formActionName }}
          <button type="button" formaction={formActionName} on:click={() => onClickAction(data)}>

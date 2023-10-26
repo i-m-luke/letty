@@ -1,11 +1,5 @@
 import type LayoutLoadData from "./LayoutLoadData";
-import type {
-  ThreadData,
-  DBNode,
-  FolderData,
-  ContentData,
-  PromptData,
-} from "$types";
+import type { DBNode, FolderData, ContentData } from "$types";
 import { TreeNodeInfo } from "$lib/components/Tree/index";
 import { writable } from "svelte/store";
 

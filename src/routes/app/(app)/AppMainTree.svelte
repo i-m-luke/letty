@@ -5,28 +5,25 @@
    import Tree, { TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
    import { fetchPostThread, fetchPostPrompt, fetchDeleteThread, fetchDeletePrompt } from "./$page-logic";
+   import { addNodeToNode } from "./$AppMainTree-logic";
 
    export let threadTreeState: Writable<TreeNodeInfo[]>;
    export let promptTreeState: Writable<TreeNodeInfo[]>;
-
-   const addNodeToNode = (targetNodeId: string, node: TreeNodeInfo, nodeToAdd: TreeNodeInfo): TreeNodeInfo => {
-      return node.data._id === targetNodeId
-         ? { ...node, childNodes: [...node.childNodes, nodeToAdd] }
-         : { ...node, childNodes: node.childNodes.map((node) => addNodeToNode(targetNodeId, node, nodeToAdd)) };
-   };
 
    //#region thread
 
    const threadFolderNodeAdditionalButtons = [
       new ButtonInfo("ADD", {
          onClickAction: (data: TreeNodeInfoData) => {
+            // NOTE: Zamyslet se, zda by nebylo lepší, aby fetch navracel kompletní strom (ne jenom "uzel", který se pak dodá to stromu)
             console.log("TODO: ADD THREAD"); // TODO
-            const tempNewTreeNodeInfo = new TreeNodeInfo(false, "NEW NODE", { _id: "NO ID" });
-            const newThreadTreeNodes = $threadTreeState.map((node) => addNodeToNode(data._id, node, tempNewTreeNodeInfo));
-            threadTreeState.set(newThreadTreeNodes); // TODO: Vyřešit, aby se přerendroval strom!!!
+            const tempNewTreeNodeInfo = new TreeNodeInfo(false, "NEW NODE", { _id: "NO ID" }); // NOTE: Tento node bude navrácent fetch
+            threadTreeState.update((current) => current.map((node) => addNodeToNode(data._id, node, tempNewTreeNodeInfo))); // TODO: Vyřešit, aby se přerendroval strom!!!
+            console.log($threadTreeState);
          },
       }),
       new ButtonInfo("REMOVE", {
+         // NOTE: Aby šlo uzel smazat, bude muset být známo folderNodeId
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE THREAD FOLDER"); // TODO
          },
@@ -73,7 +70,7 @@
    <span>THREADING:</span>
    <Tree
       nodeOnClickAction={(nodeData) => goto(`/app/thread${nodeData._id}`)}
-      nodeInfoCollection={$threadTreeState}
+      nodeInfoCollection={threadTreeState}
       contentNodeAdditionalButtons={threadContentNodeAdditionalButtons}
       folderNodeAdditionalButtons={threadFolderNodeAdditionalButtons}
    />
@@ -83,7 +80,7 @@
    <span>PROMPTING:</span>
    <Tree
       nodeOnClickAction={(nodeData) => goto(`/app/prompt${nodeData._id}`)}
-      nodeInfoCollection={$promptTreeState}
+      nodeInfoCollection={promptTreeState}
       contentNodeAdditionalButtons={promptContentNodeAdditionalButtons}
       folderNodeAdditionalButtons={promptFolderNodeAdditionalButtons}
    />
