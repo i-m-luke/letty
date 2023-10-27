@@ -17,23 +17,17 @@
          onClickAction: (data: TreeNodeInfoData) => {
             // NOTE: Tento node bude navrácent fetch
             const tempNewTreeNodeInfo = new TreeNodeInfo(false, "NEW NODE", { _id: "NO ID" });
+            threadTreeState.update((current) =>
+               current.map((node) => addNodeToMultipleNodes(data._id, node, tempNewTreeNodeInfo))
+            );
 
-            threadTreeState.update((curr) => {
-               curr[0].childNodes.push(tempNewTreeNodeInfo);
-               return curr;
-            });
-
-            // NOTE: Zamyslet se, zda by nebylo lepší, aby fetch navracel kompletní strom (ne jenom "uzel", který se pak dodá to stromu)
-            // threadTreeState.update((current) =>
-            //    current.map((node) => addNodeToMultipleNodes(data._id, node, tempNewTreeNodeInfo))
-            // ); // TODO: Vyřešit, aby se přerendroval strom!!!
-
-            console.log($threadTreeState);
             console.log("TODO: ADD THREAD");
          },
       }),
       new ButtonInfo("REMOVE", {
-         // NOTE: Aby šlo uzel smazat, bude muset být známo folderNodeId
+         // NOTE:
+         // Aby šlo uzel smazat, bude muset být známo folderNodeId
+         // --> TODO: Rozšířit TreeNodeInfoData o folderNodeId
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE THREAD FOLDER"); // TODO
          },

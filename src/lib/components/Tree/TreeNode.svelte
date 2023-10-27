@@ -8,9 +8,7 @@
    export let folderNodeAdditionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
 
    let isOpen: boolean = false;
-   let data: TreeNodeInfoData = nodeInfo.data;
-   let childNodes: TreeNodeInfo[] = nodeInfo.childNodes;
-
+   $: data = nodeInfo.data;
    $: nodeState = nodeInfo.isFolder && isOpen ? "(opened)" : "(closed)";
 
    const additionalButtons: ButtonInfo<TreeNodeInfoData>[] = nodeInfo.isFolder
@@ -44,7 +42,7 @@
 
    {#if isOpen}
       <div class="child-nodes">
-         {#each childNodes as childNode}
+         {#each nodeInfo.childNodes as childNode}
             <svelte:self {nodeOnClickAction} nodeInfo={childNode} {contentNodeAdditionalButtons} {folderNodeAdditionalButtons} />
          {/each}
       </div>

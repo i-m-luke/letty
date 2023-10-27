@@ -68,6 +68,48 @@ export const addNodeToMultipleNodes = (
       };
 };
 
+export const addNodeToSingleNode = (
+  targetNodeId: string,
+  currentNode: TreeNodeInfo,
+  nodeToAdd: TreeNodeInfo
+): TreeNodeInfo => {
+  const newCurrentNode = { ...currentNode };
+
+  const findNodeById = (
+    id: string,
+    nodes: TreeNodeInfo[]
+  ): TreeNodeInfo | undefined => {
+    const newChildNodes = [...newCurrentNode.childNodes];
+
+    for (const node of nodes) {
+      if (node.data._id === id) return node;
+      const foundNode = findNodeById(id, node.childNodes);
+      if (foundNode) return foundNode;
+    }
+
+    findNodeById(targetNodeId, newChildNodes)?.childNodes.push(nodeToAdd);
+  };
+
+  return newCurrentNode;
+};
+
+// TODO: TEST & DEBUG
+export const removeNodeFromMultipleNodes = (
+  currentNode: TreeNodeInfo,
+  targetNode: TreeNodeInfo
+): TreeNodeInfo => {
+  const childNodes = currentNode.childNodes.filter(
+    (childNode) => childNode.data._id === targetNode.data._id
+  );
+  return {
+    ...currentNode,
+    childNodes: childNodes.map((childNode) =>
+      removeNodeFromMultipleNodes(childNode, targetNode)
+    ),
+  };
+};
+
+// TODO: TEST & DEBUG
 export const removeNodeFromSingleNode = (
   currentNode: TreeNodeInfo,
   targetNode: TreeNodeInfo,
@@ -95,21 +137,6 @@ export const removeNodeFromSingleNode = (
     ...newCurrentNode,
     childNodes: newChildNodes.map((childNode) =>
       removeNodeFromSingleNode(childNode, targetNode, false)
-    ),
-  };
-};
-
-export const removeNodeFromMultipleNodes = (
-  currentNode: TreeNodeInfo,
-  targetNode: TreeNodeInfo
-): TreeNodeInfo => {
-  const childNodes = currentNode.childNodes.filter(
-    (childNode) => childNode.data._id === targetNode.data._id
-  );
-  return {
-    ...currentNode,
-    childNodes: childNodes.map((childNode) =>
-      removeNodeFromMultipleNodes(childNode, targetNode)
     ),
   };
 };
