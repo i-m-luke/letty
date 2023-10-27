@@ -2,6 +2,8 @@ import type { TreeNodeInfo } from "$lib/components/Tree";
 import { RequestType } from "../Request";
 import type Request from "../Request";
 import type { TreeNodeInfoData } from "$lib/components/Tree";
+import routes from "$routes";
+import type { PromptData } from "$types";
 
 //#region  IMPURE CODE:
 
@@ -9,18 +11,26 @@ import type { TreeNodeInfoData } from "$lib/components/Tree";
 
 export const fetchPOST =
   <TData>(type: RequestType) =>
-  async (data: TData) => {
+  async (data: TData): Promise<PromptData> => {
     const req: Request = {
       type,
       data,
     };
-    return await fetch(`/app/`, {
+
+    const res = await fetch(routes.static.app, {
       method: "POST",
       body: JSON.stringify(req),
       headers: {
         "Content-Type": "application/json",
       },
     });
+
+    // TODO
+    return {
+      _id: "TODO",
+      name: "TODO",
+      prompt: "TODO",
+    };
   };
 
 export const fetchPostThread = fetchPOST<TreeNodeInfoData>(RequestType.Thread);
@@ -37,7 +47,7 @@ export const fetchDELETE =
       type,
       data,
     };
-    return await fetch(`/app/`, {
+    return await fetch(routes.static.app, {
       method: "DELETE",
       body: JSON.stringify(req),
       headers: {
@@ -73,21 +83,27 @@ export const addNodeToSingleNode = (
   currentNode: TreeNodeInfo,
   nodeToAdd: TreeNodeInfo
 ): TreeNodeInfo => {
-  const newCurrentNode = { ...currentNode };
+  const clone = (node: TreeNodeInfo): TreeNodeInfo => {
+    return {
+      ...node,
+      childNodes: node.childNodes.map(clone),
+    };
+  };
+  const newCurrentNode = clone(currentNode);
 
   const findNodeById = (
     id: string,
     nodes: TreeNodeInfo[]
   ): TreeNodeInfo | undefined => {
-    const newChildNodes = [...newCurrentNode.childNodes];
-
     for (const node of nodes) {
       if (node.data._id === id) return node;
       const foundNode = findNodeById(id, node.childNodes);
       if (foundNode) return foundNode;
     }
 
-    findNodeById(targetNodeId, newChildNodes)?.childNodes.push(nodeToAdd);
+    findNodeById(targetNodeId, newCurrentNode.childNodes)?.childNodes.push(
+      nodeToAdd
+    );
   };
 
   return newCurrentNode;
@@ -98,14 +114,11 @@ export const removeNodeFromMultipleNodes = (
   currentNode: TreeNodeInfo,
   targetNode: TreeNodeInfo
 ): TreeNodeInfo => {
-  const childNodes = currentNode.childNodes.filter(
-    (childNode) => childNode.data._id === targetNode.data._id
-  );
   return {
     ...currentNode,
-    childNodes: childNodes.map((childNode) =>
-      removeNodeFromMultipleNodes(childNode, targetNode)
-    ),
+    childNodes: currentNode.childNodes
+      .filter((childNode) => childNode.data._id === targetNode.data._id)
+      .map((childNode) => removeNodeFromMultipleNodes(childNode, targetNode)),
   };
 };
 

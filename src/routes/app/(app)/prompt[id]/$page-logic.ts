@@ -1,5 +1,6 @@
 import type PostData from "./PostData";
 import type { PromptInfo } from "$types";
+import routes from "$routes";
 
 // IMPURE CODE:
 export const fetchPOST = async (
@@ -9,7 +10,7 @@ export const fetchPOST = async (
 ) => {
   const postData: PostData = { parentId, promptName, prompt };
 
-  const response = await fetch(`/app/prompt`, {
+  const response = await fetch(routes.static.prompt, {
     method: "POST",
     body: JSON.stringify(postData),
     headers: {

@@ -4,6 +4,7 @@
    import type PromptSegmentState from "./PromptSegmentState";
    import { fetchPOST } from "./$page-logic";
    import { writable, type Writable } from "svelte/store";
+   import routes from "$routes";
 
    let inPromptName: string = "test prompt";
    let inPromptText: string = "test prompt";
@@ -37,7 +38,7 @@
       </div>
 
       <div>
-         <button formAction="/app?/run-prompt">{"<< RUN PROMPT >>"}</button>
+         <button formAction={routes.static.app + "?/run-prompt"}>{"<< RUN PROMPT >>"}</button>
       </div>
    </form>
 </main>

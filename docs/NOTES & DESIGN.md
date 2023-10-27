@@ -1,3 +1,5 @@
+NÁZEV APLIKACE: letty.io ??
+
 - ZAČÍT S MINIMEM MONŽOSTÍ A V PŘÍPADĚ ZÁJMU PŘIDÁVAT ZA POPLATEK DALŠÍ
 - TRIAL / OMEZENÝ POČET PROMPTŮ ? ... BUDE NÁKLADNÉ, API STOJÍ PENÍZE
 - Prompt Engineering is a thing
@@ -119,8 +121,6 @@
 
 # NÁZEV PRODUKTU
 
-PANDA - Prompter for Automated Navigation and Directional Assistance
-PMT - Prompt Management Tool
 PM - Prompt Manager
 rips - root interface prompting solution
 PE - Prompting Environment

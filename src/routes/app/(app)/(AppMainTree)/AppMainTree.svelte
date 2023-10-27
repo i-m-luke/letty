@@ -1,5 +1,5 @@
 <script lang="ts">
-   import type { PromptData, ThreadData } from "$types";
+   import routes from "$routes";
    import type { Writable } from "svelte/store";
    import { goto } from "$app/navigation";
    import Tree, { TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
@@ -15,13 +15,15 @@
    const threadFolderNodeAdditionalButtons = [
       new ButtonInfo("ADD", {
          onClickAction: (data: TreeNodeInfoData) => {
-            // NOTE: Tento node bude navrácent fetch
-            const tempNewTreeNodeInfo = new TreeNodeInfo(false, "NEW NODE", { _id: "NO ID" });
-            threadTreeState.update((current) =>
-               current.map((node) => addNodeToMultipleNodes(data._id, node, tempNewTreeNodeInfo))
-            );
-
-            console.log("TODO: ADD THREAD");
+            fetchPostPrompt(data)
+               .then((res) => {
+                  threadTreeState.update((current) =>
+                     current.map((node) =>
+                        addNodeToMultipleNodes(data._id, node, new TreeNodeInfo(false, res.name, { _id: res._id }))
+                     )
+                  );
+               })
+               .catch((err) => console.log(err));
          },
       }),
       new ButtonInfo("REMOVE", {
@@ -73,7 +75,7 @@
 {#if $threadTreeState.length > 0}
    <span>THREADING:</span>
    <Tree
-      nodeOnClickAction={(nodeData) => goto(`/app/thread${nodeData._id}`)}
+      nodeOnClickAction={(nodeData) => goto(`${routes.static.thread}${nodeData._id}`)}
       nodeInfoCollection={threadTreeState}
       contentNodeAdditionalButtons={threadContentNodeAdditionalButtons}
       folderNodeAdditionalButtons={threadFolderNodeAdditionalButtons}
@@ -83,7 +85,7 @@
 {#if $promptTreeState.length > 0}
    <span>PROMPTING:</span>
    <Tree
-      nodeOnClickAction={(nodeData) => goto(`/app/prompt${nodeData._id}`)}
+      nodeOnClickAction={(nodeData) => goto(`${routes.static.prompt}${nodeData._id}`)}
       nodeInfoCollection={promptTreeState}
       contentNodeAdditionalButtons={promptContentNodeAdditionalButtons}
       folderNodeAdditionalButtons={promptFolderNodeAdditionalButtons}

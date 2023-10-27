@@ -3,6 +3,7 @@
    import { isMobile } from "$lib/global-state";
    import type LayoutLoadData from "./LayoutLoadData";
    import AppMainTree from "./(AppMainTree)/AppMainTree.svelte";
+   import routes from "$routes";
 
    export let data: LayoutLoadData;
 </script>
@@ -12,7 +13,7 @@
       <a href="/app/settings">SETTINGS</a>
       {#if $isMobile}
          <span>||</span>
-         <button on:click={() => goto("/app")}>SHOW TREE</button>
+         <button on:click={() => goto(routes.static.app)}>SHOW TREE</button>
       {/if}
    </div>
 
