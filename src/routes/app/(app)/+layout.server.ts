@@ -4,6 +4,7 @@ import ThreadDAO from "$lib/DAO/ThreadDataDAO";
 import PromptDAO from "$lib/DAO/PromptDataDAO";
 import ThreadFoldersDAO from "$lib/DAO/ThreadFoldersDAO";
 import PromptFoldersDAO from "$lib/DAO/PromptFoldersDAO";
+import type { Actions } from "@sveltejs/kit";
 
 const threadDAO = new ThreadDAO(db);
 const promptDAO = new PromptDAO(db);

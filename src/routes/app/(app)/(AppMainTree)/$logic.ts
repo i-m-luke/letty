@@ -3,20 +3,20 @@ import { RequestType } from "../Request";
 import type Request from "../Request";
 import type { TreeNodeInfoData } from "$lib/components/Tree";
 import routes from "$routes";
-import type { PromptData } from "$types";
+import type { PromptData, ThreadData } from "$types";
 
 //#region  IMPURE CODE:
 
 //#region  POST
 
 export const fetchPOST =
-  <TData>(type: RequestType) =>
-  async (data: TData): Promise<PromptData> => {
-    const req: Request = {
+  <TReqData, TResData>(type: RequestType) =>
+  async (data: TReqData): Promise<TResData> => {
+    const req: Request<TReqData> = {
       type,
       data,
     };
-
+    // TODO
     const res = await fetch(routes.static.app, {
       method: "POST",
       body: JSON.stringify(req),
@@ -25,16 +25,16 @@ export const fetchPOST =
       },
     });
 
-    // TODO
-    return {
-      _id: "TODO",
-      name: "TODO",
-      prompt: "TODO",
-    };
+    // TODO?
+    return (await res.json()) as TResData;
   };
 
-export const fetchPostThread = fetchPOST<TreeNodeInfoData>(RequestType.Thread);
-export const fetchPostPrompt = fetchPOST<TreeNodeInfoData>(RequestType.Prompt);
+export const fetchPostThread = fetchPOST<TreeNodeInfoData, ThreadData>(
+  RequestType.Thread
+);
+export const fetchPostPrompt = fetchPOST<TreeNodeInfoData, PromptData>(
+  RequestType.Prompt
+);
 
 //#endregion
 
@@ -42,18 +42,20 @@ export const fetchPostPrompt = fetchPOST<TreeNodeInfoData>(RequestType.Prompt);
 
 export const fetchDELETE =
   <TData>(type: RequestType) =>
-  async (data: TData) => {
-    const req: Request = {
+  async (data: TData): Promise<boolean> => {
+    const req: Request<TData> = {
       type,
       data,
     };
-    return await fetch(routes.static.app, {
+    const res = fetch(routes.static.app, {
       method: "DELETE",
       body: JSON.stringify(req),
       headers: {
         "Content-Type": "application/json",
       },
     });
+
+    return true; // TODO: return delete successful?
   };
 
 export const fetchDeleteThread = fetchDELETE<TreeNodeInfoData>(RequestType.Thread);

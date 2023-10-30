@@ -3,9 +3,9 @@ export enum RequestType {
   Prompt = "Prompt",
 }
 
-type Request = {
+type Request<TData> = {
   type: RequestType;
-  data: any;
+  data: TData;
 };
 
 export default Request;

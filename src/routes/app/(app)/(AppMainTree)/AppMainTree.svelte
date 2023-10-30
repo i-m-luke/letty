@@ -7,23 +7,37 @@
    import { fetchPostThread, fetchPostPrompt, fetchDeleteThread, fetchDeletePrompt, removeNodeFromSingleNode } from "./$logic";
    import { addNodeToMultipleNodes } from "./$logic";
 
+   import Dialog from "$lib/components/Dialog.svelte";
+   import { TextInput, TextInputType } from "$lib/components/TextInput";
+
+   let createPromptDialog: HTMLDialogElement;
+
    export let threadTreeState: Writable<TreeNodeInfo[]>;
    export let promptTreeState: Writable<TreeNodeInfo[]>;
 
-   //#region thread
+   function showDialogAndBlockTillClosed(dialog: HTMLDialogElement) {
+      dialog.showModal();
+      return new Promise((resolve) => {
+         dialog.addEventListener("close", resolve, { once: true });
+      });
+   }
+
+   //#region thread buttons
 
    const threadFolderNodeAdditionalButtons = [
       new ButtonInfo("ADD", {
          onClickAction: (data: TreeNodeInfoData) => {
-            fetchPostPrompt(data)
-               .then((res) => {
-                  threadTreeState.update((current) =>
-                     current.map((node) =>
-                        addNodeToMultipleNodes(data._id, node, new TreeNodeInfo(false, res.name, { _id: res._id }))
-                     )
-                  );
-               })
-               .catch((err) => console.log(err));
+            showDialogAndBlockTillClosed(createPromptDialog).then(() => {
+               fetchPostPrompt(data)
+                  .then((res) => {
+                     threadTreeState.update((current) =>
+                        current.map((node) =>
+                           addNodeToMultipleNodes(data._id, node, new TreeNodeInfo(false, res.name, { _id: res._id }))
+                        )
+                     );
+                  })
+                  .catch((err) => console.log(err));
+            });
          },
       }),
       new ButtonInfo("REMOVE", {
@@ -46,7 +60,7 @@
 
    //#endregion
 
-   //#region prompt
+   //#region prompt buttons
 
    const promptFolderNodeAdditionalButtons = [
       new ButtonInfo("ADD", {
@@ -91,3 +105,22 @@
       folderNodeAdditionalButtons={promptFolderNodeAdditionalButtons}
    />
 {/if}
+
+<button on:click={() => createPromptDialog.showModal()}>SHOW DIALOG</button>
+<Dialog bind:dialog={createPromptDialog} on:close={() => {}}>
+   <TextInput type={TextInputType.Text} value="" label="NAME:" />
+   <button
+      on:click={() => {
+         // ... provede se fetch (form actions nepůjde použít)
+         createPromptDialog.close();
+      }}
+      >OK
+   </button>
+
+   <style>
+      form {
+         display: flex;
+         flex-direction: column;
+      }
+   </style>
+</Dialog>
