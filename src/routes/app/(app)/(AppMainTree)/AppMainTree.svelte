@@ -28,6 +28,9 @@
       new ButtonInfo("ADD", {
          onClickAction: (data: TreeNodeInfoData) => {
             showDialogAndBlockTillClosed(createPromptDialog).then(() => {
+               // TODO: Provést fetch až podle toho, zda byl dialog potvrzen OK
+               // Promise by mohl vracet ConfirmOption a další data (např. vyplněné hodnoty)
+               // Avšak na serveru by se po potvrzení měla provést validace dat ...
                fetchPostPrompt(data)
                   .then((res) => {
                      threadTreeState.update((current) =>
