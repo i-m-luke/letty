@@ -1,11 +1,1 @@
-<script lang="ts">
-   import { isMobile } from "$lib/global-state";
-   import type LayoutLoadData from "./LayoutLoadData";
-   import AppMainTree from "./(AppMainTree)/AppMainTree.svelte";
-
-   export let data: LayoutLoadData;
-</script>
-
-{#if $isMobile}
-   <AppMainTree promptTreeState={data.promptTreeState} threadTreeState={data.threadTreeState} />
-{/if}
+<!-- EMPTY PAGE SO THE LAYOUT CAN BE RENDERED -->

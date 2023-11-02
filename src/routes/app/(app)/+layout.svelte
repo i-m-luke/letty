@@ -1,9 +1,6 @@
 <script lang="ts">
-   import { goto } from "$app/navigation";
-   import { isMobile } from "$lib/global-state";
    import type LayoutLoadData from "./LayoutLoadData";
    import AppMainTree from "./(AppMainTree)/AppMainTree.svelte";
-   import routes from "$routes";
 
    export let data: LayoutLoadData;
 </script>
@@ -11,19 +8,12 @@
 <main>
    <div class="upper-container">
       <a href="/app/settings">SETTINGS</a>
-      {#if $isMobile}
-         <span>||</span>
-         <button on:click={() => goto(routes.static.app)}>SHOW TREE</button>
-      {/if}
    </div>
 
    <div class="root-container">
-      <!-- TODO: Na mobilu se tree bude skrývat a půjde jej rozbalit skrze tlačítko [ >> ] -->
-      {#if !$isMobile}
-         <div class="side-container">
-            <AppMainTree promptTreeState={data.promptTreeState} threadTreeState={data.threadTreeState} />
-         </div>
-      {/if}
+      <div class="side-container">
+         <AppMainTree promptTreeState={data.promptTreeState} threadTreeState={data.threadTreeState} />
+      </div>
 
       <div class="main-container">
          <!-- WORKSPACE SLOT -->

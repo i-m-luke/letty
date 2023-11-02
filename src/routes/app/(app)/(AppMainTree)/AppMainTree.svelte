@@ -1,41 +1,33 @@
+<!-- Nepřesunout obsah komponenty přímo do +layout.svelte ??? -->
 <script lang="ts">
    import routes from "$routes";
    import type { Writable } from "svelte/store";
    import { goto } from "$app/navigation";
-   import Tree, { TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
+   import { Tree, TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
    import { fetchPostThread, fetchPostPrompt, fetchDeleteThread, fetchDeletePrompt, removeNodeFromSingleNode } from "./$logic";
    import { addNodeToMultipleNodes } from "./$logic";
-
-   import Dialog from "$lib/components/Dialog.svelte";
+   import { Dialog, DialogProxy } from "$lib/components/Dialog";
    import { TextInput, TextInputType } from "$lib/components/TextInput";
 
-   let createPromptDialog: HTMLDialogElement;
+   let createPromptDialogProxy = new DialogProxy();
+   let createPromptDialog_PromptNameValue: string;
 
    export let threadTreeState: Writable<TreeNodeInfo[]>;
    export let promptTreeState: Writable<TreeNodeInfo[]>;
-
-   function showDialogAndBlockTillClosed(dialog: HTMLDialogElement) {
-      dialog.showModal();
-      return new Promise((resolve) => {
-         dialog.addEventListener("close", resolve, { once: true });
-      });
-   }
 
    //#region thread buttons
 
    const threadFolderNodeAdditionalButtons = [
       new ButtonInfo("ADD", {
          onClickAction: (data: TreeNodeInfoData) => {
-            showDialogAndBlockTillClosed(createPromptDialog).then(() => {
-               // TODO: Provést fetch až podle toho, zda byl dialog potvrzen OK
-               // Promise by mohl vracet ConfirmOption a další data (např. vyplněné hodnoty)
-               // Avšak na serveru by se po potvrzení měla provést validace dat ...
+            createPromptDialogProxy.showModalAndBlockTillClosed().then(() => {
+               const promptName = createPromptDialog_PromptNameValue;
                fetchPostPrompt(data)
                   .then((res) => {
                      threadTreeState.update((current) =>
                         current.map((node) =>
-                           addNodeToMultipleNodes(data._id, node, new TreeNodeInfo(false, res.name, { _id: res._id }))
+                           addNodeToMultipleNodes(data._id, node, new TreeNodeInfo(false, promptName, { _id: res._id }))
                         )
                      );
                   })
@@ -109,17 +101,9 @@
    />
 {/if}
 
-<button on:click={() => createPromptDialog.showModal()}>SHOW DIALOG</button>
-<Dialog bind:dialog={createPromptDialog} on:close={() => {}}>
-   <TextInput type={TextInputType.Text} value="" label="NAME:" />
-   <button
-      on:click={() => {
-         // ... provede se fetch (form actions nepůjde použít)
-         createPromptDialog.close();
-      }}
-      >OK
-   </button>
-
+<Dialog bind:proxy={createPromptDialogProxy}>
+   <TextInput type={TextInputType.Text} bind:value={createPromptDialog_PromptNameValue} label="NAME:" />
+   <button on:click={() => createPromptDialogProxy.close()}>OK</button>
    <style>
       form {
          display: flex;

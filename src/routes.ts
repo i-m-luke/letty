@@ -1,4 +1,4 @@
-const makeDynamicRoute = (...values: string[]) =>
+const makeRoute = (...values: string[]) =>
   values.length > 1
     ? values.reduce(
         (prev, curr) => sanitizeRouteSegment(prev) + sanitizeRouteSegment(curr)
@@ -15,14 +15,17 @@ const Routes = {
     thread: "",
   },
   dynamic: {
-    appId: (id: string) => makeDynamicRoute(Routes.static.app, id) + "/",
+    appId: (id: string) => makeRoute(Routes.static.app, id) + "/",
+  },
+  names: {
+    app: "app",
+    thread: "thread",
+    prompt: "prompt",
   },
 };
 
-const app = (Routes.static.app = makeDynamicRoute("app"));
-Routes.static.prompt = makeDynamicRoute(app, "prompt");
-Routes.static.thread = makeDynamicRoute(app, "thread");
-
-console.log("app route:" + app);
+const app = (Routes.static.app = makeRoute(Routes.names.app));
+Routes.static.prompt = makeRoute(app, Routes.names.prompt);
+Routes.static.thread = makeRoute(app, Routes.names.thread);
 
 export default Object.freeze(Routes);

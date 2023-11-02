@@ -1,17 +1,25 @@
 <script lang="ts">
    import { TextInputType } from "./";
+   import Input from "./Input.svelte";
+   import TextArea from "./TextArea.svelte";
+
    export let type: TextInputType;
    export let label: string;
    export let value: string;
+
+   const getComponent = () => {
+      switch (type) {
+         case TextInputType.Text:
+            return Input;
+         case TextInputType.TextArea:
+            return TextArea;
+      }
+   };
 </script>
 
 <div class="root">
    {#if label !== undefined || ""}<span>{label}</span>{/if}
-   {#if type === TextInputType.TextArea}
-      <textarea {value} />
-   {:else}
-      <input {type} {value} />
-   {/if}
+   <svelte:component this={getComponent()} bind:value />
 </div>
 
 <style>

@@ -2,8 +2,6 @@ import _Tree from "./Tree.svelte";
 import _TreeNode from "./TreeNode.svelte";
 
 export const Tree = _Tree;
-export default Tree;
-
 export const TreeNode = _TreeNode;
 
 export type TreeNodeInfoOpts = {

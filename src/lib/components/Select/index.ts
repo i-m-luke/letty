@@ -1,7 +1,6 @@
 import _Select from "./Select.svelte";
 
 export const Select = _Select;
-export default Select;
 
 export interface ISelectOptionInfo {
   text: string;

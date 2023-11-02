@@ -1,0 +1,2 @@
+COMPONENT B
+<slot />
