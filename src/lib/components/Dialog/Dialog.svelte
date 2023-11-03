@@ -1,19 +1,39 @@
 <script lang="ts">
-   import { onMount } from "svelte";
-   import type { DialogProxy } from "./";
-   import { validate } from "uuid";
+   import { DialogButtonType, type DialogProxy } from "./";
 
    export let proxy: DialogProxy;
    let dialog: HTMLDialogElement;
    $: {
       proxy.init(dialog);
    }
+
+   export let dataReset = () => {};
+
+   const handleDialog = (dispatchEventName: string) => () => {
+      dialog.close();
+      proxy.dispatchEvent(new Event(dispatchEventName));
+   };
+
+   const getOnClickAction = (type: DialogButtonType) => {
+      switch (type) {
+         case DialogButtonType.Close:
+            return handleDialog("close");
+         case DialogButtonType.Confirm:
+            return () => {
+               handleDialog("confirm");
+            };
+      }
+   };
+
+   export let buttons: { type: DialogButtonType; text: string }[];
 </script>
 
-<dialog bind:this={dialog}>
+<dialog bind:this={dialog} on:close={dataReset}>
    <div class="root">
       <slot />
-      <button on:click={() => dialog.close()}>{"<< close >>"}</button>
+      {#each buttons as { type, text }}
+         <button on:click={handleDialog(type.toString())}>{text}</button>
+      {/each}
    </div>
 </dialog>
 

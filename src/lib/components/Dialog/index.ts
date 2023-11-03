@@ -1,16 +1,25 @@
 import _Dialog from "./Dialog.svelte";
 export const Dialog = _Dialog;
 
-export class DialogProxy {
+export class DialogProxy extends EventTarget {
   private dialog: HTMLDialogElement | undefined;
-  constructor() {}
+  constructor() {
+    super();
+  }
 
-  async showModalAndBlockTillClosed(): Promise<unknown> {
+  showModalAndBlockTillClosed(): {
+    confirmed: Promise<unknown>;
+    closed: Promise<unknown>;
+  } {
     this.dialog?.showModal();
-    // NOTE: Navracet ConfirmOption?
-    return new Promise((resolve) => {
-      this.dialog?.addEventListener("close", resolve, { once: true });
-    });
+    return {
+      confirmed: new Promise((resolve) => {
+        this.addEventListener("confirm", resolve, { once: true });
+      }),
+      closed: new Promise((resolve) => {
+        this.addEventListener("close", resolve, { once: true });
+      }),
+    };
   }
 
   close(): void {
@@ -20,4 +29,9 @@ export class DialogProxy {
   init(element: HTMLDialogElement): void {
     this.dialog = element;
   }
+}
+
+export enum DialogButtonType {
+  Confirm = "confirm", // = event name
+  Close = "close",
 }

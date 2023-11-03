@@ -1,9 +1,11 @@
-import type { TreeNodeInfo } from "$lib/components/Tree";
+import { TreeNodeInfo } from "$lib/components/Tree";
 import { RequestType } from "../Request";
 import type Request from "../Request";
 import type { TreeNodeInfoData } from "$lib/components/Tree";
 import routes from "$routes";
-import type { PromptData, ThreadData } from "$types";
+import type { PromptData, ThreadData, WithId } from "$types";
+import type { DialogProxy } from "$lib/components/Dialog";
+import type { Writable } from "svelte/store";
 
 //#region  IMPURE CODE:
 
@@ -64,6 +66,27 @@ export const fetchDeletePrompt = fetchDELETE<TreeNodeInfoData>(RequestType.Promp
 //#endregion
 
 //#endregion
+
+export const curryNodeOnClickAction =
+  <TData extends WithId>(
+    treeState: Writable<TreeNodeInfo[]>,
+    fetchFn: (data: TreeNodeInfoData) => Promise<TData>
+  ) =>
+  (data: TreeNodeInfoData, name: string) => {
+    fetchFn(data)
+      .then((res) => {
+        treeState.update((current) =>
+          current.map((node) =>
+            addNodeToMultipleNodes(
+              data._id,
+              node,
+              new TreeNodeInfo(false, name, { _id: res._id })
+            )
+          )
+        );
+      })
+      .catch((err) => console.log(err));
+  };
 
 export const addNodeToMultipleNodes = (
   targetNodeId: string,

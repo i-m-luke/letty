@@ -1,39 +1,47 @@
-<!-- Nepřesunout obsah komponenty přímo do +layout.svelte ??? -->
 <script lang="ts">
    import routes from "$routes";
-   import type { Writable } from "svelte/store";
+   import { get, type Writable } from "svelte/store";
    import { goto } from "$app/navigation";
    import { Tree, TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
-   import { fetchPostThread, fetchPostPrompt, fetchDeleteThread, fetchDeletePrompt, removeNodeFromSingleNode } from "./$logic";
+   import {
+      fetchPostThread,
+      fetchPostPrompt,
+      fetchDeleteThread,
+      fetchDeletePrompt,
+      removeNodeFromSingleNode,
+      curryNodeOnClickAction as curryFetchAndTreeUpdateFn,
+   } from "./$logic";
    import { addNodeToMultipleNodes } from "./$logic";
-   import { Dialog, DialogProxy } from "$lib/components/Dialog";
-   import { TextInput, TextInputType } from "$lib/components/TextInput";
+   import { DialogProxy } from "$lib/components/Dialog";
+   import CreatePromptDialog from "./CreatePromptDialog.svelte";
+   import CreatePromptDialogData from "./CreatePromptDialogData";
+   import CreateThreadDialog from "./CreatePromptDialog.svelte";
+   import CreateThreadDialogData from "./CreatePromptDialogData";
+
+   let createThreadDialogProxy = new DialogProxy();
+   let createThreadDialogData = new CreateThreadDialogData();
 
    let createPromptDialogProxy = new DialogProxy();
-   let createPromptDialog_PromptNameValue: string;
+   let createPromptDialogData = new CreatePromptDialogData();
 
    export let threadTreeState: Writable<TreeNodeInfo[]>;
    export let promptTreeState: Writable<TreeNodeInfo[]>;
 
    //#region thread buttons
 
+   const curryThreadFolderNodeAddButtonOnClickActionFn = () => {
+      const onClickAction = curryFetchAndTreeUpdateFn(threadTreeState, fetchPostThread);
+      return (data: TreeNodeInfoData) => {
+         const { confirmed, closed } = createThreadDialogProxy.showModalAndBlockTillClosed();
+         const { name } = createThreadDialogData;
+         confirmed.then(() => onClickAction(data, get(name)));
+      };
+   };
+
    const threadFolderNodeAdditionalButtons = [
       new ButtonInfo("ADD", {
-         onClickAction: (data: TreeNodeInfoData) => {
-            createPromptDialogProxy.showModalAndBlockTillClosed().then(() => {
-               const promptName = createPromptDialog_PromptNameValue;
-               fetchPostPrompt(data)
-                  .then((res) => {
-                     threadTreeState.update((current) =>
-                        current.map((node) =>
-                           addNodeToMultipleNodes(data._id, node, new TreeNodeInfo(false, promptName, { _id: res._id }))
-                        )
-                     );
-                  })
-                  .catch((err) => console.log(err));
-            });
-         },
+         onClickAction: curryThreadFolderNodeAddButtonOnClickActionFn(),
       }),
       new ButtonInfo("REMOVE", {
          // NOTE:
@@ -57,11 +65,18 @@
 
    //#region prompt buttons
 
+   const curryPromptFolderNodeAddButtonOnClickActionFn = () => {
+      const onClickAction = curryFetchAndTreeUpdateFn(promptTreeState, fetchPostPrompt);
+      return (data: TreeNodeInfoData) => {
+         const { confirmed, closed } = createPromptDialogProxy.showModalAndBlockTillClosed();
+         const { name } = createPromptDialogData;
+         confirmed.then(() => onClickAction(data, get(name)));
+      };
+   };
+
    const promptFolderNodeAdditionalButtons = [
       new ButtonInfo("ADD", {
-         onClickAction: (data: TreeNodeInfoData) => {
-            console.log("TODO: ADD PROMPT"); // TODO
-         },
+         onClickAction: curryPromptFolderNodeAddButtonOnClickActionFn(),
       }),
       new ButtonInfo("REMOVE", {
          onClickAction: (data: TreeNodeInfoData) => {
@@ -101,13 +116,5 @@
    />
 {/if}
 
-<Dialog bind:proxy={createPromptDialogProxy}>
-   <TextInput type={TextInputType.Text} bind:value={createPromptDialog_PromptNameValue} label="NAME:" />
-   <button on:click={() => createPromptDialogProxy.close()}>OK</button>
-   <style>
-      form {
-         display: flex;
-         flex-direction: column;
-      }
-   </style>
-</Dialog>
+<CreateThreadDialog dialogProxy={createThreadDialogProxy} data={createThreadDialogData} />
+<CreatePromptDialog dialogProxy={createPromptDialogProxy} data={createPromptDialogData} />
