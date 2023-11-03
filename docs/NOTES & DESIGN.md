@@ -1,4 +1,4 @@
-# NÁZEV APLIKACE: letty.io ???
+# NÁZEV PRODUKTU: letty.io ???
 
     Další návrhy:
         - PM - Prompt Manager
@@ -52,7 +52,7 @@
     - Database?: MongoDB --> PocketBase ???
     - Zaintegrovat analýzy (návštěvnost, doba návštěvy, atd ...)
 
-## Front-end:
+## Frontend:
 
     - Obrazovka bude rozdělená na dvě poloviny:
         a) AppMainTree - vlevo,
@@ -90,6 +90,26 @@
         - skrze media-queries
         - AppMainTree se bude na mobilních zařízeních skrývat (bude se rolovat vlevo)
         - půjde rozbalit pomocí buttonu
+
+    # Style:
+        - Color-pallete:
+            - 1. bílá, 2. černá: plus gradienty
+            - 3. sytě fialová: pro highlight, např. mouse-over
+        - Zakulacené rohy
+        - AppMainTree: "glass-design" = částečně průhledné; bude se jemně prolínát s pozadím za stromem
+
+## Backend:
+
+    # Routing:
+        - Každá route má ve sveltekit vlastní adresář
+        - Pro každou route lze na serveru specifikovat:
+            - http metody: get, post, update, ...
+            - form actions: akce pro zprácovávání formulářu
+        - Route: Používá se pro různé provádění různých operaci na serveru
+
+    # Route testing:
+        - Na express lze řešit skrze middleware route
+        - Jak se řeší v případě SvelteKit ???
 
 ## Features:
 
@@ -141,19 +161,6 @@
                 b) Onznačí se více zpráv na které bude chtít uživatel reagovat: V tomto případě se otevře nové okno
             - u openai API requestu provést priming skrze messages u chatCompletion.create
             - viz img/react-to-messages.jpg
-
-## Back-end:
-
-    # Routing:
-        - Každá route má ve sveltekit vlastní adresář
-        - Pro každou route lze na serveru specifikovat:
-            - http metody: get, post, update, ...
-            - form actions: akce pro zprácovávání formulářu
-        - Route: Používá se pro různé provádění různých operaci na serveru
-
-    # Route testing:
-        - Na express lze řešit skrze middleware route
-        - Jak se řeší v případě SvelteKit ???
 
 # LOGO
 
