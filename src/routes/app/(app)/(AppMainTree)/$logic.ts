@@ -135,14 +135,14 @@ export const addNodeToSingleNode = (
 
 // TODO: TEST & DEBUG
 export const removeNodeFromMultipleNodes = (
-  currentNode: TreeNodeInfo,
-  targetNode: TreeNodeInfo
+  targetNodeId: string,
+  currentNode: TreeNodeInfo
 ): TreeNodeInfo => {
   return {
     ...currentNode,
     childNodes: currentNode.childNodes
-      .filter((childNode) => childNode.data._id === targetNode.data._id)
-      .map((childNode) => removeNodeFromMultipleNodes(childNode, targetNode)),
+      .filter((childNode) => childNode.data._id === targetNodeId)
+      .map((childNode) => removeNodeFromMultipleNodes(targetNodeId, childNode)),
   };
 };
 

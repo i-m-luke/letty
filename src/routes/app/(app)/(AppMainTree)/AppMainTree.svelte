@@ -4,7 +4,14 @@
    import { goto } from "$app/navigation";
    import { Tree, TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
-   import { fetchPostThread, fetchPostPrompt, fetchDeleteThread, fetchDeletePrompt, curryFetchAndUpdateTreeFn } from "./$logic";
+   import {
+      fetchPostThread,
+      fetchPostPrompt,
+      fetchDeleteThread,
+      fetchDeletePrompt,
+      curryFetchAndUpdateTreeFn,
+      removeNodeFromMultipleNodes,
+   } from "./$logic";
    import { DialogProxy } from "$lib/components/Dialog";
    import CreatePromptDialog from "./CreatePromptDialog.svelte";
    import CreatePromptDialogData from "./CreatePromptDialogData";
@@ -30,6 +37,7 @@
             const { name } = createThreadDialogData;
             fetchAndUpdateTree(data, get(name));
          });
+         canceled.then(() => console.log("dialog canceled"));
       };
    };
 
@@ -38,11 +46,20 @@
          onClickAction: curryThreadFolderNodeAddButtonOnClickActionFn(),
       }),
       new ButtonInfo("REMOVE", {
-         // NOTE:
-         // Aby šlo uzel smazat, bude muset být známo folderNodeId
-         // --> TODO: Rozšířit TreeNodeInfoData o folderNodeId
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE THREAD FOLDER"); // TODO
+            fetchDeleteThread(data)
+               .then(() => {
+                  // NOTE:
+                  // Jsou smazány pouze potomci daného uzlu, uzel ve stomu zůstane
+                  // Nejspíše proto, že filtrování neprobíhá na poli threadTreeState, ale až na potomcích
+                  threadTreeState.update((current) =>
+                     current
+                        .filter((node) => node.data._id === data._id)
+                        .map((node) => removeNodeFromMultipleNodes(data._id, node))
+                  );
+               })
+               .catch((err) => console.log(err));
          },
       }),
    ];
@@ -67,6 +84,7 @@
             const { name } = createPromptDialogData;
             fetchAndUpdateTree(data, get(name));
          });
+         canceled.then(() => console.log("dialog canceled"));
       };
    };
 
