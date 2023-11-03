@@ -1,13 +1,29 @@
-NÁZEV APLIKACE: letty.io ??
+# NÁZEV APLIKACE: letty.io ???
 
-- ZAČÍT S MINIMEM MONŽOSTÍ A V PŘÍPADĚ ZÁJMU PŘIDÁVAT ZA POPLATEK DALŠÍ
-- TRIAL / OMEZENÝ POČET PROMPTŮ ? ... BUDE NÁKLADNÉ, API STOJÍ PENÍZE
-- Prompt Engineering is a thing
-- Pricing:
-  a) 5usd + vlastní API key
-  b) přiřazeny API key + nějaký money navíc+ omezení tokenů za den?
-- pořídím si GPT4 ... DO KDY MÁ DATA?
-- threading vynechat v první fázi (půjde pouze single Prompting)
+    Další návrhy:
+        - PM - Prompt Manager
+        - rips - root interface prompting solution
+        - PE - Prompting Environment
+        - PEP - prompting entry point
+        - AIPE [ejp] - AI Prompter Environment
+        - AIP [ejp] - AI Prompter - PRIME PROMPT PROFIT
+
+# TERMINOLOGIE
+
+    + Thread: Vlákno chatu
+    + Threading: Průběh chatování skrze vlákno
+    + Prompt: Entita na základě které je sestaven dotaz pro chatbota; může brát argumenty
+    + Prompting: Vytváření promptů
+
+# BUSSINES MODEL
+
+    - TRIAL / OMEZENÝ POČET PROMPTŮ: Neomezený počet promptů by při velkém počtu lidí bylo velice nákladné
+    - ZAČÍT S MINIMEM MONŽOSTÍ: V případě zájmu aplikaci posléze rozšiřovat, některé funkce otevřít pouze za poplatek
+    - PROMPT ENGINEERING IS "A THING": Prompt engineering je budoucnost; nástroje k tomuto účelu budou (jsou) žádané
+    - Možnosti pricingu:
+        a) Neomezené tokeny: Subscribtion + Uživatel dodá vlastní API key
+        b) Omezené tokeny: Subscribtion v rámci kterého bude uživateli přiřazeny API key
+    - Začít s promtingem, poté rozšířit o threading
 
 # ÚČEL
 
@@ -15,120 +31,129 @@ NÁZEV APLIKACE: letty.io ??
         - uchovávání promptů
         - verzování (větvení) promptů
         - komentovávní promptů
-        - později sdílení promptů
+        ## use-cases: 1. Tunning promptů pro generování obrázků, 2. ...
     # Thread management:
+        - thread = vlákno chatu
         - uchovávání promptů v rámci threadu
         - mazání, verzování, vytváření branches (od daného místa konverzace se bude moci vytvořit kopie (snapshot) konverzace)
         - byl by přidán až později poté, co by se vyřešilo threadování promptů
     # Sdílení promptů:
         - nabízený prompt by obsahovat popis, úkázka výsledku a možnost vyzkoušení
 
-# USE CASES
-
-    1. TUNNING PROMPTU PRO GENEROVÁNÍ OBRÁZKŮ
-
 # DESIGN
+
+    # Unit Tests:
+        - Půjde plně otestovat na Svelte v5: Runes umožňí maximálně oddělit logiku od komponenty (ViewModel)
+        - Jak se řeší UI testing u sveltu?
+
+## Technologie:
 
     - Svelte Kit
     - Database?: MongoDB --> PocketBase ???
     - Zaintegrovat analýzy (návštěvnost, doba návštěvy, atd ...)
 
-    # UI:
-        - Obrazovka bude rozdělená na dvě poloviny: vlevo strom, vpravo workspace
-        - workspace půjde přepínat do mezi režimy: a) diagram promptů, b) editorem a runnerem promptů
-        - expandování jako je u svelte.dev/tutorial (po straně bude div, který bude mít event pro press) (rozměry se pak uloží do cookies) ... inspirovat se z freecodecamp tut, kde řeší eventy pohybu myši
-        - rezponsivnost:
-            - skrze media-queries
-            - tree se bude na mobilních zařízeních skrývat (bude se rolovat vlevo)
-            - půjde rozbalit pomocí buttonu
-        - rework Tree komponenty:
-            - v rohu stromu bude "tree manager" btn (ikonka pastelky):
-                - bude přepínat do režimu správy uzlů
-                - po přepnutí budou u uzlů checkboxy
+## Front-end:
+
+    - Obrazovka bude rozdělená na dvě poloviny:
+        a) AppMainTree - vlevo,
+        b) Workspace - vpravo
+
+    # Workspace:
+        - Půjde přepínat do mezi režimy
+        - Každý režim bude vlastní route (page)
+        - Seznam režimů:
+            a) prompt diagram: prohlížení promptů v diagramové struktuře,
+            b) prompt editor-runner: úprava promptu a jejich spouštění z jedné obrazovky
+            c) thread: chat; do chatu bude přepnito při spuštění prompt
+        ## Režim Prompt-editor :
+            - Obrazovka rozdělena na 3 části:
+                1. Část Konfigurace promptu: Parametrizace, ... ???
+                2. Část Text promptu + tlačítko "run": Tlačítko "run/execute" spustí prompt
+                3. Část Výsledek provedení promptu:
+                    + Ve spodní části panelu panel bude odpověď od AI
+                    + Dále v této části bude tlačítko, pomomcí kterého půjde přepnout do threadu: Provede se redirect na thread page
+            #### Parametrizace:
+                - bude obsahovat checkbox "parametrize", po navolení se zobrazí tlačítko [ + ] pro přidávání parametrů a textboxy pro zadání argumentů použitých při "run"
+                - do textu s promptem bude poté možné přidávat objekty "parametrů" (hodnota z textboxu se tam pak doplní)
+
+    # AppMainTree:
+        - Expandování jako je u svelte.dev/tutorial: po straně bude div, který bude mít event pro press; rozměry se pak uloží do        cookies; inspirovat se z freecodecamp tut, kde řeší eventy pohybu myši
+        ## future features:
+            - v rohu stromu bude "tree manager" btn (ikonka "pastelky"):
+                - při kliku se strom přepne do režimu správy uzlů
+                - po přepnutí budou u uzlů checkboxy: vybrané uzly půjde smazat
                 - zobrazí se delete btn
                 - bude možné uzly přesouvat
-                - viz img/tree-manager
-    # Prompt route page:
-        - rozdělena na 3 části:
-            1. Konfigurace promptu: parametrizace
-            2. Text promptu ... + tlačítko "run" ?? ... kam umístit?
-            3. Výsledek (odpověď) ... + tlačítko "run" ?? ... kam umístit?
-        - tlačítko "run/execute" spustí prompt
-        - ve spodní části panelu panel bude odpověď od AI + tlačítko, pomomcí kterého půjde přepnout do threadu (otevře se dialog ve kterém bude probíhat thread?) a pokračovat v promptování/konverzaci
+                - viz obr img/tree-manager
 
-        # Parametrizace:
-            - bude obsahovat checkbox "parametrize", po navolení se zobrazí tlačítko [ + ] pro přidávání parametrů a        textboxy pro zadání argumentů použitých při "run"
-            - do textu s promptem bude poté možné přidávat objekty "parametrů" (hodnota z textboxu se tam pak doplní)
+    # Rezponsivnost:
+        - skrze media-queries
+        - AppMainTree se bude na mobilních zařízeních skrývat (bude se rolovat vlevo)
+        - půjde rozbalit pomocí buttonu
 
-    # Thread managmenet:
-        - thread by se dal znovu vystavět skrze prompt, který by obsahoval veškeré prompty které uživatel zadal v rámci daného threadu
-        - toto by ale bylo velice nákladné (při dotazu o 34k tokený by tato operace stála 20 Kč (1000 * 20 = 20k))
-        - Thread: neposílat veškeré předešlé messages, ale skrze AI vytvořit shrnutí (komprimaci) a poté s touto komprimací pracovat (viz. https://www.lesswrong.com/posts/bNCDexejSZpkuu3yz/you-can-use-gpt-4-to-create-prompt-injections-against-gpt-4)
-        - u openai API requestu provést priming skrze messages u chatCompletion.create
-        # Reagování na messages:
-            - dva způsoby reagování:
-                a) u zprávy, na kterou bude chtít uživatel reagovat, klikne na "react" a přidá otázku. pod danou zprávou se začne provádět thread (jako kdy na FB reaguješ na komentář). Půjde navolt možnost, kdy se při reakci do messages přidají veškeré navazující (předešlé zprávy)
-                b) onznačí se více zpráv na které bude chtít uživatel reagovat, v tomto případě se otevře nové okno
-            - viz img/react-to-messages.jpg
+## Features:
 
-    # Features:
-        # Kombinování a řetězení promptů:
-            - vytvoří se jaké si "prompt-flow"
-            - prompt bude brán jako funkce:
-                A. provede se jeden prompt za druhým
-                B. výstup promptu se použije v dalším promptu
-        # Vytváření souhrnu threadu: klik na odpověď -> uložit do kolekce poznámek/export
-        # Sync:
-            - provádění synchronizace bude mít v settings 2 možnosti:
-                a) after every change
-                b) timed
-            - Timed:
-                - půjde dále nastavit časový interval synchronizace
-                - objeví se "sync"/"save" button, pro manuální provedení
-            - Blokování UI při synchronizaci:
-                - Ve chvíli provádění synchronizae se zablokují kontroly UI (všechny kontroly, nebou pouze ty, u kterých bude aktuálně prováděna synch?)
-                - z důvodu bezpečného odbavení veškerých změn
-                - ve stavu aplikace bude ležet objekt "changes" (bude obsahovat neodbavené změny na daných kontrolech, např. nově PromptTreeNodeInfo)
-                - postup:
-                    1. zablokuje se UI (aby nebylo možné aktualizovat neodbavené změny) (kontroly nezešenou, pouze nebudou v danou chvíli reagovat na eventy) + vizálně se zobrazí (progress bar kulatá ikonka), že se provádí sync
-                    2. naklonují se neodbavené změny
-                    3. vyprázdní se objekt nedobavených změn
-                    4. odblokuje se UI
-                    5. provede se async fce pro nahrání změn na backend
+    - Features jsou seřazeny podle priorit
+
+    # Auto-Save editovaných promptů:
+        - V settings půjde povolit jako možnost
+        - Po navolení se zadá interval mezi ukládáním
+        - Blokování UI při synchronizaci:
+            - Z důvodu bezpečného odbavení veškerých změn se ve chvíli ukládání zablokují kontroly UI (všechny kontroly, nebou pouze ty, u kterých bude aktuálně prováděna synch?)
+            - Ve stavu aplikace bude ležet objekt "changes": bude obsahovat neodbavené změny na daných kontrolech; např. hodnotu textu promptu
+            - postup:
+                1. Zablokuje se UI: Aby nebylo možné aktualizovat neodbavené změny; kontroly nezešednou, pouze nebudou v danou chvíli reagovat na eventy; vizálně se zobrazí (progress bar kulatá ikonka), že se provádí sync
+                2. naklonují se neodbavené změny
+                3. vyprázdní se objekt nedobavených změn
+                4. odblokuje se UI
+                5. provede se async fce pro nahrání změn na backend
+
+    # Kombinování a řetězení promptů:
+        - Vytvoří se jaké si "prompt-flow"
+        - K promptu bude přitupováno jako k funkci: Výstup promptu se použije jako argument pro prompt další
+
+    # Další:
+        - Vytváření souhrnu threadu: Klik na tlačítko "export" na odpověď/vlákno -> uložit do kolekce poznámek/export
+
+## Logic
 
     # AI API:
-        - používat offiko od open ai nebo chagpt (od transitive-bullshit)
+        - používat offiko od open ai nebo chagpt (transitive-bullshit/chatgpt)
         - nestudovat repozitár transitive-bullshit/chatgpt:
+            - link: https://github.com/transitive-bullshit/chatgpt-api/blob/main/src/chatgpt-api.ts
             - zjistit, jak dělá, aby mohl reagovat na konkrétní messages (pomocí parentMessageId)
-            - ref: https://github.com/transitive-bullshit/chatgpt-api/blob/main/src/chatgpt-api.ts
             - nejspíš si bokem uchovává odeslané zprávy a přiděluje jim id
             - poté použije chatCompletion (open ai api) a danou zprávu přidá do messages
 
-    # BACKEND:
-        # Routing:
-            - každá route má ve sveltekit vlastní adresář
-            - Route = akce: Route se bude používat pro různé operace (akce, interakce, komunikace se serverem) na backendu. Když budu potřebovat provést nějaký specifický task, zavolám danou route a ta se na serveru splní.
-            - Route adresář bude obsahovat veškerou logiku spojenou s danou route
-        # Route testing:
-            - na express lze snadno (zeptat se chbota), pomocí middleware route, viz. nalezený článek
-            - Jak ale řešit na SVELTEkit
-        # Uchovávání stromové sturktury:
-            - viz řešení větve "develop-storing-prompt-info"
-            a) jako JSON: { id: 1, parentId: undefined, childPrompts: [
-                id: 11, parentId: 1, childPrompts: []
-            ]}
-            b) v podobě itemu a relací:
-                - každý item by měl id, childrenIds ... případně userId, aby bylo možné vyfiltrovat uzli daného uživatele
-                - podle childrenIds by se pak sestavila struktura
+    # Kontext threadu:
+        - ChatGPT při sestavování odpovědí pracuje s celým kontextem, tzn. i předešlé odpovědi
+        - Při posílání API requestu není pracováno s kontextem: Platilo dříve, ale platí stále? API určitě prošlo nějakou úpravou --> Nastudovat API
+        - Pokud by OpenAI API stále neumělo pracovat s kontextem tak by se, do otázky musel připojit kontext  threadu
+        - Přidat však celý thread by ale bylo velice nákladné: Při dotazu o 34k tokený by tato operace stála 20 Kč (1000 * 20 = 20k)
+        - Dvě řešení: a) Komprimace threadu, b) Reagování na messages
+        # Komprimace threadu:
+            - neposílat veškeré předešlé messages, ale skrze AI vytvořit shrnutí (komprimaci) a poté s touto komprimací pracovat
+            - viz. https://www.lesswrong.com/posts/bNCDexejSZpkuu3yz/you-can-use-gpt-4-to-create-prompt-injections-against-gpt-4
+            - Komprimaci by muselo provádět AI a zaslat spolu s odpovědí i její komprimovanou podobo, jinak by řešení nemělo smysl
+        # Reagování na messages:
+            - dva způsoby reagování:
+                a) U zprávy, na kterou bude chtít uživatel reagovat, klikne na "react" a přidá otázku: Pod danou zprávou se začne provádět thread (jako kdy na FB reaguješ na komentář). Půjde navolt možnost, kdy se při reakci do messages přidají veškeré navazující (předešlé zprávy)
+                b) Onznačí se více zpráv na které bude chtít uživatel reagovat: V tomto případě se otevře nové okno
+            - u openai API requestu provést priming skrze messages u chatCompletion.create
+            - viz img/react-to-messages.jpg
 
-# NÁZEV PRODUKTU
+## Back-end:
 
-PM - Prompt Manager
-rips - root interface prompting solution
-PE - Prompting Environment
-PEP - prompting entry point
-AIPE [ejp] - AI Prompter Environment
-AIP [ejp] - AI Prompter - PRIME PROMPT PROFIT
+    # Routing:
+        - Každá route má ve sveltekit vlastní adresář
+        - Pro každou route lze na serveru specifikovat:
+            - http metody: get, post, update, ...
+            - form actions: akce pro zprácovávání formulářu
+        - Route: Používá se pro různé provádění různých operaci na serveru
+
+    # Route testing:
+        - Na express lze řešit skrze middleware route
+        - Jak se řeší v případě SvelteKit ???
 
 # LOGO
 
@@ -136,5 +161,3 @@ AIP [ejp] - AI Prompter - PRIME PROMPT PROFIT
     - nechat vygenerovat AI (midjourney, ...)
     - případně vytvoři skicu a podlé ní nechat vytvořit
     - nějaké návrhy jsou již připraveny viz adr. logo
-
-    ...
