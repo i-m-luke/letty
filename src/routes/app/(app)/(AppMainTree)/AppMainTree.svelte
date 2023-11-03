@@ -26,9 +26,10 @@
       const fetchAndUpdateTree = curryFetchAndUpdateTreeFn(threadTreeState, fetchPostThread);
       return (data: TreeNodeInfoData) => {
          const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
-         const { name } = createThreadDialogData;
-         confirmed.then(() => fetchAndUpdateTree(data, get(name)));
-         debugger;
+         confirmed.then(() => {
+            const { name } = createThreadDialogData;
+            fetchAndUpdateTree(data, get(name));
+         });
       };
    };
 
@@ -62,8 +63,10 @@
       const fetchAndUpdateTree = curryFetchAndUpdateTreeFn(promptTreeState, fetchPostPrompt);
       return (data: TreeNodeInfoData) => {
          const { confirmed, canceled } = createPromptDialogProxy.showModalAndWaitTillClosed();
-         const { name } = createPromptDialogData;
-         confirmed.then(() => fetchAndUpdateTree(data, get(name)));
+         confirmed.then(() => {
+            const { name } = createPromptDialogData;
+            fetchAndUpdateTree(data, get(name));
+         });
       };
    };
 

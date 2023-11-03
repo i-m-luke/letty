@@ -79,7 +79,7 @@ export const curryFetchAndUpdateTreeFn =
             addNodeToMultipleNodes(
               data._id,
               node,
-              new TreeNodeInfo(false, name, { _id: res._id })
+              new TreeNodeInfo(false, true, name, { ...data })
             )
           )
         );

@@ -10,27 +10,29 @@ export type TreeNodeInfoOpts = {
 
 export type TreeNodeInfoData = {
   _id: string;
+  _folderId: string;
 };
 
 export class TreeNodeInfo {
   isRoot: boolean;
+  isFolder: boolean;
   text: string;
   data: TreeNodeInfoData;
-  isFolder: boolean;
 
   childNodes: TreeNodeInfo[] = [];
 
   constructor(
     isRoot: boolean,
+    isFolder: boolean,
     text: string,
     data: TreeNodeInfoData,
     opts?: TreeNodeInfoOpts
   ) {
     this.isRoot = isRoot;
+    this.isFolder = isFolder;
     this.text = text;
     this.data = data;
 
     this.childNodes = opts?.childNodes ?? [];
-    this.isFolder = this.childNodes.length > 0;
   }
 }

@@ -58,12 +58,19 @@ const transformFolderDBNodeToTreeNodeInfo = (
     .filter((folderItem) =>
       currentFolderDbNode.data.itemsIds.includes(folderItem._id)
     )
-    .map(({ name, _id }) => new TreeNodeInfo(false, name, { _id }));
+    .map(
+      ({ name, _id }) =>
+        new TreeNodeInfo(false, false, name, {
+          _id,
+          _folderId: currentFolderDbNode._id,
+        })
+    );
 
   return new TreeNodeInfo(
     isRootNode,
+    true,
     currentFolderDbNode.data.name,
-    { _id: currentFolderDbNode._id },
+    { _id: currentFolderDbNode._id, _folderId: currentFolderDbNode.parentId ?? "" },
     {
       childNodes: [...subfolderNodes, ...contentNodes],
     }
