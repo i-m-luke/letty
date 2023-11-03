@@ -1,11 +1,9 @@
 <script lang="ts">
-   import { DialogButtonType, type DialogProxy } from "./";
+   import { onMount } from "svelte";
+   import type { DialogButtonType, DialogProxy } from "./";
 
    export let proxy: DialogProxy;
    let dialog: HTMLDialogElement;
-   $: {
-      proxy.init(dialog);
-   }
 
    export let dataReset = () => {};
 
@@ -14,18 +12,11 @@
       proxy.dispatchEvent(new Event(dispatchEventName));
    };
 
-   const getOnClickAction = (type: DialogButtonType) => {
-      switch (type) {
-         case DialogButtonType.Cancel:
-            return handleDialog("close");
-         case DialogButtonType.Confirm:
-            return () => {
-               handleDialog("confirm");
-            };
-      }
-   };
-
    export let buttons: { type: DialogButtonType; text: string }[];
+
+   onMount(() => {
+      proxy.init(dialog);
+   });
 </script>
 
 <dialog bind:this={dialog} on:close={dataReset}>

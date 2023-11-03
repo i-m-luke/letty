@@ -25,7 +25,6 @@
    const curryThreadFolderNodeAddButtonOnClickActionFn = () => {
       const fetchAndUpdateTree = curryFetchAndUpdateTreeFn(threadTreeState, fetchPostThread);
       return (data: TreeNodeInfoData) => {
-         // transform TreeNodeInfoData --> PromptData
          const { confirmed, canceled } = createThreadDialogProxy.showModalAndBlockTillClosed();
          const { name } = createThreadDialogData;
          confirmed.then(() => fetchAndUpdateTree(data, get(name)));
