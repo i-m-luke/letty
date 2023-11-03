@@ -16,7 +16,7 @@
 
    const getOnClickAction = (type: DialogButtonType) => {
       switch (type) {
-         case DialogButtonType.Close:
+         case DialogButtonType.Cancel:
             return handleDialog("close");
          case DialogButtonType.Confirm:
             return () => {

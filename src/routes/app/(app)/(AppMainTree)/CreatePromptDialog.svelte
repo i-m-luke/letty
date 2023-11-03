@@ -18,7 +18,7 @@
    bind:proxy={dialogProxy}
    buttons={[
       { type: DialogButtonType.Confirm, text: "ADD" },
-      { type: DialogButtonType.Close, text: "CLOSE" },
+      { type: DialogButtonType.Cancel, text: "CLOSE" },
    ]}
    {dataReset}
 >

@@ -7,18 +7,22 @@ export class DialogProxy extends EventTarget {
     super();
   }
 
-  // rnm --> BlockTill...???
+  // rnm --> ...AndWaitTillClosed ???
   showModalAndBlockTillClosed(): {
     confirmed: Promise<unknown>;
-    closed: Promise<unknown>;
+    canceled: Promise<unknown>;
   } {
     this.dialog?.showModal();
     return {
       confirmed: new Promise((resolve) => {
-        this.addEventListener("confirm", resolve, { once: true });
+        this.addEventListener(DialogButtonType.Confirm.toString(), resolve, {
+          once: true,
+        });
       }),
-      closed: new Promise((resolve) => {
-        this.addEventListener("close", resolve, { once: true });
+      canceled: new Promise((resolve) => {
+        this.addEventListener(DialogButtonType.Cancel.toString(), resolve, {
+          once: true,
+        });
       }),
     };
   }
@@ -34,5 +38,5 @@ export class DialogProxy extends EventTarget {
 
 export enum DialogButtonType {
   Confirm = "confirm", // = event name
-  Close = "close",
+  Cancel = "close",
 }

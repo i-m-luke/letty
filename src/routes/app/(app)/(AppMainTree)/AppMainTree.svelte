@@ -4,19 +4,11 @@
    import { goto } from "$app/navigation";
    import { Tree, TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
-   import {
-      fetchPostThread,
-      fetchPostPrompt,
-      fetchDeleteThread,
-      fetchDeletePrompt,
-      removeNodeFromSingleNode,
-      curryNodeOnClickAction as curryFetchAndTreeUpdateFn,
-   } from "./$logic";
-   import { addNodeToMultipleNodes } from "./$logic";
+   import { fetchPostThread, fetchPostPrompt, fetchDeleteThread, fetchDeletePrompt, curryFetchAndUpdateTreeFn } from "./$logic";
    import { DialogProxy } from "$lib/components/Dialog";
    import CreatePromptDialog from "./CreatePromptDialog.svelte";
    import CreatePromptDialogData from "./CreatePromptDialogData";
-   import CreateThreadDialog from "./CreatePromptDialog.svelte";
+   import CreateThreadDialog from "./CreateThreadDialog.svelte";
    import CreateThreadDialogData from "./CreatePromptDialogData";
 
    let createThreadDialogProxy = new DialogProxy();
@@ -31,12 +23,12 @@
    //#region thread buttons
 
    const curryThreadFolderNodeAddButtonOnClickActionFn = () => {
-      const onClickAction = curryFetchAndTreeUpdateFn(threadTreeState, fetchPostThread);
+      const fetchAndUpdateTree = curryFetchAndUpdateTreeFn(threadTreeState, fetchPostThread);
       return (data: TreeNodeInfoData) => {
-         // rnm closed --> canceled
-         const { confirmed, closed } = createThreadDialogProxy.showModalAndBlockTillClosed();
+         // transform TreeNodeInfoData --> PromptData
+         const { confirmed, canceled } = createThreadDialogProxy.showModalAndBlockTillClosed();
          const { name } = createThreadDialogData;
-         confirmed.then(() => onClickAction(data, get(name)));
+         confirmed.then(() => fetchAndUpdateTree(data, get(name)));
       };
    };
 
@@ -67,11 +59,11 @@
    //#region prompt buttons
 
    const curryPromptFolderNodeAddButtonOnClickActionFn = () => {
-      const onClickAction = curryFetchAndTreeUpdateFn(promptTreeState, fetchPostPrompt);
+      const fetchAndUpdateTree = curryFetchAndUpdateTreeFn(promptTreeState, fetchPostPrompt);
       return (data: TreeNodeInfoData) => {
-         const { confirmed, closed } = createPromptDialogProxy.showModalAndBlockTillClosed();
+         const { confirmed, canceled } = createPromptDialogProxy.showModalAndBlockTillClosed();
          const { name } = createPromptDialogData;
-         confirmed.then(() => onClickAction(data, get(name)));
+         confirmed.then(() => fetchAndUpdateTree(data, get(name)));
       };
    };
 

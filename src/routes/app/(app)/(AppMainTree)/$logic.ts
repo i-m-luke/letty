@@ -4,7 +4,6 @@ import type Request from "../Request";
 import type { TreeNodeInfoData } from "$lib/components/Tree";
 import routes from "$routes";
 import type { PromptData, ThreadData, WithId } from "$types";
-import type { DialogProxy } from "$lib/components/Dialog";
 import type { Writable } from "svelte/store";
 
 //#region  IMPURE CODE:
@@ -67,7 +66,7 @@ export const fetchDeletePrompt = fetchDELETE<TreeNodeInfoData>(RequestType.Promp
 
 //#endregion
 
-export const curryNodeOnClickAction =
+export const curryFetchAndUpdateTreeFn =
   <TData extends WithId>(
     treeState: Writable<TreeNodeInfo[]>,
     fetchFn: (data: TreeNodeInfoData) => Promise<TData>
