@@ -7,8 +7,7 @@ export class DialogProxy extends EventTarget {
     super();
   }
 
-  // rnm --> ...AndWaitTillClosed ???
-  showModalAndBlockTillClosed(): {
+  showModalAndWaitTillClosed(): {
     confirmed: Promise<unknown>;
     canceled: Promise<unknown>;
   } {

@@ -25,9 +25,10 @@
    const curryThreadFolderNodeAddButtonOnClickActionFn = () => {
       const fetchAndUpdateTree = curryFetchAndUpdateTreeFn(threadTreeState, fetchPostThread);
       return (data: TreeNodeInfoData) => {
-         const { confirmed, canceled } = createThreadDialogProxy.showModalAndBlockTillClosed();
+         const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
          const { name } = createThreadDialogData;
          confirmed.then(() => fetchAndUpdateTree(data, get(name)));
+         debugger;
       };
    };
 
@@ -60,7 +61,7 @@
    const curryPromptFolderNodeAddButtonOnClickActionFn = () => {
       const fetchAndUpdateTree = curryFetchAndUpdateTreeFn(promptTreeState, fetchPostPrompt);
       return (data: TreeNodeInfoData) => {
-         const { confirmed, canceled } = createPromptDialogProxy.showModalAndBlockTillClosed();
+         const { confirmed, canceled } = createPromptDialogProxy.showModalAndWaitTillClosed();
          const { name } = createPromptDialogData;
          confirmed.then(() => fetchAndUpdateTree(data, get(name)));
       };

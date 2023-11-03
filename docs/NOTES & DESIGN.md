@@ -133,7 +133,7 @@
         - K promptu bude přitupováno jako k funkci: Výstup promptu se použije jako argument pro prompt další
 
     # Další:
-        - Vytváření souhrnu threadu: Klik na tlačítko "export" na odpověď/vlákno -> uložit do kolekce poznámek/export
+        - Vytváření souhrnu threadu/export threadu: Najetí na odpověď/vlákno -> Zobrazí se popup s tlačítkem "export" --> Klik na tlačítko -> uložit do kolekce poznámek/export
 
 ## Logic
 
