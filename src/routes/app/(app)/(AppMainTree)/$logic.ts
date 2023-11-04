@@ -73,13 +73,16 @@ export const curryFetchAndUpdateTreeFn =
   ) =>
   (data: TreeNodeInfoData, name: string) => {
     fetchFn(data)
-      .then((res) => {
+      .then(() => {
         treeState.update((current) =>
           current.map((node) =>
             addNodeToMultipleNodes(
               data._id,
               node,
-              new TreeNodeInfo(false, true, name, { ...data })
+              new TreeNodeInfo(false, true, name, {
+                _id: "TODO",
+                _folderId: data._id,
+              })
             )
           )
         );
@@ -101,6 +104,30 @@ export const addNodeToMultipleNodes = (
         ),
       };
 };
+
+export const _addNodeToMultipleNodes = (
+  targetNodeId: string,
+  nodes: TreeNodeInfo[],
+  nodeToAdd: TreeNodeInfo
+): TreeNodeInfo[] =>
+  nodes.map((node) =>
+    node.data._id === targetNodeId
+      ? {
+          ...node,
+          childNodes: {
+            ..._addNodeToMultipleNodes(targetNodeId, node.childNodes, nodeToAdd),
+            nodeToAdd,
+          },
+        }
+      : {
+          ...node,
+          childNodes: _addNodeToMultipleNodes(
+            targetNodeId,
+            node.childNodes,
+            nodeToAdd
+          ),
+        }
+  );
 
 export const addNodeToSingleNode = (
   targetNodeId: string,
@@ -132,6 +159,19 @@ export const addNodeToSingleNode = (
 
   return newCurrentNode;
 };
+
+export const _removeNodeFromMultipleNodes = (
+  targetNodeId: string,
+  nodes: TreeNodeInfo[]
+): TreeNodeInfo[] =>
+  nodes
+    .filter((node) => node.data._id !== targetNodeId)
+    .map((node) => {
+      return {
+        ...node,
+        childNodes: _removeNodeFromMultipleNodes(targetNodeId, node.childNodes),
+      };
+    });
 
 // TODO: TEST & DEBUG
 export const removeNodeFromMultipleNodes = (

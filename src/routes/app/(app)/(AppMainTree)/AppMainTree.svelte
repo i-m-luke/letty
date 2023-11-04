@@ -10,7 +10,7 @@
       fetchDeleteThread,
       fetchDeletePrompt,
       curryFetchAndUpdateTreeFn,
-      removeNodeFromMultipleNodes,
+      _removeNodeFromMultipleNodes,
    } from "./$logic";
    import { DialogProxy } from "$lib/components/Dialog";
    import CreatePromptDialog from "./CreatePromptDialog.svelte";
@@ -50,14 +50,7 @@
             console.log("TODO: REMOVE THREAD FOLDER"); // TODO
             fetchDeleteThread(data)
                .then(() => {
-                  // NOTE:
-                  // Jsou smazány pouze potomci daného uzlu, uzel ve stomu zůstane
-                  // Nejspíše proto, že filtrování neprobíhá na poli threadTreeState, ale až na potomcích
-                  threadTreeState.update((current) =>
-                     current
-                        .filter((node) => node.data._id === data._id)
-                        .map((node) => removeNodeFromMultipleNodes(data._id, node))
-                  );
+                  threadTreeState.update((current) => _removeNodeFromMultipleNodes(data._id, current));
                })
                .catch((err) => console.log(err));
          },
