@@ -4,20 +4,22 @@
    import { TextInput, TextInputType } from "$lib/components/TextInput";
    import { TreeNodeType } from "$lib/components/Tree";
    import type CreateDialogData from "./CreateDialogData";
-   import { onMount } from "svelte";
 
    export let dialogProxy: DialogProxy;
    export let data: CreateDialogData;
 
    const { name, type } = data;
 
-   const defaultType = TreeNodeType.Folder;
    const dataReset = () => {
       name.set("");
-      type.set(defaultType);
+      type.set(TreeNodeType.Content);
    };
 </script>
 
+<!-- NOTE: 
+   + Content je stejný jako pro CreatePromptDialog
+   + Sjednotit do jedné komponenty a parametrizovat přes props
+ -->
 <Dialog
    bind:proxy={dialogProxy}
    buttons={[
@@ -29,12 +31,12 @@
    <div class="">
       <span>Type: </span>
       <div class="">
-         <span>Folder: </span>
-         <input type="radio" bind:group={$type} value="{TreeNodeType.Folder}/" />
+         <span>Content: </span>
+         <input type="radio" bind:group={$type} value={TreeNodeType.Content} />
       </div>
       <div class="">
-         <span>Content: </span>
-         <input type="radio" bind:group={$type} value="{TreeNodeType.Content}/" />
+         <span>Folder: </span>
+         <input type="radio" bind:group={$type} value={TreeNodeType.Folder} />
       </div>
    </div>
 

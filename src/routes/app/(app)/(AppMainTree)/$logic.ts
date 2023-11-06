@@ -86,9 +86,6 @@ export const fetchAndUpdateTreeFn = <TData extends WithId>(
         addNodeToMultipleNodes(
           folderNodeData._id,
           current,
-          // NOTE:
-          // newNodeType má na konci stringu vždy "/",
-          // To poté způsobí, že se správně nevyhodnotí TreeNode >> isFolder
           new TreeNodeInfo(false, newNodetype, newNodeName, {
             _id: "TODO",
             _folderId: folderNodeData._id,

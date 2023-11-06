@@ -16,10 +16,6 @@
    };
 </script>
 
-<!-- NOTE: 
-   + Content je stejný jako pro CreateThreadDialog
-   + Sjednotit do jedné komponenty a parametrizovat přes props
- -->
 <Dialog
    bind:proxy={dialogProxy}
    buttons={[

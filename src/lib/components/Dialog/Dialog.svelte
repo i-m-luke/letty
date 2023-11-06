@@ -5,6 +5,7 @@
    export let proxy: DialogProxy;
    let dialog: HTMLDialogElement;
 
+   // rnm --> setDefaultValues ??
    /**
     * Empty data for the next dialog show session
     */
@@ -19,7 +20,7 @@
 
    onMount(() => {
       proxy.init(dialog);
-      // dataReset() ???
+      dataReset();
    });
 </script>
 

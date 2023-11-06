@@ -16,6 +16,7 @@ export type TreeNodeInfoData = {
 export enum TreeNodeType {
   Folder = "folder",
   Content = "content",
+  Unknown = "unkown",
 }
 
 export class TreeNodeInfo {

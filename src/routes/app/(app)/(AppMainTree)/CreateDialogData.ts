@@ -7,7 +7,7 @@ export default class CreatePromptDialogData {
 
   constructor() {
     this._name = writable("");
-    this._type = writable(TreeNodeType.Content);
+    this._type = writable(TreeNodeType.Unknown);
   }
 
   get name() {
