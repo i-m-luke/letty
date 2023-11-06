@@ -9,48 +9,42 @@
       fetchPostPrompt,
       fetchDeleteThread,
       fetchDeletePrompt,
-      curryFetchAndUpdateTreeFn,
-      _removeNodeFromMultipleNodes,
+      fetchAndUpdateTreeFn,
+      removeNodeFromMultipleNodes,
    } from "./$logic";
    import { DialogProxy } from "$lib/components/Dialog";
    import CreatePromptDialog from "./CreatePromptDialog.svelte";
-   import CreatePromptDialogData from "./CreatePromptDialogData";
    import CreateThreadDialog from "./CreateThreadDialog.svelte";
-   import CreateThreadDialogData from "./CreatePromptDialogData";
+   import CreateDialogData from "./CreateDialogData";
 
    let createThreadDialogProxy = new DialogProxy();
-   let createThreadDialogData = new CreateThreadDialogData();
+   let createThreadDialogData = new CreateDialogData();
 
    let createPromptDialogProxy = new DialogProxy();
-   let createPromptDialogData = new CreatePromptDialogData();
+   let createPromptDialogData = new CreateDialogData();
 
    export let threadTreeState: Writable<TreeNodeInfo[]>;
    export let promptTreeState: Writable<TreeNodeInfo[]>;
 
    //#region thread buttons
 
-   const curryThreadFolderNodeAddButtonOnClickActionFn = () => {
-      const fetchAndUpdateTree = curryFetchAndUpdateTreeFn(threadTreeState, fetchPostThread);
-      return (data: TreeNodeInfoData) => {
-         const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
-         confirmed.then(() => {
-            const { name } = createThreadDialogData;
-            fetchAndUpdateTree(data, get(name));
-         });
-         canceled.then(() => console.log("dialog canceled"));
-      };
-   };
-
    const threadFolderNodeAdditionalButtons = [
       new ButtonInfo("ADD", {
-         onClickAction: curryThreadFolderNodeAddButtonOnClickActionFn(),
+         onClickAction: (data: TreeNodeInfoData) => {
+            const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
+            confirmed.then(() => {
+               const { name, type } = createThreadDialogData;
+               fetchAndUpdateTreeFn(data, get(name), get(type), threadTreeState, fetchPostThread);
+            });
+            canceled.then(() => console.log("dialog canceled"));
+         },
       }),
       new ButtonInfo("REMOVE", {
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE THREAD FOLDER"); // TODO
             fetchDeleteThread(data)
                .then(() => {
-                  threadTreeState.update((current) => _removeNodeFromMultipleNodes(data._id, current));
+                  threadTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
                .catch((err) => console.log(err));
          },
@@ -69,25 +63,25 @@
 
    //#region prompt buttons
 
-   const curryPromptFolderNodeAddButtonOnClickActionFn = () => {
-      const fetchAndUpdateTree = curryFetchAndUpdateTreeFn(promptTreeState, fetchPostPrompt);
-      return (data: TreeNodeInfoData) => {
-         const { confirmed, canceled } = createPromptDialogProxy.showModalAndWaitTillClosed();
-         confirmed.then(() => {
-            const { name } = createPromptDialogData;
-            fetchAndUpdateTree(data, get(name));
-         });
-         canceled.then(() => console.log("dialog canceled"));
-      };
-   };
-
    const promptFolderNodeAdditionalButtons = [
       new ButtonInfo("ADD", {
-         onClickAction: curryPromptFolderNodeAddButtonOnClickActionFn(),
+         onClickAction: (data: TreeNodeInfoData) => {
+            const { confirmed, canceled } = createPromptDialogProxy.showModalAndWaitTillClosed();
+            confirmed.then(() => {
+               const { name, type } = createPromptDialogData;
+               fetchAndUpdateTreeFn(data, get(name), get(type), promptTreeState, fetchPostPrompt);
+            });
+            canceled.then(() => console.log("dialog canceled"));
+         },
       }),
       new ButtonInfo("REMOVE", {
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE PROMPT FOLDER"); // TODO
+            fetchDeletePrompt(data)
+               .then(() => {
+                  promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
+               })
+               .catch((err) => console.log(err));
          },
       }),
    ];

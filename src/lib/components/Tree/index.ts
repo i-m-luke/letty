@@ -13,9 +13,14 @@ export type TreeNodeInfoData = {
   _folderId: string;
 };
 
+export enum TreeNodeType {
+  Folder = "folder",
+  Content = "content",
+}
+
 export class TreeNodeInfo {
   isRoot: boolean;
-  isFolder: boolean;
+  type: TreeNodeType;
   text: string;
   data: TreeNodeInfoData;
 
@@ -23,13 +28,13 @@ export class TreeNodeInfo {
 
   constructor(
     isRoot: boolean,
-    isFolder: boolean,
+    type: TreeNodeType,
     text: string,
     data: TreeNodeInfoData,
     opts?: TreeNodeInfoOpts
   ) {
     this.isRoot = isRoot;
-    this.isFolder = isFolder;
+    this.type = type;
     this.text = text;
     this.data = data;
 

@@ -1,6 +1,6 @@
 import type LayoutLoadData from "./LayoutLoadData";
 import type { DBNode, FolderData, ContentData } from "$types";
-import { TreeNodeInfo } from "$lib/components/Tree/index";
+import { TreeNodeInfo, TreeNodeType } from "$lib/components/Tree/index";
 import { writable } from "svelte/store";
 
 // data: data předaná z +layout.server.ts
@@ -60,7 +60,7 @@ const transformFolderDBNodeToTreeNodeInfo = (
     )
     .map(
       ({ name, _id }) =>
-        new TreeNodeInfo(false, false, name, {
+        new TreeNodeInfo(false, TreeNodeType.Content, name, {
           _id,
           _folderId: currentFolderDbNode._id,
         })
@@ -68,7 +68,7 @@ const transformFolderDBNodeToTreeNodeInfo = (
 
   return new TreeNodeInfo(
     isRootNode,
-    true,
+    TreeNodeType.Folder,
     currentFolderDbNode.data.name,
     { _id: currentFolderDbNode._id, _folderId: currentFolderDbNode.parentId ?? "" },
     {

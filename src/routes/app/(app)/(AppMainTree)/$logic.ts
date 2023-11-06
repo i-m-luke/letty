@@ -1,4 +1,4 @@
-import { TreeNodeInfo } from "$lib/components/Tree";
+import { TreeNodeInfo, TreeNodeType } from "$lib/components/Tree";
 import { RequestType } from "../Request";
 import type Request from "../Request";
 import type { TreeNodeInfoData } from "$lib/components/Tree";
@@ -66,68 +66,72 @@ export const fetchDeletePrompt = fetchDELETE<TreeNodeInfoData>(RequestType.Promp
 
 //#endregion
 
-export const curryFetchAndUpdateTreeFn =
-  <TData extends WithId>(
-    treeState: Writable<TreeNodeInfo[]>,
-    fetchFn: (data: TreeNodeInfoData) => Promise<TData>
-  ) =>
-  (data: TreeNodeInfoData, name: string) => {
-    fetchFn(data)
-      .then(() => {
-        treeState.update((current) =>
-          current.map((node) =>
-            addNodeToMultipleNodes(
-              data._id,
-              node,
-              new TreeNodeInfo(false, true, name, {
-                _id: "TODO",
-                _folderId: data._id,
-              })
-            )
-          )
-        );
-      })
-      .catch((err) => console.log(err));
-  };
-
-export const addNodeToMultipleNodes = (
-  targetNodeId: string,
-  currentNode: TreeNodeInfo,
-  nodeToAdd: TreeNodeInfo
-): TreeNodeInfo => {
-  return currentNode.data._id === targetNodeId
-    ? { ...currentNode, childNodes: [...currentNode.childNodes, nodeToAdd] }
-    : {
-        ...currentNode,
-        childNodes: currentNode.childNodes.map((node) =>
-          addNodeToMultipleNodes(targetNodeId, node, nodeToAdd)
-        ),
-      };
+/**
+ * Performs fetch and updates the tree (add new node to folder)
+ * @param folderNodeData
+ * @param newNodeName
+ * @param treeState
+ * @param postFetchFn
+ */
+export const fetchAndUpdateTreeFn = <TData extends WithId>(
+  folderNodeData: TreeNodeInfoData,
+  newNodeName: string,
+  newNodetype: TreeNodeType,
+  treeState: Writable<TreeNodeInfo[]>,
+  postFetchFn: (data: TreeNodeInfoData) => Promise<TData>
+) => {
+  postFetchFn(folderNodeData)
+    .then(() => {
+      treeState.update((current) =>
+        addNodeToMultipleNodes(
+          folderNodeData._id,
+          current,
+          // NOTE:
+          // newNodeType má na konci stringu vždy "/",
+          // To poté způsobí, že se správně nevyhodnotí TreeNode >> isFolder
+          new TreeNodeInfo(false, newNodetype, newNodeName, {
+            _id: "TODO",
+            _folderId: folderNodeData._id,
+          })
+        )
+      );
+    })
+    .catch((err) => console.log(err));
 };
 
-export const _addNodeToMultipleNodes = (
+export const addNodeToMultipleNodes = (
   targetNodeId: string,
   nodes: TreeNodeInfo[],
   nodeToAdd: TreeNodeInfo
 ): TreeNodeInfo[] =>
-  nodes.map((node) =>
-    node.data._id === targetNodeId
-      ? {
-          ...node,
-          childNodes: {
-            ..._addNodeToMultipleNodes(targetNodeId, node.childNodes, nodeToAdd),
-            nodeToAdd,
-          },
-        }
-      : {
-          ...node,
-          childNodes: _addNodeToMultipleNodes(
-            targetNodeId,
-            node.childNodes,
-            nodeToAdd
-          ),
-        }
-  );
+  nodes.map((node) => {
+    const newChildNodes = addNodeToMultipleNodes(
+      targetNodeId,
+      node.childNodes,
+      nodeToAdd
+    );
+    return {
+      ...node,
+      childNodes:
+        node.data._id === targetNodeId
+          ? [...newChildNodes, nodeToAdd]
+          : newChildNodes,
+    };
+  });
+
+export const removeNodeFromMultipleNodes = (
+  targetNodeId: string,
+  nodes: TreeNodeInfo[]
+): TreeNodeInfo[] => {
+  return nodes
+    .filter((node) => node.data._id !== targetNodeId)
+    .map((node) => {
+      return {
+        ...node,
+        childNodes: removeNodeFromMultipleNodes(targetNodeId, node.childNodes),
+      };
+    });
+};
 
 export const addNodeToSingleNode = (
   targetNodeId: string,
@@ -158,32 +162,6 @@ export const addNodeToSingleNode = (
   };
 
   return newCurrentNode;
-};
-
-export const _removeNodeFromMultipleNodes = (
-  targetNodeId: string,
-  nodes: TreeNodeInfo[]
-): TreeNodeInfo[] =>
-  nodes
-    .filter((node) => node.data._id !== targetNodeId)
-    .map((node) => {
-      return {
-        ...node,
-        childNodes: _removeNodeFromMultipleNodes(targetNodeId, node.childNodes),
-      };
-    });
-
-// TODO: TEST & DEBUG
-export const removeNodeFromMultipleNodes = (
-  targetNodeId: string,
-  currentNode: TreeNodeInfo
-): TreeNodeInfo => {
-  return {
-    ...currentNode,
-    childNodes: currentNode.childNodes
-      .filter((childNode) => childNode.data._id === targetNodeId)
-      .map((childNode) => removeNodeFromMultipleNodes(targetNodeId, childNode)),
-  };
 };
 
 // TODO: TEST & DEBUG

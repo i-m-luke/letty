@@ -5,6 +5,9 @@
    export let proxy: DialogProxy;
    let dialog: HTMLDialogElement;
 
+   /**
+    * Empty data for the next dialog show session
+    */
    export let dataReset = () => {};
 
    const handleDialog = (dispatchEventName: string) => () => {
@@ -16,6 +19,7 @@
 
    onMount(() => {
       proxy.init(dialog);
+      // dataReset() ???
    });
 </script>
 

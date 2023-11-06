@@ -1,5 +1,5 @@
 <script lang="ts">
-   import type { TreeNodeInfo, TreeNodeInfoData } from "./";
+   import { TreeNodeType, type TreeNodeInfo, type TreeNodeInfoData } from "./";
    import type ButtonInfo from "$lib/components/ButtonInfo";
 
    export let nodeInfo: TreeNodeInfo;
@@ -7,16 +7,17 @@
    export let contentNodeAdditionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
    export let folderNodeAdditionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
 
+   let isFolder: boolean = nodeInfo.type === TreeNodeType.Folder;
    let isOpen: boolean = false;
    $: data = nodeInfo.data;
-   $: nodeState = nodeInfo.isFolder && isOpen ? "(opened)" : "(closed)";
+   $: nodeStateInText = !isFolder ? "" : isOpen ? "(opened)" : "(closed)";
 
-   const additionalButtons: ButtonInfo<TreeNodeInfoData>[] = nodeInfo.isFolder
+   const additionalButtons: ButtonInfo<TreeNodeInfoData>[] = isFolder
       ? folderNodeAdditionalButtons
       : contentNodeAdditionalButtons;
 
    const toggleIsOpen: () => void = () => (isOpen = !isOpen);
-   const nodeOnClickEvent = nodeInfo.isFolder
+   const nodeOnClickEvent = isFolder
       ? toggleIsOpen
       : (): void => {
            nodeOnClickAction(data);
@@ -31,7 +32,7 @@
          </div>
       {/if}
 
-      <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}> {`${nodeInfo.text} ${nodeState}`}</span>
+      <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}> {`${nodeInfo.text} ${nodeStateInText}`}</span>
 
       {#each additionalButtons as { text, onClickAction, formActionName }}
          <button type="button" formaction={formActionName} on:click={() => onClickAction(data)}>
