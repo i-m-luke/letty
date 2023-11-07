@@ -13,9 +13,8 @@
       removeNodeFromMultipleNodes,
    } from "./$logic";
    import { DialogProxy } from "$lib/components/Dialog";
-   import CreatePromptDialog from "./CreatePromptDialog.svelte";
-   import CreateThreadDialog from "./CreateThreadDialog.svelte";
    import CreateDialogData from "./CreateDialogData";
+   import CreateDialog from "./CreateDialog.svelte";
 
    let createThreadDialogProxy = new DialogProxy();
    let createThreadDialogData = new CreateDialogData();
@@ -31,9 +30,13 @@
    const threadFolderNodeAdditionalButtons = [
       new ButtonInfo("ADD", {
          onClickAction: (data: TreeNodeInfoData) => {
+            console.log("TODO: ADD THREAD FOLDER/CONTENT"); // TODO CONNECT TO DB
             const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
             confirmed.then(() => {
                const { name, type } = createThreadDialogData;
+               // NOTE:
+               // U fetch requestu se bude muset specifikovat, že se jedná o folder
+               // V DB se bude muset vytvořit DBNodeItem
                fetchAndUpdateTreeFn(data, get(name), get(type), threadTreeState, fetchPostThread);
             });
             canceled.then(() => console.log("dialog canceled"));
@@ -41,7 +44,8 @@
       }),
       new ButtonInfo("REMOVE", {
          onClickAction: (data: TreeNodeInfoData) => {
-            console.log("TODO: REMOVE THREAD FOLDER"); // TODO
+            console.log("TODO: REMOVE THREAD FOLDER/CONTENT"); // TODO CONNECT TO DB
+            // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
             fetchDeleteThread(data)
                .then(() => {
                   threadTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
@@ -54,7 +58,12 @@
    const threadContentNodeAdditionalButtons = [
       new ButtonInfo("REMOVE", {
          onClickAction: (data: TreeNodeInfoData) => {
-            fetchDeleteThread(data); // TODO
+            console.log("TODO: REMOVE THREAD CONTENT"); // TODO CONNECT TO DB
+            fetchDeletePrompt(data)
+               .then(() => {
+                  promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
+               })
+               .catch((err) => console.log(err));
          },
       }),
    ];
@@ -66,9 +75,11 @@
    const promptFolderNodeAdditionalButtons = [
       new ButtonInfo("ADD", {
          onClickAction: (data: TreeNodeInfoData) => {
+            console.log("TODO: ADD PROMPT FOLDER/CONTENT"); // TODO CONNECT TO DB
             const { confirmed, canceled } = createPromptDialogProxy.showModalAndWaitTillClosed();
             confirmed.then(() => {
                const { name, type } = createPromptDialogData;
+               // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
                fetchAndUpdateTreeFn(data, get(name), get(type), promptTreeState, fetchPostPrompt);
             });
             canceled.then(() => console.log("dialog canceled"));
@@ -76,7 +87,8 @@
       }),
       new ButtonInfo("REMOVE", {
          onClickAction: (data: TreeNodeInfoData) => {
-            console.log("TODO: REMOVE PROMPT FOLDER"); // TODO
+            console.log("TODO: REMOVE PROMPT FOLDER/CONTENT"); // TODO CONNECT TO DB
+            // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
             fetchDeletePrompt(data)
                .then(() => {
                   promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
@@ -89,7 +101,12 @@
    const promptContentNodeAdditionalButtons = [
       new ButtonInfo("REMOVE", {
          onClickAction: (data: TreeNodeInfoData) => {
-            fetchDeletePrompt(data); // TODO
+            console.log("TODO: REMOVE PROMPT CONTENT"); // TODO CONNECT TO DB
+            fetchDeletePrompt(data)
+               .then(() => {
+                  promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
+               })
+               .catch((err) => console.log(err));
          },
       }),
    ];
@@ -117,5 +134,5 @@
    />
 {/if}
 
-<CreateThreadDialog dialogProxy={createThreadDialogProxy} data={createThreadDialogData} />
-<CreatePromptDialog dialogProxy={createPromptDialogProxy} data={createPromptDialogData} />
+<CreateDialog dialogProxy={createThreadDialogProxy} data={createThreadDialogData} />
+<CreateDialog dialogProxy={createPromptDialogProxy} data={createPromptDialogData} />
