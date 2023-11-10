@@ -8,6 +8,17 @@
         - AIPE [ejp] - AI Prompter Environment
         - AIP [ejp] - AI Prompter - PRIME PROMPT PROFIT
 
+# TODO | PLAN
+
+    0. Nastylovat: najít font, nastudovat tailwind
+    1. Napijit fetch buttonů stromu na DB
+    2. AppMainTree >> folderNode AddButton: Přidat volbu (radio btn v dialogu) pro přepínání mezi vytváření folder / node
+    3. AppMainTree
+        - Přepracovat strom
+        - Root node bude mít název Threads/Prompts
+        - Root node nepůjde mazat (nebude mít Remove button) ... Skrze dev-tools však půjde bez problemu tlačítko přidat a zavolat  fetchFci ... Jak se todle dá ošetřit?
+    4. ... Viz kanban board task
+
 # TERMINOLOGIE
 
     + Thread: Vlákno chatu
@@ -78,6 +89,8 @@
 
     # AppMainTree:
         - Expandování jako je u svelte.dev/tutorial: po straně bude div, který bude mít event pro press; rozměry se pak uloží do        cookies; inspirovat se z freecodecamp tut, kde řeší eventy pohybu myši
+        - Přidání, odebrání, modifikace uzlů AppMainTree: Vracet z fetch kompletní nový strom?; Z DB by se vyčetla aktuální data
+            ; náročnější na přenos dat; jaké by mělo přínosy?
         ## future features:
             - v rohu stromu bude "tree manager" btn (ikonka "pastelky"):
                 - při kliku se strom přepne do režimu správy uzlů
@@ -87,9 +100,15 @@
                 - viz obr img/tree-manager
 
     # Rezponsivnost:
-        - skrze media-queries
-        - AppMainTree se bude na mobilních zařízeních skrývat (bude se rolovat vlevo)
-        - půjde rozbalit pomocí buttonu
+        - AppMainTree (levý panel) se bude na mobilních zařízeních skrývat (bude se rolovat vlevo)
+        - Při skrytí půjde rozbalit pomocí buttonu
+        - řešení: a) skrze media-queries, b) svelte if logic blokem
+        ## Řešení svelte if blokem
+            + Bude existovat globální proměnná "isMobile":
+            + Layout se bude přizpůsobovat na základě hodnoty proměnné isMobile
+            + isMobile === true:
+                + AppMainTree: Skryje se z postranního panelu; zobrazí se ve slotu layoutu (strom se vyrendruje v +page route "app")
+                + Zobrazí se tlačítko "show tree", které provede redirect na route "app"
 
     # Style:
         - Color-pallete:

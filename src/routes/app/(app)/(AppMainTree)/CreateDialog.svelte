@@ -24,7 +24,7 @@
    ]}
    {dataReset}
 >
-   <div class="">
+   <div class="bg-yellow">
       <span>Type: </span>
       <div class="">
          <span>Content: </span>
