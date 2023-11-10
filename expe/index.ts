@@ -8,6 +8,57 @@ import {
   sendMessageWithContext,
 } from "./ai-interface";
 
+class TreeNodeInfo {
+  type: "folder" | "content";
+  constructor(type: "folder" | "content") {
+    this.type = type;
+  }
+}
+
+class ContentTreeNodeInfo extends TreeNodeInfo {
+  constructor() {
+    super("content");
+  }
+}
+
+class FolderTreeNodeInfo extends TreeNodeInfo {
+  contentNodes: string[];
+  constructor() {
+    super("folder");
+    this.contentNodes = [];
+  }
+}
+
+const node = new FolderTreeNodeInfo();
+switch (node.type) {
+  case "content":
+    node.contentNodes;
+}
+
+type Successfull = {
+  type: "Successfull";
+  data: {};
+};
+
+type Error = {
+  type: "Error";
+  errorMessage: string;
+};
+
+type State = Successfull | Error;
+
+const switchFn = (some: State) => {
+  switch (some.type) {
+    case "Successfull":
+      some.data;
+      break;
+    case "Error":
+      some.errorMessage;
+      some.data; // Vypíše error, jelikož data existuje pouze při type === Successfull
+      break;
+  }
+};
+
 const logResult = (response: SendMessageResult) => {
   log("RESPONSE: " + response.response);
   log("TOKENS: " + response.data.usage?.total_tokens);
