@@ -1,6 +1,8 @@
 <script lang="ts">
    import { onMount } from "svelte";
    import type { DialogButtonType, DialogProxy } from "./";
+   import Button from "../Button.svelte";
+   import styles from "$styles";
 
    export let proxy: DialogProxy;
    let dialog: HTMLDialogElement;
@@ -10,13 +12,17 @@
     * Empty data for the next dialog show session
     */
    export let dataReset = () => {};
+   export let buttons: { type: DialogButtonType; text: string }[];
+
+   const dialogStyle = styles.build(
+      styles.colors.primary,
+      "absolute inset-x-1/2 p-4 border-2 border-black rounded -translate-y-1/2 -translate-x-1/2"
+   );
 
    const handleDialog = (dispatchEventName: string) => () => {
       dialog.close();
       proxy.dispatchEvent(new Event(dispatchEventName));
    };
-
-   export let buttons: { type: DialogButtonType; text: string }[];
 
    onMount(() => {
       proxy.init(dialog);
@@ -24,28 +30,20 @@
    });
 </script>
 
-<dialog bind:this={dialog} on:close={dataReset}>
-   <div class="root">
+<dialog class={dialogStyle} bind:this={dialog} on:close={dataReset}>
+   <!--  -->
+   <div class="flex flex-col place-items-center space-y-2">
       <slot />
-      {#each buttons as { type, text }}
-         <button on:click={handleDialog(type.toString())}>{text}</button>
-      {/each}
+      <div class="w-full grid grid-flow-col justify-stretch space-x-2">
+         {#each buttons as { type, text }}
+            <Button on:click={handleDialog(type.toString())} {text} />
+         {/each}
+      </div>
    </div>
 </dialog>
 
 <style>
    dialog::backdrop {
       backdrop-filter: blur(1.25px);
-   }
-
-   dialog {
-      top: 25%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-   }
-
-   .root {
-      display: flex;
-      flex-direction: column;
    }
 </style>

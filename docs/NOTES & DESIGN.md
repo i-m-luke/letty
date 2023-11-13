@@ -211,6 +211,7 @@
 
 # LOGO
 
+    - viz. docs >> img >> letty.jpg
     - minimalistic black and white logo with a little of purple color used. Logo has an ape in it and there will be letters AIPE
     - nechat vygenerovat AI (midjourney, ...)
     - případně vytvoři skicu a podlé ní nechat vytvořit

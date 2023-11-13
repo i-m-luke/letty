@@ -1,5 +1,3 @@
-// alias module
-
 import type { WithId as MongoWithId, Document } from "mongodb";
 
 // TODO: Přesunout sem TreeNodeInfo, atd. (z components)

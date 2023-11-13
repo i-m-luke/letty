@@ -1,29 +1,32 @@
 <script lang="ts">
    import type LayoutLoadData from "./LayoutLoadData";
    import AppMainTree from "./(AppMainTree)/AppMainTree.svelte";
-
+   import styles from "$styles";
    export let data: LayoutLoadData;
+
+   const { colors } = styles;
+   // styles.colors.primary = "";
 </script>
 
-<main class="min-h-1/2 h-auto flex flex-col font-serif">
-   <!-- upper -->
+<main class="min-h-1/2 h-auto flex flex-col">
+   <!-- upper-menu-panel -->
    <div class="">
       <a href="/app/settings" class="text-a font-a">SETTINGS</a>
       <span>HELLO</span>
    </div>
 
-   <!-- main -->
+   <!-- mid-panel -->
    <div class="h-full flex flex-row">
-      <!-- left -->
+      <!-- left-panel -->
       <div class="basis-1/6 p-2">
-         <div class="bg-indigo-50 p-2 border-2 rounded">
+         <div class={styles.build(colors.primary, "p-2 border-2 rounded")}>
             <AppMainTree promptTreeState={data.promptTreeState} threadTreeState={data.threadTreeState} />
          </div>
       </div>
 
-      <!-- right -->
-      <div class="basis-5/6 bg-indigo-50 mt-2 border-2 rounded">
-         <div class="bg-indigo-50 p-2 border-2 rounded">
+      <!-- main-panel -->
+      <div class={styles.build(colors.primary, "basis-5/6 mt-2 border-2 rounded")}>
+         <div class={styles.build(colors.primary, "p-2 border-2 rounded")}>
             <!-- WORKSPACE SLOT -->
             <slot />
             <!-- WORKSPACE SLOT -->

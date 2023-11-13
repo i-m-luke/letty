@@ -27,5 +27,6 @@ const Routes = {
 const app = (Routes.static.app = makeRoute(Routes.names.app));
 Routes.static.prompt = makeRoute(app, Routes.names.prompt);
 Routes.static.thread = makeRoute(app, Routes.names.thread);
+Object.freeze(Routes);
 
-export default Object.freeze(Routes);
+export default Routes;

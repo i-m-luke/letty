@@ -17,6 +17,7 @@ const config = {
       $types: path.resolve("./src/types.ts"),
       $db: path.resolve("./src/db.ts"),
       $routes: path.resolve("./src/routes.ts"),
+      $styles: path.resolve("./src/styles.ts"),
     },
   },
 };

@@ -19,6 +19,12 @@ export default {
         "horizontal-gradient":
           "linear-gradient(0deg, rgba(34,197,94,1) 0%, rgba(21,128,61,1) 25%, rgba(5,46,22,1) 50%, rgba(21,128,61,1) 75%, rgba(34,197,94,1) 100%)",
       },
+      boxShadow: {
+        "full-white": "0 0 0 5px rgba(255, 255, 255, 1)",
+      },
+      translate: {
+        "50/50": "translate(-50%, -50%)",
+      },
     },
   },
   plugins: [],
