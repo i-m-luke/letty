@@ -1,6 +1,7 @@
 # NÁZEV PRODUKTU: letty.io ???
 
     Další návrhy:
+        - moth-ai, mothai, mothe
         - PM - Prompt Manager
         - rips - root interface prompting solution
         - PE - Prompting Environment
@@ -65,11 +66,15 @@
 
 ## Frontend:
 
-    - Obrazovka bude rozdělená na dvě poloviny:
-        a) AppMainTree - vlevo,
-        b) Workspace - vpravo
+    - Obrazovka bude rozdělená na tři části:
+        a) Menu - nahoře
+        b) Left panel - vlevo pod menu,
+        c) Main panel - vpravo pod menu
 
-    # Workspace:
+    # Menu:
+        - Bude obsahovat tlačítká, která budou provádět redirect celé page: Zůstane alespoň menu? (menu = layout)
+
+    # Main panel:
         - Půjde přepínat do mezi režimy
         - Každý režim bude vlastní route (page)
         - Seznam režimů:
@@ -87,17 +92,20 @@
                 - bude obsahovat checkbox "parametrize", po navolení se zobrazí tlačítko [ + ] pro přidávání parametrů a textboxy pro zadání argumentů použitých při "run"
                 - do textu s promptem bude poté možné přidávat objekty "parametrů" (hodnota z textboxu se tam pak doplní)
 
-    # AppMainTree:
-        - Expandování jako je u svelte.dev/tutorial: po straně bude div, který bude mít event pro press; rozměry se pak uloží do        cookies; inspirovat se z freecodecamp tut, kde řeší eventy pohybu myši
-        - Přidání, odebrání, modifikace uzlů AppMainTree: Vracet z fetch kompletní nový strom?; Z DB by se vyčetla aktuální data
-            ; náročnější na přenos dat; jaké by mělo přínosy?
-        ## future features:
-            - v rohu stromu bude "tree manager" btn (ikonka "pastelky"):
-                - při kliku se strom přepne do režimu správy uzlů
-                - po přepnutí budou u uzlů checkboxy: vybrané uzly půjde smazat
-                - zobrazí se delete btn
-                - bude možné uzly přesouvat
-                - viz obr img/tree-manager
+    # Left panel
+        - viz. docs >> img >> tree-left-panel
+        - bude obsahovat tlačítka, pomocí kterých půjdou přepínat režimy: a) AppMainTree, b) hledání v historii threadů
+        ## AppMainTree:
+            - Expandování jako je u svelte.dev/tutorial: po straně bude div, který bude mít event pro press; rozměry se pak uloží do        cookies; inspirovat se z freecodecamp tut, kde řeší eventy pohybu myši
+            - Přidání, odebrání, modifikace uzlů AppMainTree: Vracet z fetch kompletní nový strom?; Z DB by se vyčetla aktuální data
+                ; náročnější na přenos dat; jaké by mělo přínosy?
+            ### future features:
+                - v rohu stromu bude "tree manager" btn (ikonka "pastelky"):
+                    - při kliku se strom přepne do režimu správy uzlů
+                    - po přepnutí budou u uzlů checkboxy: vybrané uzly půjde smazat
+                    - zobrazí se delete btn
+                    - bude možné uzly přesouvat
+                    - viz obr img/tree-manager
 
     # Rezponsivnost:
         - AppMainTree (levý panel) se bude na mobilních zařízeních skrývat (bude se rolovat vlevo)
@@ -111,11 +119,25 @@
                 + Zobrazí se tlačítko "show tree", které provede redirect na route "app"
 
     # Style:
+        - layout:
+            - left-side-panel: AppMainTree, ...
+            - main-panel: threading a prompting
+            - upper-panel: menu; settings
         - Color-pallete:
             - 1. bílá, 2. černá: plus gradienty
             - 3. sytě fialová: pro highlight, např. mouse-over
         - Zakulacené rohy
-        - AppMainTree: "glass-design" = částečně průhledné; bude se jemně prolínát s pozadím za stromem
+        - "glass-design":
+            - částečně průhledné; části UI aplikace (např. AppMainTree) s bude se jemně prolínát s pozadím
+            - light mode: požadí bude bílé s tmavým gradientem (šmouhami)
+            - darg mode: barva pozadí se invertuje (černé pozadí s bílými šmouhami)
+        - Odkazy a buttony: Po najetí změní na fialovou a velice jemně zazaří (glow ("neon") effect)
+        - CreateDialog: Radio buttony budou mít label nahoře (ne vlevo); boudu umístěny v group (ohraničeny border)
+        - left-side-panel:
+            - viz. docs >> img >> tree-left-panel
+            - buttony pro přepínání režimů budou řazena v pod sebou ve sloupci
+            - budou kulatá
+            - při navolení (toggle) opticky vystoupnou: objeví se stín, decentně se zvětší a posunou se nahoru a doleva (proti směru stínu)
 
 ## Backend:
 
@@ -150,6 +172,12 @@
     # Kombinování a řetězení promptů:
         - Vytvoří se jaké si "prompt-flow"
         - K promptu bude přitupováno jako k funkci: Výstup promptu se použije jako argument pro prompt další
+
+    # Využívání promptů při threadingu:
+        + V režimu thread půjde ve vlákně používat prompty
+        + V tomto případě se ve zprávě pouze výplní parametry
+        + výchozí nastavení:  obsah promptu bude skrýván; při navolení půjde prompt zobrazit
+        + U threadu bude možné nastavit výchozí prompt: při posílání zprávy bude okamžitě predpripraven prompt (jeho parametry)
 
     # Další:
         - Vytváření souhrnu threadu/export threadu: Najetí na odpověď/vlákno -> Zobrazí se popup s tlačítkem "export" --> Klik na tlačítko -> uložit do kolekce poznámek/export
