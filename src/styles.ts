@@ -1,16 +1,22 @@
-const colors = {
-  primary: "bg-indigo-50",
-};
-Object.freeze(colors);
-
 class GlobalStyles {
-  private _colors;
+  private _color;
+  private _class;
   constructor() {
-    this._colors = colors;
+    this._color = {
+      primary: "bg-white",
+    };
+    Object.freeze(this._color);
+
+    this._class = {};
+    Object.freeze(this._class);
   }
 
-  get colors() {
-    return this._colors;
+  get color() {
+    return this._color;
+  }
+
+  get class() {
+    return this._class;
   }
 
   build(...args: string[]) {

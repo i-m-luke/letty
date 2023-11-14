@@ -15,7 +15,7 @@
    export let buttons: { type: DialogButtonType; text: string }[];
 
    const dialogStyle = styles.build(
-      styles.colors.primary,
+      styles.color.primary,
       "absolute inset-x-1/2 p-4 border-2 border-black rounded -translate-y-1/2 -translate-x-1/2"
    );
 

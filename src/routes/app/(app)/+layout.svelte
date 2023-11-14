@@ -2,34 +2,42 @@
    import type LayoutLoadData from "./LayoutLoadData";
    import AppMainTree from "./(AppMainTree)/AppMainTree.svelte";
    import styles from "$styles";
+   import Background from "./Background.svelte";
    export let data: LayoutLoadData;
 
-   const { colors } = styles;
-   // styles.colors.primary = "";
+   const { color } = styles;
+   const mainPanelStyle = "p-4 rounded bg-[rgba(255,255,255,0.5)] shadow-md backdrop-blur-lg";
 </script>
 
-<main class="min-h-1/2 h-auto flex flex-col">
-   <!-- upper-menu-panel -->
-   <div class="">
-      <a href="/app/settings" class="text-a font-a">SETTINGS</a>
-      <span>HELLO</span>
+<main class="bg-white h-screen">
+   <!-- pozadí -->
+   <div class="w-full h-full">
+      <Background />
    </div>
-
-   <!-- mid-panel -->
-   <div class="h-full flex flex-row">
-      <!-- left-panel -->
-      <div class="basis-1/6 p-2">
-         <div class={styles.build(colors.primary, "p-2 border-2 rounded")}>
-            <AppMainTree promptTreeState={data.promptTreeState} threadTreeState={data.threadTreeState} />
+   <div class="absolute z-index-1 top-0 left-0 w-full min-h-1/2 p-12 flex flex-col space-y-2">
+      <!-- upper-menu-panel -->
+      <div class="grid">
+         <div class={styles.build(mainPanelStyle, "bg-[rgba(255,255,255,0.25)] w-4 min-w-fit py-2")}>
+            <a href="/app/settings"><div class="fa-solid fa-gear" /></a>
          </div>
       </div>
 
-      <!-- main-panel -->
-      <div class={styles.build(colors.primary, "basis-5/6 mt-2 border-2 rounded")}>
-         <div class={styles.build(colors.primary, "p-2 border-2 rounded")}>
-            <!-- WORKSPACE SLOT -->
-            <slot />
-            <!-- WORKSPACE SLOT -->
+      <!-- mid-panel -->
+      <div class="h-full flex flex-row justify-between space-x-4">
+         <!-- left-panel -->
+         <div class="basis-1/6">
+            <div class={styles.build(mainPanelStyle)}>
+               <AppMainTree promptTreeState={data.promptTreeState} threadTreeState={data.threadTreeState} />
+            </div>
+         </div>
+
+         <!-- main-panel -->
+         <div class={styles.build(mainPanelStyle, "basis-5/6")}>
+            <div class={styles.build("p-4 rounded")}>
+               <!-- WORKSPACE SLOT -->
+               <slot />
+               <!-- WORKSPACE SLOT -->
+            </div>
          </div>
       </div>
    </div>

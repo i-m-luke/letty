@@ -130,9 +130,10 @@
         - "glass-design":
             - částečně průhledné; části UI aplikace (např. AppMainTree) s bude se jemně prolínát s pozadím
             - light mode: požadí bude bílé s tmavým gradientem (šmouhami)
-            - darg mode: barva pozadí se invertuje (černé pozadí s bílými šmouhami)
+            - dark mode: barva pozadí se invertuje (černé pozadí s bílými šmouhami)
+            - tut: https://youtu.be/i59d6MjJLTc?si=N6HfK2KKLQMBEl_a
         - Odkazy a buttony: Po najetí změní na fialovou a velice jemně zazaří (glow ("neon") effect)
-        - CreateDialog: Radio buttony budou mít label nahoře (ne vlevo); boudu umístěny v group (ohraničeny border)
+        - Dialogy: vyjede ze shora  jako skleněná deska; bude spojený s horní částí obrazovky; bude se zviditelňovat (opacity); backdrop filter se bude zviditelňovat
         - left-side-panel:
             - viz. docs >> img >> tree-left-panel
             - buttony pro přepínání režimů budou řazena v pod sebou ve sloupci

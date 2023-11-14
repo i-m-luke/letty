@@ -1,7 +1,7 @@
 <script lang="ts">
    import Dialog from "$lib/components/Dialog/Dialog.svelte";
    import { DialogButtonType, type DialogProxy } from "$lib/components/Dialog";
-   import TextInput from "$lib/components/TextInput.svelte";
+   import TextInput from "$lib/components/Input.svelte";
    import { TreeNodeType } from "$lib/components/Tree";
    import type CreateDialogData from "./CreateDialogData";
    import Group from "$lib/components/Group.svelte";
