@@ -6,7 +6,7 @@
    export let data: LayoutLoadData;
 
    const { color } = styles;
-   const mainPanelStyle = "p-4 rounded bg-[rgba(255,255,255,0.5)] shadow-md backdrop-blur-lg";
+   const mainPanelStyle = "p-4 rounded bg-[rgba(255,255,255,0.4)] shadow-md backdrop-blur-lg";
 </script>
 
 <main class="bg-white h-screen">
