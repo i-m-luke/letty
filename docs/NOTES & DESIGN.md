@@ -107,6 +107,10 @@
                     - bude možné uzly přesouvat
                     - viz obr img/tree-manager
 
+    # Loading:
+        + Obrazovka se zobrazí při spuštění aplikace
+        + Fade-in --> Objeví se logo s textem letty -> Fade-out -> Zobrazí se panely: animace pohybu + opacity?
+
     # Rezponsivnost:
         - AppMainTree (levý panel) se bude na mobilních zařízeních skrývat (bude se rolovat vlevo)
         - Při skrytí půjde rozbalit pomocí buttonu
@@ -126,18 +130,16 @@
         - Color-pallete:
             - 1. bílá, 2. černá: plus gradienty
             - 3. sytě fialová: pro highlight, např. mouse-over
-        - Zakulacené rohy
         - "glass-design":
             - částečně průhledné; části UI aplikace (např. AppMainTree) s bude se jemně prolínát s pozadím
             - light mode: požadí bude bílé s tmavým gradientem (šmouhami)
             - dark mode: barva pozadí se invertuje (černé pozadí s bílými šmouhami)
             - tut: https://youtu.be/i59d6MjJLTc?si=N6HfK2KKLQMBEl_a
         - Odkazy a buttony: Po najetí změní na fialovou a velice jemně zazaří (glow ("neon") effect)
-        - Dialogy: vyjede ze shora  jako skleněná deska; bude spojený s horní částí obrazovky; bude se zviditelňovat (opacity); backdrop filter se bude zviditelňovat
         - left-side-panel:
             - viz. docs >> img >> tree-left-panel
-            - buttony pro přepínání režimů budou řazena v pod sebou ve sloupci
-            - budou kulatá
+            - buttony pro přepínání režimů budou řazeny pod sebou ve sloupci
+            - buttony budou kulaté
             - při navolení (toggle) opticky vystoupnou: objeví se stín, decentně se zvětší a posunou se nahoru a doleva (proti směru stínu)
 
 ## Backend:
@@ -212,8 +214,12 @@
 
 # LOGO
 
-    - viz. docs >> img >> letty.jpg
-    - minimalistic black and white logo with a little of purple color used. Logo has an ape in it and there will be letters AIPE
-    - nechat vygenerovat AI (midjourney, ...)
-    - případně vytvoři skicu a podlé ní nechat vytvořit
-    - nějaké návrhy jsou již připraveny viz adr. logo
+    + viz. docs >> img >> letty.jpg
+    + lepší je verianta č. 2 (s textem):
+        + tato varianta bude použita s textem i bez textu
+        + S textem: bude použito pro loading (intro) page
+        + Bez textu: 
+            + bude umístěno v otvoru v levém horním rohu left-side-panelu (AppMainTree)
+            + bude SVG: v otvoru se bude nacházet pouze znak loga vše ostatní bude transparentní 
+
+         
