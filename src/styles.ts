@@ -1,14 +1,20 @@
+const colors = {
+  primary: (opacity: number) => `rgba(255,255,255,${opacity})`,
+};
+Object.freeze(colors);
+
+const classes = {
+  mainPanel: `bg-[${colors.primary(0.5)}] p-4 rounded shadow-md backdrop-blur-lg`,
+  thinBorderSize: "0.1rem",
+};
+Object.freeze(classes);
+
 class GlobalStyles {
   private _color;
   private _class;
   constructor() {
-    this._color = {
-      primary: "bg-white",
-    };
-    Object.freeze(this._color);
-
-    this._class = {};
-    Object.freeze(this._class);
+    this._color = colors;
+    this._class = classes;
   }
 
   get color() {

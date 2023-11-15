@@ -25,6 +25,10 @@ export default {
       translate: {
         "50/50": "translate(-50%, -50%)",
       },
+      borderWidth: {
+        thin: "0.4px",
+        mid: "2.5px",
+      },
     },
   },
   plugins: [],

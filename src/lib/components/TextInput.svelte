@@ -1,9 +1,10 @@
 <script lang="ts">
+   import styles from "$styles";
    import BaseInput from "./BaseInput.svelte";
    export let value: string = "";
    export let label: string = "";
 </script>
 
 <BaseInput {label}>
-   <input class="border-2 border-black rounded" bind:value />
+   <input class="bg-transparent" bind:value />
 </BaseInput>
