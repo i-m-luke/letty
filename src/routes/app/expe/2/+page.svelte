@@ -3,7 +3,7 @@
    import { onMount } from "svelte";
    import CreateDialog from "../../(app)/(AppMainTree)/CreateDialog.svelte";
    import CreateDialogData from "../../(app)/(AppMainTree)/CreateDialogData";
-   import Group from "$lib/components/Group.svelte";
+   import Group from "$lib/components/GroupBox.svelte";
 
    const proxy = new DialogProxy();
    const data = new CreateDialogData();

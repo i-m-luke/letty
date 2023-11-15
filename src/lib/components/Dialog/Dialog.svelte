@@ -36,7 +36,7 @@
       <!-- TODO: Udělat title jako group, ale v italic a větším font-size -->
       {#if title !== ""} <span class="text-[2rem] font-normal italic">{":: " + title + " ::"}</span> {/if}
       <slot />
-      <div class="w-max-1/4 p-2 grid grid-flow-col justify-stretch space-x-24">
+      <div class="w-full p-2 grid grid-flow-col justify-stretch space-x-20">
          {#each buttons as { type, text }}
             <Button on:click={handleDialog(type.toString())} {text} />
          {/each}

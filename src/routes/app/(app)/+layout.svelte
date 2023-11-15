@@ -15,7 +15,10 @@
    </div>
    <div class="absolute z-index-1 top-0 left-0 w-full min-h-1/2 p-12 flex flex-col space-y-2">
       <!-- upper-menu-panel -->
-      <div class="grid">
+      <div class="flex flex-row gap-1">
+         <div class={styles.build(mainPanelStyle, "w-4 min-w-fit py-2")}>
+            <a href=""><div class="fa-solid fa-user" /></a>
+         </div>
          <div class={styles.build(mainPanelStyle, "w-4 min-w-fit py-2")}>
             <a href="/app/settings"><div class="fa-solid fa-gear" /></a>
          </div>

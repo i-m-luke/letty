@@ -4,7 +4,7 @@
    import TextInput from "$lib/components/TextInput.svelte";
    import { TreeNodeType } from "$lib/components/Tree";
    import type CreateDialogData from "./CreateDialogData";
-   import Group from "$lib/components/Group.svelte";
+   import GroupBox from "$lib/components/GroupBox.svelte";
 
    export let dialogProxy: DialogProxy;
    export let data: CreateDialogData;
@@ -29,7 +29,7 @@
    {dataReset}
 >
    <div class="flex flex-col space-y-2">
-      <Group name="... What type?" borderIsVisible={true}>
+      <GroupBox name="... What type?" borderIsVisible={true}>
          <div class="w-full flex flex-row justify-between gap-4">
             <div class={radioStyle}>
                <span>content</span>
@@ -40,9 +40,9 @@
                <input type="radio" bind:group={$type} value={TreeNodeType.Folder} />
             </div>
          </div>
-      </Group>
-      <Group name="... What name?" borderIsVisible={true}>
+      </GroupBox>
+      <GroupBox name="... What name?" borderIsVisible={true}>
          <TextInput bind:value={$name} />
-      </Group>
+      </GroupBox>
    </div>
 </Dialog>
