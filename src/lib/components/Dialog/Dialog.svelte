@@ -17,7 +17,7 @@
 
    const dialogStyle = styles.build(
       styles.class.mainPanel,
-      "bg-[rgba(255,255,255,0.4)] m-0 fixed min-h-fit inset-x-[30%] rounded-t-none rounded-bl-2xl rounded-br-2xl"
+      "bg-[rgba(255,255,255,0.2)] m-0 fixed min-h-fit inset-x-[30%] rounded-t-none rounded-bl-2xl rounded-br-2xl"
    );
 
    const handleDialog = (dispatchEventName: string) => () => {
@@ -45,19 +45,26 @@
 </dialog>
 
 <style>
+   :root {
+      --backdrop-blur: blur(0.7px);
+      --backdrop-bg: rgba(0, 0, 0, 1);
+   }
+
    @keyframes backdrop {
       0% {
          backdrop-filter: blur(0);
+         background-color: rgba(0, 0, 0, 0);
       }
 
-      100% {
-         backdrop-filter: blur(0.9px);
+      90% {
+         backdrop-filter: blur(0.7px);
+         background-color: rgba(0, 0, 0, 0.04);
       }
    }
 
    @keyframes dialog {
       0% {
-         opacity: 0;
+         opacity: 0.2;
          top: -50%;
       }
 
@@ -71,10 +78,10 @@
       }
    }
 
-   /* TODO: Bude součástí transition */
    dialog::backdrop {
-      backdrop-filter: blur(0.9px);
-      animation: backdrop 0.25s linear;
+      backdrop-filter: blur(0.7px);
+      background-color: rgba(0, 0, 0, 0.04);
+      animation: backdrop 0.75s ease;
    }
 
    dialog {

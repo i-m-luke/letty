@@ -2,7 +2,7 @@
    import styles from "$styles";
    export let text = "";
    // TODO: Pozadí bude gradient
-   const style = styles.build(styles.color.primary(0.5), "border-2 border-black rounded");
+   const style = "bg-[rgba(255,255,255,0.3)] border-thin border-[rgba(255,255,255,1)] rounded-md px-3";
 </script>
 
 <button class={style} on:click>
