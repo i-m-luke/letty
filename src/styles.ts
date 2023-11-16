@@ -4,7 +4,7 @@ const colors = {
 Object.freeze(colors);
 
 const classes = {
-  mainPanel: `bg-[rgba(255,255,255,0.4)] p-4 rounded shadow-md backdrop-blur-lg`,
+  mainPanel: `bg-[rgba(255,255,255,0.3)] p-4 rounded shadow-md backdrop-blur-lg`,
   thinBorderSize: "0.1rem",
 };
 Object.freeze(classes);

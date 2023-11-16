@@ -1,11 +1,12 @@
 export default class ButtonInfo<TData> {
-  text: string;
   onClickAction: (data: TData) => void | (() => void);
-
+  text?: string;
+  style?: string;
   formActionName?: string;
 
-  constructor(text: string, opts?: ButtonInfoOpts<TData>) {
-    this.text = text;
+  constructor(opts?: ButtonInfoOpts<TData>) {
+    this.text = opts?.text;
+    this.style = opts?.style;
     this.formActionName = opts?.formActionName;
     this.onClickAction = opts?.onClickAction ?? (() => {});
   }
@@ -13,5 +14,7 @@ export default class ButtonInfo<TData> {
 
 export type ButtonInfoOpts<TData> = {
   onClickAction?: (data: TData) => void | (() => void);
+  text?: string;
+  style?: string;
   formActionName?: string;
 };

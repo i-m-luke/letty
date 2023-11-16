@@ -27,10 +27,15 @@
 
    //#region thread buttons
 
+   const addBtnStyle = "fa-solid fa-circle-plus";
+   const removeBtnStyle = "fa-solid fa-circle-minus";
+
    const threadFolderNodeAdditionalButtons = [
-      new ButtonInfo("ADD", {
+      // ADD THREAD FOLDER BUTTON
+      new ButtonInfo({
+         style: addBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
-            console.log("TODO: ADD THREAD FOLDER/CONTENT"); // TODO CONNECT TO DB
+            console.log("TODO: ADD THREAD FOLDER/CONTENT"); // TODO: CONNECT TO DB
             const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
             confirmed.then(() => {
                const { name, type } = createThreadDialogData;
@@ -42,7 +47,9 @@
             canceled.then(() => console.log("dialog canceled"));
          },
       }),
-      new ButtonInfo("REMOVE", {
+      // REMOVE THREAD FOLDER BUTTON
+      new ButtonInfo({
+         style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE THREAD FOLDER/CONTENT"); // TODO CONNECT TO DB
             // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
@@ -56,7 +63,9 @@
    ];
 
    const threadContentNodeAdditionalButtons = [
-      new ButtonInfo("REMOVE", {
+      // REMOVE THREAD BUTTON
+      new ButtonInfo({
+         style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE THREAD CONTENT"); // TODO CONNECT TO DB
             fetchDeletePrompt(data)
@@ -73,7 +82,9 @@
    //#region prompt buttons
 
    const promptFolderNodeAdditionalButtons = [
-      new ButtonInfo("ADD", {
+      // ADD PROMPT FOLDER BUTTON
+      new ButtonInfo({
+         style: addBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: ADD PROMPT FOLDER/CONTENT"); // TODO CONNECT TO DB
             const { confirmed, canceled } = createPromptDialogProxy.showModalAndWaitTillClosed();
@@ -85,7 +96,9 @@
             canceled.then(() => console.log("dialog canceled"));
          },
       }),
-      new ButtonInfo("REMOVE", {
+      // REMOVE PROMPT FOLDER BUTTON
+      new ButtonInfo({
+         style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE PROMPT FOLDER/CONTENT"); // TODO CONNECT TO DB
             // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
@@ -99,7 +112,9 @@
    ];
 
    const promptContentNodeAdditionalButtons = [
-      new ButtonInfo("REMOVE", {
+      // ADD PROMPT BUTTON
+      new ButtonInfo({
+         style: addBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE PROMPT CONTENT"); // TODO CONNECT TO DB
             fetchDeletePrompt(data)
@@ -114,25 +129,29 @@
    //#endregion
 </script>
 
-{#if $threadTreeState.length > 0}
-   <span>THREADING:</span>
-   <Tree
-      nodeOnClickAction={(nodeData) => goto(`${routes.static.thread}${nodeData._id}`)}
-      nodeInfoCollection={threadTreeState}
-      contentNodeAdditionalButtons={threadContentNodeAdditionalButtons}
-      folderNodeAdditionalButtons={threadFolderNodeAdditionalButtons}
-   />
-{/if}
+<div class="w-full grid place-items-center">
+   <div>
+      {#if $threadTreeState.length > 0}
+         <span>THREADING:</span>
+         <Tree
+            nodeOnClickAction={(nodeData) => goto(`${routes.static.thread}${nodeData._id}`)}
+            nodeInfoCollection={threadTreeState}
+            contentNodeAdditionalButtons={threadContentNodeAdditionalButtons}
+            folderNodeAdditionalButtons={threadFolderNodeAdditionalButtons}
+         />
+      {/if}
 
-{#if $promptTreeState.length > 0}
-   <span>PROMPTING:</span>
-   <Tree
-      nodeOnClickAction={(nodeData) => goto(`${routes.static.prompt}${nodeData._id}`)}
-      nodeInfoCollection={promptTreeState}
-      contentNodeAdditionalButtons={promptContentNodeAdditionalButtons}
-      folderNodeAdditionalButtons={promptFolderNodeAdditionalButtons}
-   />
-{/if}
+      {#if $promptTreeState.length > 0}
+         <span>PROMPTING:</span>
+         <Tree
+            nodeOnClickAction={(nodeData) => goto(`${routes.static.prompt}${nodeData._id}`)}
+            nodeInfoCollection={promptTreeState}
+            contentNodeAdditionalButtons={promptContentNodeAdditionalButtons}
+            folderNodeAdditionalButtons={promptFolderNodeAdditionalButtons}
+         />
+      {/if}
+   </div>
+</div>
 
 <CreateDialog dialogProxy={createThreadDialogProxy} data={createThreadDialogData} />
 <CreateDialog dialogProxy={createPromptDialogProxy} data={createPromptDialogData} />

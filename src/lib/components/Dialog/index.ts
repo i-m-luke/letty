@@ -7,6 +7,24 @@ export class DialogProxy extends EventTarget {
     super();
   }
 
+  _onCanceled: (e?: Event) => void = (e?: Event) => {};
+  set onCanceled(value: (e?: Event) => void) {
+    this.removeEventListener(DialogButtonType.Cancel.toString(), this._onCanceled);
+    this._onCanceled = value;
+    this.addEventListener(DialogButtonType.Cancel.toString(), this._onCanceled, {
+      once: true,
+    });
+  }
+
+  _onConfirmed: (e?: Event) => void = (e?: Event) => {};
+  set onConfirmed(value: (e?: Event) => void) {
+    this.removeEventListener(DialogButtonType.Confirm.toString(), this._onConfirmed);
+    this._onConfirmed = value;
+    this.addEventListener(DialogButtonType.Confirm.toString(), this._onConfirmed, {
+      once: true,
+    });
+  }
+
   showModalAndWaitTillClosed(): {
     confirmed: Promise<unknown>;
     canceled: Promise<unknown>;
@@ -14,14 +32,10 @@ export class DialogProxy extends EventTarget {
     this.dialog?.showModal();
     return {
       confirmed: new Promise((resolve) => {
-        this.addEventListener(DialogButtonType.Confirm.toString(), resolve, {
-          once: true,
-        });
+        this.onConfirmed = resolve;
       }),
       canceled: new Promise((resolve) => {
-        this.addEventListener(DialogButtonType.Cancel.toString(), resolve, {
-          once: true,
-        });
+        this.onCanceled = resolve;
       }),
     };
   }

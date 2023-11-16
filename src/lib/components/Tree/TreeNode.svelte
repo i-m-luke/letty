@@ -1,6 +1,8 @@
 <script lang="ts">
+   import { fade } from "svelte/transition";
    import { TreeNodeType, type TreeNodeInfo, type TreeNodeInfoData } from "./";
    import type ButtonInfo from "$lib/components/ButtonInfo";
+   import styles from "$styles";
 
    export let nodeInfo: TreeNodeInfo;
    export let nodeOnClickAction: ((nodeData: TreeNodeInfoData) => void) | (() => void) = () => {};
@@ -25,7 +27,7 @@
 </script>
 
 <div class="node-container">
-   <div class="parent-node">
+   <div class="flex flex-row justify-start space-x-2">
       {#if !nodeInfo.isRoot}
          <div class="connection-container">
             <div class="connection" />
@@ -34,16 +36,22 @@
 
       <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}> {`${nodeInfo.text} ${nodeStateInText}`}</span>
 
-      {#each additionalButtons as { text, onClickAction, formActionName }}
-         <button type="button" formaction={formActionName} on:click={() => onClickAction(data)}>
-            {text}
+      {#each additionalButtons as { text, style, onClickAction, formActionName }}
+         <button
+            class={styles.build(style ? style : "", "text-transparent bg-clip-text bg-cyan-800")}
+            type="button"
+            formaction={formActionName}
+            on:click={() => onClickAction(data)}
+         >
+            {#if text}{text}{/if}
          </button>
       {/each}
    </div>
 
    {#if isOpen}
-      <div class="child-nodes">
+      <div class="child-nodes" in:fade={{ duration: 1000 }}>
          {#each nodeInfo.childNodes as childNode}
+            <!-- TODO - Animace: Položky stromu se budou postupně zobrazovat  -->
             <svelte:self {nodeOnClickAction} nodeInfo={childNode} {contentNodeAdditionalButtons} {folderNodeAdditionalButtons} />
          {/each}
       </div>

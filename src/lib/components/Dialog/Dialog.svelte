@@ -17,28 +17,34 @@
 
    const dialogStyle = styles.build(
       styles.class.mainPanel,
-      "bg-[rgba(255,255,255,0.2)] m-0 fixed min-h-fit inset-x-[30%] rounded-t-none rounded-bl-2xl rounded-br-2xl"
+      "bg-[rgba(255,255,255,0.1)] m-0 fixed min-h-fit inset-x-[30%] rounded-t-none rounded-bl-2xl rounded-br-2xl"
    );
-
-   const handleDialog = (dispatchEventName: string) => () => {
-      dialog.close();
-      proxy.dispatchEvent(new Event(dispatchEventName));
-   };
 
    onMount(() => {
       proxy.init(dialog);
       dataReset();
    });
+
+   const onClose = () => {
+      dataReset();
+   };
+
+   let value: string;
 </script>
 
-<dialog class={dialogStyle} bind:this={dialog} on:close={dataReset}>
+<dialog class={dialogStyle} bind:this={dialog} on:close={onClose}>
    <div class="h-full justify-even items-center flex flex-col space-y-2">
-      <!-- TODO: Udělat title jako group, ale v italic a větším font-size -->
-      {#if title !== ""} <span class="text-[2rem] font-normal italic">{":: " + title + " ::"}</span> {/if}
+      {#if title !== ""}<span class="text-[2rem] font-normal italic">{":: " + title + " ::"}</span>{/if}
       <slot />
       <div class="w-full p-2 grid grid-flow-col justify-stretch space-x-20">
          {#each buttons as { type, text }}
-            <Button on:click={handleDialog(type.toString())} {text} />
+            <Button
+               on:click={() => {
+                  dialog.close();
+                  proxy.dispatchEvent(new Event(type));
+               }}
+               {text}
+            />
          {/each}
       </div>
    </div>
@@ -64,16 +70,10 @@
 
    @keyframes dialog {
       0% {
-         opacity: 0.2;
          top: -50%;
       }
 
-      50% {
-         opacity: 0.6;
-      }
-
       100% {
-         opacity: 1;
          top: 0;
       }
    }
@@ -86,5 +86,9 @@
 
    dialog {
       animation: dialog 0.75s ease;
+   }
+
+   .dialog-close {
+      animation: dialog 0.75s reverse;
    }
 </style>

@@ -8,56 +8,77 @@ import {
   sendMessageWithContext,
 } from "./ai-interface";
 
-class TreeNodeInfo {
-  type: "folder" | "content";
-  constructor(type: "folder" | "content") {
-    this.type = type;
-  }
-}
-
-class ContentTreeNodeInfo extends TreeNodeInfo {
+class Target extends EventTarget {
   constructor() {
-    super("content");
+    super();
+  }
+
+  _onCanceled: (e: Event) => void = (e: Event) => {};
+  set onCanceled(value: (e: Event) => void) {
+    this.removeEventListener("A", this._onCanceled);
+    this._onCanceled = value;
+    this.addEventListener("A", this._onCanceled);
+  }
+
+  _onConfirmed: (e: Event) => void = (e: Event) => {};
+  set onConfirmed(value: (e: Event) => void) {
+    this.removeEventListener("A", this._onConfirmed);
+    this._onConfirmed = value;
+    this.addEventListener("A", this._onConfirmed);
+  }
+
+  execute01() {
+    return {
+      a: new Promise<unknown>((resolve) => {
+        this.addEventListener("A", (value: unknown) => {
+          resolve(value);
+        });
+      }),
+      b: new Promise<unknown>((resolve) => {
+        this.addEventListener("B", (value: unknown) => {
+          resolve(value);
+        });
+      }),
+    };
+  }
+
+  execute02() {
+    const { signal: signalA, abort: abortA } = new AbortController();
+    const { signal: signalB, abort: abortB } = new AbortController();
+    this.addEventListener(
+      "A",
+      () => {
+        console.log("A triggered");
+        console.log(signalB.aborted);
+        abortB();
+      },
+      { once: true, signal: signalA }
+    );
+    this.addEventListener(
+      "B",
+      () => {
+        if (!signalB.aborted) {
+          console.log("B triggered");
+          abortA();
+        }
+      },
+      { once: true, signal: signalB }
+    );
+  }
+
+  execute03() {
+    this.onCanceled = (e: Event) => console.log("A");
+    this.onConfirmed = (e: Event) => console.log("B");
   }
 }
 
-class FolderTreeNodeInfo extends TreeNodeInfo {
-  contentNodes: string[];
-  constructor() {
-    super("folder");
-    this.contentNodes = [];
-  }
-}
+const target = new Target();
+target.execute03();
+target.dispatchEvent(new Event("A"));
+target.execute03();
+target.dispatchEvent(new Event("B"));
 
-const node = new FolderTreeNodeInfo();
-switch (node.type) {
-  case "content":
-    node.contentNodes;
-}
-
-type Successfull = {
-  type: "Successfull";
-  data: {};
-};
-
-type Error = {
-  type: "Error";
-  errorMessage: string;
-};
-
-type State = Successfull | Error;
-
-const switchFn = (some: State) => {
-  switch (some.type) {
-    case "Successfull":
-      some.data;
-      break;
-    case "Error":
-      some.errorMessage;
-      some.data; // Vypíše error, jelikož data existuje pouze při type === Successfull
-      break;
-  }
-};
+debugger;
 
 const logResult = (response: SendMessageResult) => {
   log("RESPONSE: " + response.response);
