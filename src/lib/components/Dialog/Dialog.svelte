@@ -1,5 +1,6 @@
 <script lang="ts">
    import { onMount } from "svelte";
+   import { fade } from "svelte/transition";
    import type { DialogButtonType, DialogProxy } from "./";
    import Button from "../Button.svelte";
    import styles from "$styles";
@@ -17,7 +18,7 @@
 
    const dialogStyle = styles.build(
       styles.class.mainPanel,
-      "bg-[rgba(255,255,255,0.1)] m-0 fixed min-h-fit inset-x-[30%] rounded-t-none rounded-bl-2xl rounded-br-2xl"
+      " m-0 fixed min-h-fit inset-x-[30%] rounded-t-none rounded-bl-2xl rounded-br-2xl bg-[rgba(255,255,255,0.1)] backdrop-blur-[7px]"
    );
 
    onMount(() => {
@@ -32,6 +33,7 @@
    let value: string;
 </script>
 
+<!-- TODO - Animace při close: dialog zajede zpátky nahoru (opačná animace jako při zobrazení) -->
 <dialog class={dialogStyle} bind:this={dialog} on:close={onClose}>
    <div class="h-full justify-even items-center flex flex-col space-y-2">
       {#if title !== ""}<span class="text-[2rem] font-normal italic">{":: " + title + " ::"}</span>{/if}
