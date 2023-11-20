@@ -1,4 +1,5 @@
 import type { WithId as MongoWithId, Document } from "mongodb";
+import { z } from "zod";
 
 // TODO: Přesunout sem TreeNodeInfo, atd. (z components)
 
@@ -32,21 +33,22 @@ export type ThreadData = {
 
 //#endregion
 
-// TODO: Nahradit za PromptData
-export type PromptInfo = {
-  id: string;
-  parentId: string | null; // ... null je fuj!
-  name: string;
-  prompt: string;
-  chidren: PromptInfo[];
-};
+export const PromptInfoValidator = z.object({
+  id: z.string(),
+  parentId: z.string().nullable(), // ... null je fuj! ... ale lepší jak undefined
+  name: z.string(),
+  prompt: z.string(),
+});
 
-// TODO: Nahradit za ThreadData
-export type ThreadInfo = {
-  id: number;
-  name: string;
-  children: ThreadInfo[];
-};
+export type PromptInfo = z.infer<typeof PromptInfoValidator>;
+
+export const ThreadInfoValidator = z.object({
+  id: z.string(),
+  parentId: z.string().nullable(), // ... null je fuj! ... ale lepší jak undefined
+  name: z.string(),
+});
+
+export type ThreadInfo = z.infer<typeof PromptInfoValidator>;
 
 export type DBNode<TData> = {
   userId: string;

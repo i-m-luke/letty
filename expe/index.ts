@@ -1,4 +1,5 @@
 import { log } from "./logging"; // facade pattern
+import { ZodError, z } from "zod";
 
 import {
   sendMessage,
@@ -58,9 +59,55 @@ const convert = <TType>(obj: any) => {
   return converted;
 };
 
+export const PromptInfoValidator = z.object({
+  id: z.string(),
+  parentId: z.string().nullable(), // ... null je fuj! ... ale lepší jak undefined
+  name: z.string(),
+  prompt: z.string(),
+});
+
+type PromptInfo = z.infer<typeof PromptInfoValidator>;
+
 // MAIN:
 (() => {
   while (true) {
+    // Person.ts
+    const request = { data: {} };
+    const json = (obj: {}) => {};
+
+    const PersonValidator = z.object({
+      id: z.string(),
+      age: z.number(),
+    });
+
+    type Person = z.infer<typeof PersonValidator>;
+
+    // client.ts
+
+    // ... parse
+    try {
+      const validatedPerson = PersonValidator.parse(json(request.data));
+    } catch (error) {
+      if (error instanceof ZodError) {
+        // ...
+      }
+    }
+
+    // ... safeParse
+    const validatedPerson = PersonValidator.safeParse(json(request.data));
+    if (validatedPerson.success) {
+      // ... validatedPerson.data; 
+    }
+
+    try {
+      const validatedObj = UserValidation.parse({ propA: "10" });
+    } catch (error: any) {
+      if (!(error instanceof ZodError)) throw error;
+      console.log(error);
+    }
+
+    UserValidation.safeParse({});
+
     console.log(checkObjectType<Data>({ prop: ".." }, new Data("", 0)));
     console.log(checkObjectType<Data>(new Data("", 0), new Data("", 0)));
     const obj: Data = convert<Data>({ someProp: "" });

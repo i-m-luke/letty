@@ -1,7 +1,9 @@
-type PostData = {
-	parentId: string;
-	promptName: string;
-	prompt: string;
-};
+import { z } from "zod";
 
-export default PostData;
+export const PostDataValidator = z.object({
+  parentId: z.string(),
+  promptName: z.string(),
+  prompt: z.string(),
+});
+
+export type PostData = z.infer<typeof PostDataValidator>;
