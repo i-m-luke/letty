@@ -17,7 +17,7 @@
       <!-- upper-menu-panel -->
       <div class="flex flex-row gap-1">
          <div class={styles.build(mainPanelStyle, "w-4 min-w-fit py-2")}>
-            <a href=""><div class="fa-solid fa-user" /></a>
+            <a href="./"><div class="fa-solid fa-user" /></a>
          </div>
          <div class={styles.build(mainPanelStyle, "w-4 min-w-fit py-2")}>
             <a href="/app/settings"><div class="fa-solid fa-gear" /></a>
@@ -28,14 +28,14 @@
       <div class="h-full flex flex-row space-x-4">
          <!-- left-panel -->
          <div class="basis-1/6">
-            <div class={styles.build(mainPanelStyle)}>
+            <div class={mainPanelStyle}>
                <AppMainTree promptTreeState={data.promptTreeState} threadTreeState={data.threadTreeState} />
             </div>
          </div>
 
          <!-- main-panel -->
          <div class={styles.build(mainPanelStyle, "basis-5/6")}>
-            <div class={styles.build("p-4 rounded")}>
+            <div class="p-4 rounded">
                <!-- WORKSPACE SLOT -->
                <slot />
                <!-- WORKSPACE SLOT -->

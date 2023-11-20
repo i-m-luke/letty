@@ -8,75 +8,67 @@ import {
   sendMessageWithContext,
 } from "./ai-interface";
 
-class Target extends EventTarget {
-  constructor() {
-    super();
-  }
-
-  _onCanceled: (e: Event) => void = (e: Event) => {};
-  set onCanceled(value: (e: Event) => void) {
-    this.removeEventListener("A", this._onCanceled);
-    this._onCanceled = value;
-    this.addEventListener("A", this._onCanceled);
-  }
-
-  _onConfirmed: (e: Event) => void = (e: Event) => {};
-  set onConfirmed(value: (e: Event) => void) {
-    this.removeEventListener("A", this._onConfirmed);
-    this._onConfirmed = value;
-    this.addEventListener("A", this._onConfirmed);
-  }
-
-  execute01() {
-    return {
-      a: new Promise<unknown>((resolve) => {
-        this.addEventListener("A", (value: unknown) => {
-          resolve(value);
-        });
-      }),
-      b: new Promise<unknown>((resolve) => {
-        this.addEventListener("B", (value: unknown) => {
-          resolve(value);
-        });
-      }),
-    };
-  }
-
-  execute02() {
-    const { signal: signalA, abort: abortA } = new AbortController();
-    const { signal: signalB, abort: abortB } = new AbortController();
-    this.addEventListener(
-      "A",
-      () => {
-        console.log("A triggered");
-        console.log(signalB.aborted);
-        abortB();
-      },
-      { once: true, signal: signalA }
-    );
-    this.addEventListener(
-      "B",
-      () => {
-        if (!signalB.aborted) {
-          console.log("B triggered");
-          abortA();
-        }
-      },
-      { once: true, signal: signalB }
-    );
-  }
-
-  execute03() {
-    this.onCanceled = (e: Event) => console.log("A");
-    this.onConfirmed = (e: Event) => console.log("B");
+class Data {
+  strProp: string;
+  numProp: number;
+  constructor(strProp: string, numProp: number) {
+    this.strProp = strProp;
+    this.numProp = numProp;
   }
 }
 
-const target = new Target();
-target.execute03();
-target.dispatchEvent(new Event("A"));
-target.execute03();
-target.dispatchEvent(new Event("B"));
+const clientSideFn = () => {};
+
+let reqData = {};
+let resData = {};
+const fakeAPI = {
+  sendReq: (data: any) => {
+    reqData = data;
+  },
+  getReq: () => reqData,
+  sendRes: (data: any) => {
+    resData = data;
+  },
+  getRes: () => resData,
+};
+
+const serverSideFn = () => {};
+
+const checkObjectType = <TDataType extends object>(
+  object: any,
+  testObject: TDataType
+) => {
+  const objectEntries = Object.entries(object);
+  for (const [testKey, testValue] of Object.entries(testObject)) {
+    if (
+      objectEntries.find(([key, value]) => {
+        return key === testKey && typeof value === typeof testValue;
+      }) === undefined
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const convert = <TType>(obj: any) => {
+  const converted = obj as TType;
+  console.log(converted);
+  return converted;
+};
+
+// MAIN:
+(() => {
+  while (true) {
+    console.log(checkObjectType<Data>({ prop: ".." }, new Data("", 0)));
+    console.log(checkObjectType<Data>(new Data("", 0), new Data("", 0)));
+    const obj: Data = convert<Data>({ someProp: "" });
+    console.log("obj:" + obj);
+    console.log(obj.numProp);
+    console.log(obj.strProp);
+  }
+})();
 
 debugger;
 
