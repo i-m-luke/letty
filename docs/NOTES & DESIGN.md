@@ -66,6 +66,12 @@
 
 ## Frontend:
 
+    - Redirect z buttonů:
+        - Každý button, který bude provádět redirect, změní content pro main-panel page
+        - Obdobně, jako se teď děje při kliku na uzel stromu
+        - Týkat se bude např. Settings btn (sekce Menu)
+        - Povede k lepšímu UX: uživatel bude pořád pracovat se stejným layoutem a tím pro něj bude zobrazení UI konzistentní
+
     - Obrazovka bude rozdělená na tři části:
         a) Menu - nahoře
         b) Left panel - vlevo pod menu,
@@ -155,6 +161,11 @@
         - Na express lze řešit skrze middleware route
         - Jak se řeší v případě SvelteKit ???
 
+    # Validace typu dat přenášených mezi client-server
+        - Zajištěno pomocí ZOD schémat
+        - konzistence dat se musí vždy ověřit při jejich převzetí ze sítě
+        - tzn. json se vždy musi validovat
+
 ## Features:
 
     - Features jsou seřazeny podle priorit
@@ -218,8 +229,6 @@
     + lepší je verianta č. 2 (s textem):
         + tato varianta bude použita s textem i bez textu
         + S textem: bude použito pro loading (intro) page
-        + Bez textu: 
+        + Bez textu:
             + bude umístěno v otvoru v levém horním rohu left-side-panelu (AppMainTree)
-            + bude SVG: v otvoru se bude nacházet pouze znak loga vše ostatní bude transparentní 
-
-         
+            + bude SVG: v otvoru se bude nacházet pouze znak loga vše ostatní bude transparentní

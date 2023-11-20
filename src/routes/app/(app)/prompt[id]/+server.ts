@@ -8,7 +8,7 @@ import { v4 as uuid } from "uuid";
 
 // VYTVOŘENÍ PROMPTU
 export async function POST({ request }) {
-  const data = PostDataValidator.parse(await request.json());
+  const data: PostData = PostDataValidator.parse(await request.json());
   const promptInfo: PromptInfo = {
     id: uuid(),
     parentId: data.parentId,
