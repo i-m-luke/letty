@@ -1,9 +1,14 @@
 import { TreeNodeInfo, TreeNodeType } from "$lib/components/Tree";
-import { RequestType } from "../Request";
-import type Request from "../Request";
+import { RequestType, type Request, type RequestData } from "../Request";
 import type { TreeNodeInfoData } from "$lib/components/Tree";
 import routes from "$routes";
-import type { PromptData, ThreadData, WithId } from "$types";
+import {
+  PromptDataSchema,
+  type PromptData,
+  type ThreadData,
+  type WithId,
+  ThreadDataSchema,
+} from "$types";
 import type { Writable } from "svelte/store";
 
 //#region  IMPURE CODE:
@@ -11,12 +16,13 @@ import type { Writable } from "svelte/store";
 //#region  POST
 
 export const fetchPOST =
-  <TReqData, TResData>(type: RequestType) =>
-  async (data: TReqData): Promise<TResData> => {
-    const req: Request<TReqData> = {
+  <TResData>(type: RequestType, convertResDataFn: (data: any) => TResData) =>
+  async (data: RequestData): Promise<any> => {
+    const req: Request = {
       type,
       data,
     };
+
     // TODO
     const res = await fetch(routes.static.app, {
       method: "POST",
@@ -26,15 +32,17 @@ export const fetchPOST =
       },
     });
 
-    // TODO?
-    return (await res.json()) as TResData;
+    return convertResDataFn(await res.json());
+    // return {} as TResData;
   };
 
-export const fetchPostThread = fetchPOST<TreeNodeInfoData, ThreadData>(
-  RequestType.Thread
+export const fetchPostThread = fetchPOST<ThreadData>(
+  RequestType.Thread,
+  ThreadDataSchema.parse
 );
-export const fetchPostPrompt = fetchPOST<TreeNodeInfoData, PromptData>(
-  RequestType.Prompt
+export const fetchPostPrompt = fetchPOST<PromptData>(
+  RequestType.Prompt,
+  PromptDataSchema.parse
 );
 
 //#endregion
@@ -42,9 +50,9 @@ export const fetchPostPrompt = fetchPOST<TreeNodeInfoData, PromptData>(
 //#region  DELETE
 
 export const fetchDELETE =
-  <TData>(type: RequestType) =>
-  async (data: TData): Promise<boolean> => {
-    const req: Request<TData> = {
+  (type: RequestType) =>
+  async (data: RequestData): Promise<boolean> => {
+    const req: Request = {
       type,
       data,
     };
@@ -59,8 +67,8 @@ export const fetchDELETE =
     return true; // TODO: return delete successful?
   };
 
-export const fetchDeleteThread = fetchDELETE<TreeNodeInfoData>(RequestType.Thread);
-export const fetchDeletePrompt = fetchDELETE<TreeNodeInfoData>(RequestType.Prompt);
+export const fetchDeleteThread = fetchDELETE(RequestType.Thread);
+export const fetchDeletePrompt = fetchDELETE(RequestType.Prompt);
 
 //#endregion
 

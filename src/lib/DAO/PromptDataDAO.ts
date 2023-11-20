@@ -1,5 +1,5 @@
 import type { Db as DB } from "mongodb";
-import type { DBItem, PromptData } from "$types";
+import { PromptDataSchema, type DBItem, type PromptData } from "$types";
 import BaseDAO from "./BaseDAO";
 
 export default class PromptDataDAO extends BaseDAO<PromptData> {
@@ -8,15 +8,15 @@ export default class PromptDataDAO extends BaseDAO<PromptData> {
   }
 
   async getAll(): Promise<PromptData[]> {
-    const data = (await this.collection.find({}).toArray()) as DBItem<PromptData>[];
-    return data.map((data) => data as PromptData);
+    const data = (await this.collection.find({}).toArray()).map(this.convertDbItem);
+    return data.map((data) => PromptDataSchema.parse(data));
   }
 
   async getById(id: string): Promise<PromptData> {
-    const data = (await this.collection.findOne({
+    const data = await this.collection.findOne({
       id: id,
-    })) as DBItem<PromptData>;
-    return data as PromptData;
+    });
+    return PromptDataSchema.parse(this.convertDbItem(data));
   }
 
   async insert(data: PromptData): Promise<void> {

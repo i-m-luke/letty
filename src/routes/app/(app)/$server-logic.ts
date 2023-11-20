@@ -1,59 +1,61 @@
-import type { ThreadData, PromptData } from "$types";
+import { json } from "@sveltejs/kit";
 import type { RouteParams } from "./$types";
-import { RequestType } from "./Request";
-import type Request from "./Request";
+import { RequestType, RequestSchema, type RequestData } from "./Request";
+import type { PromptData, ThreadData } from "$types";
 
 export const handlePOST = (request: any, params: RouteParams) => {
-  const { type } = checkRequest(request);
+  const { type, data } = RequestSchema.parse(request);
   switch (type) {
     case RequestType.Prompt:
-      handlePostPromptReq(request.data as PromptData, params); // TODO: return created item
-      break;
+      return json(handlePostPromptReq(data, params)); // TODO: return created item
     case RequestType.Thread:
-      handlePostThreadReq(request.data as ThreadData, params); // TODO: return created item
-      break;
+      return json(handlePostThreadReq(data, params)); // TODO: return created item
+    default:
+      throw new Error("Error while handling POST request");
   }
 };
 
 export const handleDELETE = (request: any, params: RouteParams) => {
-  const { type } = checkRequest(request);
+  const { type, data } = RequestSchema.parse(request);
   switch (type) {
     case RequestType.Prompt:
-      handleDeletePromptReq(request.data as PromptData, params); // TODO: return item was removed successfully?
+      handleDeletePromptReq(data, params); // TODO: return item was removed successfully?
       break;
     case RequestType.Thread:
-      handleDeleteThreadReq(request.data as ThreadData, params); // TODO: return item was removed successfully?
+      handleDeleteThreadReq(data, params); // TODO: return item was removed successfully?
       break;
+    default:
+      throw new Error("Error while handling POST request");
   }
-};
-
-export const checkRequest = (request: any): { type: RequestType } => {
-  if (request.type === undefined) {
-    throw new Error("Request didn't have mandatory property 'type'");
-  }
-
-  return { type: request.type };
 };
 
 // IMPURE CODE:
 
-export const handlePostPromptReq = (data: PromptData, params: RouteParams) => {
+export const handlePostPromptReq = (
+  data: RequestData,
+  params: RouteParams
+): PromptData => {
   /* ... store some data */
   console.log("Prompt POST handled. Data: ", data);
+  return { name: "TODO", _id: "TODO", prompt: "TODO" };
 };
 
-export const handlePostThreadReq = (data: ThreadData, params: RouteParams) => {
+export const handlePostThreadReq = (
+  data: RequestData,
+  params: RouteParams
+): ThreadData => {
   /* ... store some data */
   console.log("Thread POST handled. Data:", data);
+  return { _id: "TODO", name: "TODO", messages: [] };
 };
 
 // ... but accessing DB makes it also inpure, so whatever
-export const handleDeletePromptReq = (data: PromptData, params: RouteParams) => {
+export const handleDeletePromptReq = (data: RequestData, params: RouteParams) => {
   /* ... store some data */
   console.log("Prompt DELETE handled. Data: ", data);
 };
 
-export const handleDeleteThreadReq = (data: ThreadData, params: RouteParams) => {
+export const handleDeleteThreadReq = (data: RequestData, params: RouteParams) => {
   /* ... store some data */
   console.log("Thread DELETE handled. Data:", data);
 };

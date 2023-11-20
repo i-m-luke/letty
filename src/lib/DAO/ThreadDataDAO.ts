@@ -1,5 +1,5 @@
 import type { Db as DB } from "mongodb";
-import type { ThreadData, DBNode, DBItem } from "$types";
+import { type ThreadData, type DBNode, type DBItem, ThreadDataSchema } from "$types";
 import BaseDAO from "./BaseDAO";
 
 export default class TheradDAO extends BaseDAO<ThreadData> {
@@ -8,17 +8,15 @@ export default class TheradDAO extends BaseDAO<ThreadData> {
   }
 
   async getAll(): Promise<ThreadData[]> {
-    const data = (await this.collection
-      .find({})
-      .toArray()) as DBItem<ThreadData>[];
-    return data.map((data) => data as ThreadData);
+    const data = (await this.collection.find({}).toArray()).map(this.convertDbItem);
+    return data.map((data) => ThreadDataSchema.parse(data));
   }
 
   async getById(id: string): Promise<ThreadData> {
-    const data = (await this.collection.findOne({
+    const data = await this.collection.findOne({
       id: id,
-    })) as DBItem<ThreadData>;
-    return data as ThreadData;
+    });
+    return ThreadDataSchema.parse(this.convertDbItem(data));
   }
 
   async insert(data: ThreadData): Promise<void> {

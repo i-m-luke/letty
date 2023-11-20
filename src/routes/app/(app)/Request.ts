@@ -1,29 +1,18 @@
-// TODO: Implement type validation
-
-// import { z } from "zod";
-
-// export enum RequestType {
-//   Thread = "Thread",
-//   Prompt = "Prompt",
-// }
-
-// const RequestValidator = z.object({
-//   type: z.nativeEnum(RequestType),
-//   data: z.unknown(),
-// });
-
-// type Request = z.infer<typeof RequestValidator>;
-
-// export default Request;
+import { z } from "zod";
 
 export enum RequestType {
   Thread = "Thread",
   Prompt = "Prompt",
 }
 
-type Request<TData> = {
-  type: RequestType;
-  data: TData;
-};
+export const RequestDataSchema = z.object({});
 
-export default Request;
+export type RequestData = z.infer<typeof RequestDataSchema>;
+
+export const RequestSchema = z
+  .object({
+    type: z.nativeEnum(RequestType),
+  })
+  .extend({ data: RequestDataSchema });
+
+export type Request = z.infer<typeof RequestSchema>;
