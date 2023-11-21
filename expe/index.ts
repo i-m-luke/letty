@@ -13,6 +13,10 @@ import {
 (() => {
   while (true) {
     // Person.ts
+    type User = { id: string; name: string; email: string; phoneNumber: string };
+    type UserWithoutId = Omit<User, "id">;
+    type UserContactInfo = Pick<User, "email" | "phoneNumber">;
+
     const request = { data: {} };
     const json = (obj: {}) => {};
 

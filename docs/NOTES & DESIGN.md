@@ -12,13 +12,15 @@
 # TODO | PLAN
 
     0. Nastylovat: najít font, nastudovat tailwind
+    0. Vytvořit logo a zaintegrovat jej do AppMainTree
     1. Napijit fetch buttonů stromu na DB
     2. AppMainTree >> folderNode AddButton: Přidat volbu (radio btn v dialogu) pro přepínání mezi vytváření folder / node
     3. AppMainTree
         - Přepracovat strom
         - Root node bude mít název Threads/Prompts
         - Root node nepůjde mazat (nebude mít Remove button) ... Skrze dev-tools však půjde bez problemu tlačítko přidat a zavolat  fetchFci ... Jak se todle dá ošetřit?
-    4. ... Viz kanban board task
+    4. ZOD data validation: Přepracovat na parseSafe? Nebude pak způsobovat pád aplikace pokud nastane na server
+    5. ... Viz kanban board task
 
 # TERMINOLOGIE
 

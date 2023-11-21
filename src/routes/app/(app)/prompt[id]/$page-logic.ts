@@ -1,5 +1,5 @@
 import type PostData from "./PostData";
-import type { PromptInfo } from "$types";
+import type { Prompt } from "$types";
 import routes from "$routes";
 
 // IMPURE CODE:
@@ -18,6 +18,6 @@ export const fetchPOST = async (
     },
   });
 
-  const promptInfo = (await response.json()) as PromptInfo;
+  const promptInfo = (await response.json()) as Prompt;
   alert("NEW SAVED PROMPT INFO ID:" + promptInfo.id);
 };

@@ -22,26 +22,32 @@ export const ThreadDataSchema = z
   })
   .merge(WithIdSchema);
 
-export const PromptInfoSchema = z.object({
+export const PromptSchema = z.object({
   id: z.string(),
   parentId: z.string().nullable(), // ... null je fuj! ... ale lepší jak undefined
   name: z.string(),
-  prompt: z.string(),
+  text: z.string(),
 });
 
-export const ThreadInfoSchema = z.object({
+export const NewPromptSchema = PromptSchema.omit({ id: true });
+
+export const ThreadSchema = z.object({
   id: z.string(),
   parentId: z.string().nullable(), // ... null je fuj! ... ale lepší jak undefined
   name: z.string(),
 });
+
+export const NewThreadSchema = ThreadSchema.omit({ id: true });
 
 //#endregion
 
 export type WithId = z.infer<typeof WithIdSchema>;
 export type PromptData = z.infer<typeof PromptDataSchema>;
 export type ThreadData = z.infer<typeof ThreadDataSchema>;
-export type PromptInfo = z.infer<typeof PromptInfoSchema>;
-export type ThreadInfo = z.infer<typeof PromptInfoSchema>;
+export type NewPrompt = z.infer<typeof NewPromptSchema>; // Zašle se v requestu na server (proto je vynechána prop "id")
+export type Prompt = z.infer<typeof PromptSchema>; // Získá se z response na clientu
+export type NewThread = z.infer<typeof ThreadSchema>; // Zašle se v requestu na server (proto je vynechána prop "id")
+export type Thread = z.infer<typeof PromptSchema>; // Získá se z response na clientu
 
 export type FolderData = {
   name: string;

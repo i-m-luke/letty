@@ -1,6 +1,6 @@
 import { json } from "@sveltejs/kit";
 import { PostRequestSchema, type PostRequest } from "./PostRequest";
-import type { PromptInfo } from "$types";
+import type { Prompt } from "$types";
 import { v4 as uuid } from "uuid";
 
 // import { db, PromptDataDOA } from "$db"
@@ -9,11 +9,11 @@ import { v4 as uuid } from "uuid";
 // VYTVOŘENÍ PROMPTU
 export async function POST({ request }) {
   const data: PostRequest = PostRequestSchema.parse(await request.json());
-  const promptInfo: PromptInfo = {
+  const promptInfo: Prompt = {
     id: uuid(),
     parentId: data.parentId,
     name: data.promptName,
-    prompt: data.prompt,
+    text: data.text,
   };
 
   // promptDataDOA.insertOne(promptInfo);
