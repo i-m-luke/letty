@@ -83,7 +83,7 @@
             console.log("TODO: REMOVE THREAD CONTENT"); // TODO CONNECT TO DB
             fetchDeletePrompt(data)
                .then(() => {
-                  promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
+                  threadTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
                .catch((err) => console.error(err));
          },

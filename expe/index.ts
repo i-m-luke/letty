@@ -13,7 +13,12 @@ import {
 (() => {
   while (true) {
     // Person.ts
-    type User = { id: string; name: string; email: string; phoneNumber: string };
+    type User = {
+      id: string;
+      name: string;
+      email: string | null;
+      phoneNumber?: string;
+    };
     type UserWithoutId = Omit<User, "id">;
     type UserContactInfo = Pick<User, "email" | "phoneNumber">;
 
