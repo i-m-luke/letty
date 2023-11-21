@@ -29,6 +29,7 @@ export class DialogProxy extends EventTarget {
     confirmed: Promise<unknown>;
     canceled: Promise<unknown>;
   } {
+    this.dialog?.dispatchEvent(new Event("show"));
     this.dialog?.showModal();
     return {
       confirmed: new Promise((resolve) => {

@@ -1,10 +1,15 @@
 import { json } from "@sveltejs/kit";
 import type { RouteParams } from "./$types";
-import { RequestType, RequestSchema, type RequestData } from "./Request";
+import {
+  RequestType,
+  RequestSchema,
+  type RequestData,
+  type Request,
+} from "./Request";
 import type { PromptData, ThreadData } from "$types";
 
-export const handlePOST = (request: any, params: RouteParams) => {
-  const { type, data } = RequestSchema.parse(request);
+export const handlePOST = (request: Request, params: RouteParams) => {
+  const { type, data } = request;
   switch (type) {
     case RequestType.Prompt:
       return json(handlePostPromptReq(data, params)); // TODO: return created item
@@ -15,8 +20,8 @@ export const handlePOST = (request: any, params: RouteParams) => {
   }
 };
 
-export const handleDELETE = (request: any, params: RouteParams) => {
-  const { type, data } = RequestSchema.parse(request);
+export const handleDELETE = (request: Request, params: RouteParams) => {
+  const { type, data } = request;
   switch (type) {
     case RequestType.Prompt:
       handleDeletePromptReq(data, params); // TODO: return item was removed successfully?

@@ -9,8 +9,8 @@
       fetchPostPrompt,
       fetchDeleteThread,
       fetchDeletePrompt,
-      fetchAndUpdateTreeFn,
       removeNodeFromMultipleNodes,
+      addNodeToMultipleNodes,
    } from "./$logic";
    import { DialogProxy } from "$lib/components/Dialog";
    import CreateDialogData from "./CreateDialogData";
@@ -37,12 +37,25 @@
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: ADD THREAD FOLDER/CONTENT"); // TODO: CONNECT TO DB
             const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
-            confirmed.then(() => {
+            confirmed.then(async () => {
                const { name, type } = createThreadDialogData;
                // NOTE:
                // U fetch requestu se bude muset specifikovat, že se jedná o folder
                // V DB se bude muset vytvořit DBNodeItem
-               fetchAndUpdateTreeFn(data, get(name), get(type), threadTreeState, fetchPostThread);
+               fetchPostThread(data)
+                  .then(() => {
+                     threadTreeState.update((current) =>
+                        addNodeToMultipleNodes(
+                           data._id,
+                           current,
+                           new TreeNodeInfo(false, get(type), get(name), {
+                              _id: "TODO",
+                              _folderId: data._id,
+                           })
+                        )
+                     );
+                  })
+                  .catch((err) => console.error(err));
             });
             canceled.then(() => console.log("dialog canceled"));
          },
@@ -57,7 +70,7 @@
                .then(() => {
                   threadTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
-               .catch((err) => console.log(err));
+               .catch((err) => console.error(err));
          },
       }),
    ];
@@ -72,7 +85,7 @@
                .then(() => {
                   promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
-               .catch((err) => console.log(err));
+               .catch((err) => console.error(err));
          },
       }),
    ];
@@ -91,7 +104,20 @@
             confirmed.then(() => {
                const { name, type } = createPromptDialogData;
                // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
-               fetchAndUpdateTreeFn(data, get(name), get(type), promptTreeState, fetchPostPrompt);
+               fetchPostPrompt(data)
+                  .then(() => {
+                     promptTreeState.update((current) =>
+                        addNodeToMultipleNodes(
+                           data._id,
+                           current,
+                           new TreeNodeInfo(false, get(type), get(name), {
+                              _id: "TODO",
+                              _folderId: data._id,
+                           })
+                        )
+                     );
+                  })
+                  .catch((err) => console.error(err));
             });
             canceled.then(() => console.log("dialog canceled"));
          },
@@ -106,7 +132,7 @@
                .then(() => {
                   promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
-               .catch((err) => console.log(err));
+               .catch((err) => console.error(err));
          },
       }),
    ];
@@ -121,7 +147,7 @@
                .then(() => {
                   promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
-               .catch((err) => console.log(err));
+               .catch((err) => console.error(err));
          },
       }),
    ];
