@@ -12,59 +12,54 @@ import {
 
 //#region  POST
 
-export const fetchPOST =
-  <TResData>(type: RequestType, convertResDataFn: (data: any) => TResData) =>
-  async (data: RequestData): Promise<TResData> => {
-    const req: Request = {
-      type,
-      data,
-    };
-
-    // TODO
-    const res = await fetch(routes.static.app, {
-      method: "POST",
-      body: JSON.stringify(req),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    return convertResDataFn(await res.json());
+const fetchPOST = async (type: RequestType, data: RequestData) => {
+  const req: Request = {
+    type,
+    data,
   };
 
-export const fetchPostThread = fetchPOST<ThreadData>(
-  RequestType.Thread,
-  ThreadDataSchema.parse
-);
-export const fetchPostPrompt = fetchPOST<PromptData>(
-  RequestType.Prompt,
-  PromptDataSchema.parse
-);
+  // TODO
+  return fetch(routes.static.app, {
+    method: "POST",
+    body: JSON.stringify(req),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((res) => res.json());
+};
+
+export const fetchPostThread = async (data: RequestData) =>
+  ThreadDataSchema.parse(await fetchPOST(RequestType.Thread, data));
+
+export const fetchPostPrompt = async (data: RequestData) =>
+  PromptDataSchema.parse(await fetchPOST(RequestType.Prompt, data));
 
 //#endregion
 
 //#region  DELETE
 
-export const fetchDELETE =
-  (type: RequestType) =>
-  async (data: RequestData): Promise<boolean> => {
-    const req: Request = {
-      type,
-      data,
-    };
-    const res = fetch(routes.static.app, {
-      method: "DELETE",
-      body: JSON.stringify(req),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    return true; // TODO: return delete successful?
+export const fetchDELETE = async (type: RequestType, data: RequestData) => {
+  const req: Request = {
+    type,
+    data,
   };
 
-export const fetchDeleteThread = fetchDELETE(RequestType.Thread);
-export const fetchDeletePrompt = fetchDELETE(RequestType.Prompt);
+  // TODO
+  const res = fetch(routes.static.app, {
+    method: "DELETE",
+    body: JSON.stringify(req),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return true; // TODO: return delete successful?
+};
+
+export const fetchDeleteThread = (data: RequestData) =>
+  fetchDELETE(RequestType.Thread, data);
+export const fetchDeletePrompt = (data: RequestData) =>
+  fetchDELETE(RequestType.Prompt, data);
 
 //#endregion
 
