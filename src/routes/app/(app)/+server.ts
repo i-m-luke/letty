@@ -5,16 +5,13 @@ import type { RequestData, Request } from "./Request";
 import type { PromptData, ThreadData } from "$types";
 
 export async function POST({ request, params }) {
-  return handlePOST(RequestSchema.parse(await request.json()), params);
-}
+  // const parseResult = RequestSchema.safeParse(await request.json());
+  // if (!parseResult.success) {
+  //   return json({ issues: parseResult.error.issues }); // problém při validaci (např. prázdný název)
+  // }
+  // const { type, data } = parseResult.data;
 
-export async function DELETE({ request, params }) {
-  handleDELETE(RequestSchema.parse(await request.json()), params);
-  return json({}, { status: 201 });
-}
-
-const handlePOST = (request: Request, params: RouteParams) => {
-  const { type, data } = request;
+  const { type, data } = RequestSchema.parse(await request.json());
   switch (type) {
     case RequestType.Prompt:
       return json(handlePostPromptReq(data, params)); // TODO: return created item
@@ -23,7 +20,12 @@ const handlePOST = (request: Request, params: RouteParams) => {
     default:
       throw new Error("Error while handling POST request");
   }
-};
+}
+
+export async function DELETE({ request, params }) {
+  handleDELETE(RequestSchema.parse(await request.json()), params);
+  return json({}, { status: 201 });
+}
 
 const handleDELETE = (request: Request, params: RouteParams) => {
   const { type, data } = request;

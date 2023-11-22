@@ -45,8 +45,9 @@ import {
 
     // ... safeParse
     const validatedPerson = PersonValidator.safeParse(json(request.data));
-    if (validatedPerson.success) {
+    if (!validatedPerson.success) {
       // ... validatedPerson.data;
+      validatedPerson.error;
     }
   }
 })();
