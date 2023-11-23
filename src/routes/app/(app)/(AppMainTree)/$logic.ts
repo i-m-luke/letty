@@ -1,19 +1,15 @@
 import type { TreeNodeInfo } from "$lib/components/Tree";
-import { RequestType, type Request, type RequestData } from "../Request";
+import { RequestType } from "../Request";
+import type { DeleteRequest, PostRequestData, DeleteRequestData } from "../Request";
 import routes from "$routes";
-import {
-  PromptDataSchema,
-  type PromptData,
-  type ThreadData,
-  ThreadDataSchema,
-} from "$types";
+import { PromptDataSchema, ThreadDataSchema } from "$types";
 
 //#region  IMPURE CODE:
 
 //#region  POST
 
-const fetchPOST = async (type: RequestType, data: RequestData) => {
-  const req: Request = {
+const fetchPOST = async (type: RequestType, data: PostRequestData) => {
+  const req: DeleteRequest = {
     type,
     data,
   };
@@ -28,18 +24,18 @@ const fetchPOST = async (type: RequestType, data: RequestData) => {
   }).then((res) => res.json());
 };
 
-export const fetchPostThread = async (data: RequestData) =>
+export const fetchPostThread = async (data: PostRequestData) =>
   ThreadDataSchema.parse(await fetchPOST(RequestType.Thread, data));
 
-export const fetchPostPrompt = async (data: RequestData) =>
+export const fetchPostPrompt = async (data: PostRequestData) =>
   PromptDataSchema.parse(await fetchPOST(RequestType.Prompt, data));
 
 //#endregion
 
 //#region  DELETE
 
-export const fetchDELETE = async (type: RequestType, data: RequestData) => {
-  const req: Request = {
+export const fetchDELETE = async (type: RequestType, data: DeleteRequestData) => {
+  const req: DeleteRequest = {
     type,
     data,
   };
@@ -56,9 +52,9 @@ export const fetchDELETE = async (type: RequestType, data: RequestData) => {
   return true; // TODO: return delete successful?
 };
 
-export const fetchDeleteThread = (data: RequestData) =>
+export const fetchDeleteThread = (data: DeleteRequestData) =>
   fetchDELETE(RequestType.Thread, data);
-export const fetchDeletePrompt = (data: RequestData) =>
+export const fetchDeletePrompt = (data: DeleteRequestData) =>
   fetchDELETE(RequestType.Prompt, data);
 
 //#endregion

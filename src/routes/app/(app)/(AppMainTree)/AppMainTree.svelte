@@ -42,7 +42,7 @@
                // NOTE:
                // U fetch requestu se bude muset specifikovat, že se jedná o folder
                // V DB se bude muset vytvořit DBNodeItem
-               fetchPostThread(data)
+               fetchPostThread({ ...data, name: get(name) })
                   .then(() => {
                      threadTreeState.update((current) =>
                         addNodeToMultipleNodes(
@@ -104,7 +104,7 @@
             confirmed.then(() => {
                const { name, type } = createPromptDialogData;
                // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
-               fetchPostPrompt(data)
+               fetchPostPrompt({ ...data, name: get(name) })
                   .then(() => {
                      promptTreeState.update((current) =>
                         addNodeToMultipleNodes(
