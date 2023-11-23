@@ -5,10 +5,15 @@
 
    export let nodeInfoCollection: Writable<TreeNodeInfo[]>;
    export let nodeOnClickAction = (nodeData: TreeNodeInfoData) => {};
-   export let contentNodeAdditionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
-   export let folderNodeAdditionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
+   export let contentNodeButtons: ButtonInfo<TreeNodeInfoData>[] = [];
+   export let folderNodeButtons: ButtonInfo<TreeNodeInfoData>[] = [];
 </script>
 
 {#each $nodeInfoCollection as nodeInfo}
-   <TreeNode {nodeOnClickAction} {nodeInfo} {contentNodeAdditionalButtons} {folderNodeAdditionalButtons} />
+   <TreeNode
+      {nodeOnClickAction}
+      {nodeInfo}
+      contentNodeAdditionalButtons={contentNodeButtons}
+      folderNodeAdditionalButtons={folderNodeButtons}
+   />
 {/each}

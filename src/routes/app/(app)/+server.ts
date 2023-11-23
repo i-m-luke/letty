@@ -1,10 +1,6 @@
 import { json } from "@sveltejs/kit";
 import type { RouteParams } from "./$types";
-import {
-  RequestType,
-  DeleteRequestSchema,
-  PostRequestSchema,
-} from "./Request";
+import { RequestType, DeleteRequestSchema, PostRequestSchema } from "./Request";
 import type { PostRequestData, DeleteRequest, DeleteRequestData } from "./Request";
 import type { PromptData, ThreadData } from "$types";
 import { z } from "zod";
