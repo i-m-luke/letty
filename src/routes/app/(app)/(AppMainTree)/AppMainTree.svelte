@@ -55,11 +55,12 @@
                         )
                      );
                   })
-                  .catch((err) => console.error(err));
+                  .catch((err) => console.error("ERROR ON THE SERVER:", err)); // NOTE: Vypisovat error do konzole asi není "production ready"
             });
             canceled.then(() => console.log("dialog canceled"));
          },
       }),
+
       // REMOVE THREAD FOLDER BUTTON
       new ButtonInfo({
          style: removeBtnStyle,
@@ -70,7 +71,7 @@
                .then(() => {
                   threadTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
-               .catch((err) => console.error(err));
+               .catch((err) => console.error("ERROR ON THE SERVER:", err));
          },
       }),
    ];
@@ -85,7 +86,7 @@
                .then(() => {
                   threadTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
-               .catch((err) => console.error(err));
+               .catch((err) => console.error("ERROR ON THE SERVER:", err));
          },
       }),
    ];
@@ -117,7 +118,7 @@
                         )
                      );
                   })
-                  .catch((err) => console.error(err));
+                  .catch((err) => console.error("ERROR ON THE SERVER:", err));
             });
             canceled.then(() => console.log("dialog canceled"));
          },
@@ -132,7 +133,7 @@
                .then(() => {
                   promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
-               .catch((err) => console.error(err));
+               .catch((err) => console.error("ERROR ON THE SERVER:", err));
          },
       }),
    ];
@@ -147,7 +148,7 @@
                .then(() => {
                   promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
-               .catch((err) => console.error(err));
+               .catch((err) => console.error("ERROR ON THE SERVER:", err));
          },
       }),
    ];

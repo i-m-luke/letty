@@ -12,6 +12,7 @@ import {
 // MAIN:
 (() => {
   while (true) {
+    console.log("print:", { prop: "sss" }, { propA: "bbbb" });
     // Person.ts
     type User = {
       id: string;
