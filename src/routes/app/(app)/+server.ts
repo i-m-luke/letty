@@ -3,7 +3,6 @@ import type { RouteParams } from "./$types";
 import {
   RequestType,
   DeleteRequestSchema,
-  PostRequestDataSchema,
   PostRequestSchema,
 } from "./Request";
 import type { PostRequestData, DeleteRequest, DeleteRequestData } from "./Request";
@@ -13,7 +12,7 @@ import { z } from "zod";
 export async function POST({ request, params }) {
   // const parseResult = RequestSchema.safeParse(await request.json());
   // if (!parseResult.success) {
-  //   return json({ issues: parseResult.error.issues }); // problém při validaci (např. prázdný název)
+  //   return json({ issues: parseResult.error.issues }); // problém při validaci (např. nezadané jméno)
   // }
   // const { type, data } = parseResult.data;
 

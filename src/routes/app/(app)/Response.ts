@@ -1,21 +1,15 @@
 import { z } from "zod";
 
-export const ResponseSchema = z.object({
-  success: z.boolean(),
-});
+export const ResponseSchema = z.discriminatedUnion("success", [
+  z.object({ success: z.literal(true), data: z.any() }),
+  z.object({
+    success: z.literal(false),
+    error: z.string(),
+    issues: z.array(z.string()),
+  }),
+]);
 
-export const SuccessulResponseSchema = z.object({
-  data: z.any(),
-});
-
-export const UnsuccessfulResponseSchema = z.object({
-  error: z.string(),
-  issues: z.array(z.string().length(1, { message: "" })),
-});
-
-export type Response =
-  | ({ success: true } & z.infer<typeof SuccessulResponseSchema>)
-  | ({ success: false } & z.infer<typeof UnsuccessfulResponseSchema>);
+export type Response = z.infer<typeof ResponseSchema>;
 
 // NOTE:
 // Klient dostane odpověď od serveru
@@ -24,10 +18,12 @@ export type Response =
 const clientSide = (_res: Response) => {
   const res = ResponseSchema.parse(_res);
   if (res.success) {
-    const { data } = SuccessulResponseSchema.parse(res);
+    const { data } = res;
     // ...
   } else {
-    const { error, issues } = UnsuccessfulResponseSchema.parse(res);
+    const { error, issues } = res;
     // ...
   }
 };
+
+

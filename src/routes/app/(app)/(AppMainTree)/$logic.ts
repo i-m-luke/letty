@@ -3,6 +3,7 @@ import { RequestType } from "../Request";
 import type { DeleteRequest, PostRequestData, DeleteRequestData } from "../Request";
 import routes from "$routes";
 import { PromptDataSchema, ThreadDataSchema } from "$types";
+import { ResponseSchema, type Response } from "../Response";
 
 //#region  IMPURE CODE:
 
@@ -14,6 +15,31 @@ const fetchPOST = async (type: RequestType, data: PostRequestData) => {
     data,
   };
 
+  //#region TODO
+  
+  // return ResponseSchema.parse(
+  //   fetch(routes.static.app, {
+  //     method: "POST",
+  //     body: JSON.stringify(req),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   }).then((res) => res.json().then((res) => res))
+  // );
+
+  // NEXT: processing Response
+  // e.g:
+  // const res: Response = fetchPostThread(...);
+  // if (res.success) {
+  //   const { data } = res;
+  //   // ... add new node to the tree
+  // } else {
+  //   const { error, issues } = res;
+  //   // ... show invalid data entered to the dialog
+  // }
+
+  //#endregion
+
   // TODO
   return fetch(routes.static.app, {
     method: "POST",
@@ -21,7 +47,7 @@ const fetchPOST = async (type: RequestType, data: PostRequestData) => {
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((res) => res.json());
+  }).then((res) => res.json().then((res) => res));
 };
 
 export const fetchPostThread = async (data: PostRequestData) =>

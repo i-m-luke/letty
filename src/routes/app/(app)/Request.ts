@@ -35,3 +35,30 @@ export const DeleteRequestSchema = z
   .extend({ data: DeleteRequestDataSchema });
 
 export type DeleteRequest = z.infer<typeof DeleteRequestSchema>;
+
+// TODO:
+
+const _BaseRequestSchema = z.object({
+  _id: z.string(),
+  _folderId: z.string(),
+});
+
+const _RequestSchema = z.discriminatedUnion("type", [
+  _BaseRequestSchema.merge(z.object({ type: z.literal(RequestType.Thread) })),
+  _BaseRequestSchema.merge(
+    z.object({ type: z.literal(RequestType.Prompt), name: z.string() })
+  ),
+]);
+
+type _Request = z.infer<typeof _RequestSchema>;
+
+const fn = (req: _Request) => {
+  switch (req.type) {
+    case RequestType.Prompt:
+      console.log("has name:", req.name);
+      break;
+    case RequestType.Thread:
+      console.log("has doesn't have a name");
+      break;
+  }
+};

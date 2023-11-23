@@ -12,44 +12,10 @@ import {
 // MAIN:
 (() => {
   while (true) {
-    console.log("print:", { prop: "sss" }, { propA: "bbbb" });
-    // Person.ts
-    type User = {
-      id: string;
-      name: string;
-      email: string | null;
-      phoneNumber?: string;
-    };
-    type UserWithoutId = Omit<User, "id">;
-    type UserContactInfo = Pick<User, "email" | "phoneNumber">;
+    // CLIENT SIDE
 
-    const request = { data: {} };
-    const json = (obj: {}) => {};
+    
 
-    const PersonValidator = z.object({
-      id: z.string(),
-      age: z.number(),
-    });
-
-    type Person = z.infer<typeof PersonValidator>;
-
-    // client.ts
-
-    // ... parse
-    try {
-      const validatedPerson = PersonValidator.parse(json(request.data));
-    } catch (error) {
-      if (error instanceof ZodError) {
-        // ...
-      }
-    }
-
-    // ... safeParse
-    const validatedPerson = PersonValidator.safeParse(json(request.data));
-    if (!validatedPerson.success) {
-      // ... validatedPerson.data;
-      validatedPerson.error;
-    }
   }
 })();
 
