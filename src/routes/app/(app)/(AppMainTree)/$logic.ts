@@ -1,6 +1,6 @@
 import type { TreeNodeInfo } from "$lib/components/Tree";
 import { RequestType } from "../Request";
-import type { DeleteRequest, PostRequestData, DeleteRequestData } from "../Request";
+import type { DeleteRequest, PostRequestData, DeleteRequestData, PostRequest } from "../Request";
 import routes from "$routes";
 import { PromptDataSchema, ThreadDataSchema } from "$types";
 import { ResponseSchema, type Response } from "../Response";
@@ -10,7 +10,7 @@ import { ResponseSchema, type Response } from "../Response";
 //#region  POST
 
 const fetchPOST = async (type: RequestType, data: PostRequestData) => {
-  const req: DeleteRequest = {
+  const req: PostRequest = {
     type,
     data,
   };

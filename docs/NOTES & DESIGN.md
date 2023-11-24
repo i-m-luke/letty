@@ -14,7 +14,6 @@
     0. Nastylovat: najít font, nastudovat tailwind
     0. Vytvořit logo a zaintegrovat jej do AppMainTree
     1. Napijit fetch buttonů stromu na DB
-    2. AppMainTree >> folderNode AddButton: Přidat volbu (radio btn v dialogu) pro přepínání mezi vytváření folder / node
     3. AppMainTree
         - Přepracovat strom
         - Root node bude mít název Threads/Prompts
@@ -59,6 +58,38 @@
     # Unit Tests:
         - Půjde plně otestovat na Svelte v5: Runes umožňí maximálně oddělit logiku od komponenty (ViewModel)
         - Jak se řeší UI testing u sveltu?
+        - Phind odpověd: https://www.phind.com/search?cache=j0zoxt84j0suxxt5xpa3b59u
+            Unit Testing with Jest and Svelte Testing Library
+
+            Install Jest and Svelte Testing Library:
+            npm install --save-dev @testing-library/svelte jest
+            Configure Jest to work with Svelte. You need to install some additional dependencies:
+            npm install --save-dev svelte-jester babel-jest @testing-library/jest-dom
+            Update your package.json to use Jest for running tests and add a transform configuration for .svelte files:
+            "scripts": {
+                "test": "jest src",
+                "test:watch": "npm run test -- --watch"
+            },
+            "jest": {
+                "transform": {
+                "^.+\\.js$": "babel-jest",
+                "^.+\\.svelte$": "svelte-jester"
+                },
+                "moduleFileExtensions": ["js", "svelte"]
+            }
+            Write a test for your component. For example, if you have a component that fetches data, you can mock the fetch function and assert that the component behaves correctly:
+            import '@testing-library/jest-dom';
+            import { render } from "@testing-library/svelte";
+            import Component from "./Component.svelte";
+
+            describe("Component", () => {
+                test("should fetch data and render it", async () => {
+                const { getByText } = render(Component);
+                // Wait for the fetch to complete and the component to update
+                const item = await waitFor(() => getByText('Fetched item'));
+                expect(item).toBeInTheDocument();
+                });
+            });
 
 ## Technologie:
 

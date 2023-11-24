@@ -1,3 +1,4 @@
+import { NewPromptSchema, NewThreadSchema } from "$types";
 import { z } from "zod";
 
 export enum RequestType {
@@ -36,29 +37,9 @@ export const DeleteRequestSchema = z
 
 export type DeleteRequest = z.infer<typeof DeleteRequestSchema>;
 
-// TODO:
-
-const _BaseRequestSchema = z.object({
-  _id: z.string(),
-  _folderId: z.string(),
-});
-
-const _RequestSchema = z.discriminatedUnion("type", [
-  _BaseRequestSchema.merge(z.object({ type: z.literal(RequestType.Thread) })),
-  _BaseRequestSchema.merge(
-    z.object({ type: z.literal(RequestType.Prompt), name: z.string() })
-  ),
+export const RequestSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal(RequestType.Thread), data: NewThreadSchema }),
+  z.object({ type: z.literal(RequestType.Prompt), data: NewPromptSchema }),
 ]);
 
-type _Request = z.infer<typeof _RequestSchema>;
-
-const fn = (req: _Request) => {
-  switch (req.type) {
-    case RequestType.Prompt:
-      console.log("has name:", req.name);
-      break;
-    case RequestType.Thread:
-      console.log("has doesn't have a name");
-      break;
-  }
-};
+export type Request = z.infer<typeof RequestSchema>;
