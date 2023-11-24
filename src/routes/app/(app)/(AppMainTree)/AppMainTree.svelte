@@ -42,7 +42,7 @@
                // NOTE:
                // U fetch requestu se bude muset specifikovat, že se jedná o folder
                // V DB se bude muset vytvořit DBNodeItem
-               fetchPostThread({ ...data, name: get(name) })
+               fetchPostThread({ parentId: data._id, name: get(name) })
                   .then((res) => {
                      threadTreeState.update((current) =>
                         addNodeToMultipleNodes(
@@ -105,18 +105,23 @@
             confirmed.then(() => {
                const { name, type } = createPromptDialogData;
                // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
-               fetchPostPrompt({ ...data, name: get(name) })
+               fetchPostPrompt({ parentId: data._id, name: get(name), text: "...text" })
                   .then((res) => {
-                     promptTreeState.update((current) =>
-                        addNodeToMultipleNodes(
-                           data._id,
-                           current,
-                           new TreeNodeInfo(false, get(type), get(name), {
-                              _id: "TODO",
-                              _folderId: data._id,
-                           })
-                        )
-                     );
+                     if (res.success) {
+                        // ... process data
+                        promptTreeState.update((current) =>
+                           addNodeToMultipleNodes(
+                              data._id,
+                              current,
+                              new TreeNodeInfo(false, get(type), get(name), {
+                                 _id: "TODO", // získá se z res
+                                 _folderId: data._id,
+                              })
+                           )
+                        );
+                     } else {
+                        // ... process issues
+                     }
                   })
                   .catch((err) => console.error("ERROR ON THE SERVER:", err));
             });

@@ -1,60 +1,41 @@
 import type { TreeNodeInfo } from "$lib/components/Tree";
-import { RequestType } from "../Request";
-import type { DeleteRequest, PostRequestData, DeleteRequestData, PostRequest } from "../Request";
+import { RequestType, type Request } from "../Request";
+import type {
+  DeleteRequest,
+  PostRequestData,
+  DeleteRequestData,
+  PostRequest,
+} from "../Request";
 import routes from "$routes";
-import { PromptDataSchema, ThreadDataSchema } from "$types";
+import { type NewPrompt, PromptSchema, type NewThread, ThreadSchema } from "$types";
 import { ResponseSchema, type Response } from "../Response";
+import type { SafeResponse } from "../SafeResponse";
 
 //#region  IMPURE CODE:
 
 //#region  POST
 
-const fetchPOST = async (type: RequestType, data: PostRequestData) => {
-  const req: PostRequest = {
-    type,
-    data,
-  };
-
-  //#region TODO
-  
-  // return ResponseSchema.parse(
-  //   fetch(routes.static.app, {
-  //     method: "POST",
-  //     body: JSON.stringify(req),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   }).then((res) => res.json().then((res) => res))
-  // );
-
-  // NEXT: processing Response
-  // e.g:
-  // const res: Response = fetchPostThread(...);
-  // if (res.success) {
-  //   const { data } = res;
-  //   // ... add new node to the tree
-  // } else {
-  //   const { error, issues } = res;
-  //   // ... show invalid data entered to the dialog
-  // }
-
-  //#endregion
-
-  // TODO
-  return fetch(routes.static.app, {
-    method: "POST",
-    body: JSON.stringify(req),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((res) => res.json().then((res) => res));
+const fetchPOST = async <TResData>(
+  req: Request,
+  parseResponseDataFn: (obj: any) => TResData
+): Promise<SafeResponse<TResData>> => {
+  const res = ResponseSchema.parse(
+    fetch("some/route", {
+      method: "POST",
+      body: JSON.stringify(req),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json().then((res) => res))
+  );
+  return res.success ? { ...res, data: parseResponseDataFn(res.data) } : { ...res };
 };
 
-export const fetchPostThread = async (data: PostRequestData) =>
-  ThreadDataSchema.parse(await fetchPOST(RequestType.Thread, data));
+export const fetchPostThread = async (data: NewThread) =>
+  fetchPOST({ type: RequestType.Thread, data }, ThreadSchema.parse);
 
-export const fetchPostPrompt = async (data: PostRequestData) =>
-  PromptDataSchema.parse(await fetchPOST(RequestType.Prompt, data));
+export const fetchPostPrompt = async (data: NewPrompt) =>
+  fetchPOST({ type: RequestType.Prompt, data }, PromptSchema.parse);
 
 //#endregion
 

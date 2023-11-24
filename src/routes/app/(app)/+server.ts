@@ -1,33 +1,43 @@
 import { json } from "@sveltejs/kit";
 import type { RouteParams } from "./$types";
-import { RequestType, DeleteRequestSchema, PostRequestSchema } from "./Request";
+import type { Response as _Response } from "./Response";
+import {
+  RequestType,
+  DeleteRequestSchema,
+  PostRequestSchema,
+  RequestSchema,
+  type Request,
+} from "./Request";
 import type { PostRequestData, DeleteRequest, DeleteRequestData } from "./Request";
-import type { PromptData, ThreadData } from "$types";
-import { z } from "zod";
+import {
+  NewPromptSchema,
+  type NewPrompt,
+  type Prompt,
+  type NewThread,
+  type Thread,
+  NewThreadSchema,
+} from "$types";
+import { ZodObject, z } from "zod";
+import type { SafeResponse } from "./SafeResponse";
 
-export async function POST({ request, params }) {
-  // const parseResult = RequestSchema.safeParse(await request.json());
-  // if (!parseResult.success) {
-  //   return json({ issues: parseResult.error.issues }); // problém při validaci (např. nezadané jméno)
-  // }
-  // const { type, data } = parseResult.data;
-
-  const { type, data } = PostRequestSchema.parse(await request.json());
-
-  switch (type) {
-    case RequestType.Prompt:
-      return json(handlePostPromptReq(data, params)); // TODO: return created item
-    case RequestType.Thread:
-      return json(handlePostThreadReq(data, params)); // TODO: return created item
-    default:
-      throw new Error("Error while handling POST request");
-  }
-}
+export const POST = async ({ request }) =>
+  json(handlePOST(RequestSchema.parse(request)));
 
 export async function DELETE({ request, params }) {
   handleDELETE(DeleteRequestSchema.parse(await request.json()), params);
   return json({}, { status: 201 });
 }
+
+const handlePOST = (request: Request): _Response => {
+  switch (request.type) {
+    case RequestType.Prompt:
+      return handlePostPromptReq(request.data);
+    case RequestType.Thread:
+      return handlePostThreadReq(request.data);
+    default:
+      throw new Error("ERROR ON SERVER SIDE");
+  }
+};
 
 const handleDELETE = (request: DeleteRequest, params: RouteParams) => {
   const { type, data } = request;
@@ -45,24 +55,51 @@ const handleDELETE = (request: DeleteRequest, params: RouteParams) => {
 
 // IMPURE CODE:
 
-const handlePostPromptReq = (
-  data: PostRequestData,
-  params: RouteParams
-): PromptData => {
-  /* ... store some data */
-  console.log("Prompt POST handled. Data: ", data);
-  const dataSchema = z.object({});
+const NewPromptEntriesSchema = NewPromptSchema.omit({ name: true }).extend({
+  name: z.string().min(1),
+});
 
-  return { name: "TODO", _id: "TODO", prompt: "TODO" };
+const handlePostPromptReq = (data: NewPrompt): SafeResponse<Prompt> => {
+  const newPrompt = NewPromptSchema.parse(data); // object shape check
+  const entriesCheck = NewPromptEntriesSchema.safeParse(newPrompt);
+
+  // ... some DB stuff
+  const prompt: Prompt = {
+    ...newPrompt,
+    _id: "...id",
+  };
+
+  console.log("Prompt POST handled. Data: ", data);
+  return entriesCheck.success
+    ? { success: true, data: prompt }
+    : {
+        success: false,
+        issues: entriesCheck.error.errors.map((err) => err.message),
+      };
 };
 
-const handlePostThreadReq = (
-  data: PostRequestData,
-  params: RouteParams
-): ThreadData => {
-  /* ... store some data */
+const NewThreadEntriesSchema = NewThreadSchema.omit({ name: true }).extend({
+  name: z.string().min(1),
+});
+
+const handlePostThreadReq = (data: NewThread): SafeResponse<Thread> => {
+  const newThread = NewThreadSchema.parse(data); // object shape check
+  const entriesCheck = NewThreadEntriesSchema.safeParse(newThread);
+
+  // ... some DB stuff
+  const thread: Thread = {
+    ...newThread,
+    _id: "...id",
+    messages: [],
+  };
+
   console.log("Thread POST handled. Data:", data);
-  return { _id: "TODO", name: "TODO", messages: [] };
+  return entriesCheck.success
+    ? { success: true, data: thread }
+    : {
+        success: false,
+        issues: entriesCheck.error.errors.map((err) => err.message),
+      };
 };
 
 // ... but accessing DB makes it also inpure, so whatever

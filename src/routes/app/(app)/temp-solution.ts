@@ -8,40 +8,39 @@ import { NewPromptSchema, type NewPrompt, PromptSchema, type Prompt } from "$typ
 import type { SafeResponse } from "./SafeResponse";
 import { json } from "@sveltejs/kit";
 
+// NOTE: ŘEŠENÍ PŘIPRAVENO V STASH !!!
+
 // client-side >>
 
 const fetchPOST = async <TResData>(
   req: Request,
-  parseReqDataFn: (obj: any) => TResData
+  parseResDataFn: (obj: any) => TResData
 ): Promise<SafeResponse<TResData>> => {
-  const res = fetch("some/route", {
-    method: "POST",
-    body: JSON.stringify(req),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((res) => res.json().then((res) => res));
-  const parsedRes = ResponseSchema.parse(res);
-  return parsedRes.success
-    ? { ...parsedRes, data: parseReqDataFn(parsedRes.data) }
-    : { ...parsedRes };
+  const res = ResponseSchema.parse(
+    fetch("some/route", {
+      method: "POST",
+      body: JSON.stringify(req),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json().then((res) => res))
+  );
+  return res.success ? { ...res, data: parseResDataFn(res.data) } : { ...res };
 };
 
 const fetchPostPrompt = async (newPrompt: NewPrompt) =>
   fetchPOST({ type: RequestType.Prompt, data: newPrompt }, PromptSchema.parse);
 
 const clientSide = () => {
-  const res = ResponseSchema.parse(
-    fetchPostPrompt({ parentId: "...id", name: "...name", text: "...text" }).then(
-      (res) => res
-    )
+  fetchPostPrompt({ parentId: "...id", name: "...name", text: "...text" }).then(
+    (res) => {
+      if (res.success) {
+        // ... process data
+      } else {
+        // ... process issues
+      }
+    }
   );
-
-  if (res.success) {
-    // ... process data
-  } else {
-    // ... display issues
-  }
 };
 
 // server-side >>
@@ -71,10 +70,13 @@ const handlePromptRequest = (data: NewPrompt): SafeResponse<NewPrompt> => {
   // ... some DB stuff
   const prompt: Prompt = {
     ...data,
-    id: "...id",
+    _id: "...id",
   };
 
   return entriesCheck.success
     ? { success: true, data: prompt }
-    : { success: false, error: "...", issues: [] };
+    : {
+        success: false,
+        issues: entriesCheck.error.errors.map((err) => err.message),
+      };
 };
