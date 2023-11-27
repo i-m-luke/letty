@@ -120,7 +120,7 @@
                            )
                         );
                      } else {
-                        // ... process issues
+                        // ... process issues (e.g. display invalid data in dialog)
                      }
                   })
                   .catch((err) => console.error("ERROR ON THE SERVER:", err));
