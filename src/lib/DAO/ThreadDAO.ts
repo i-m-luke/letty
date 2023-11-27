@@ -1,10 +1,16 @@
 import type { Db as DB } from "mongodb";
-import { ThreadSchema, type Thread } from "$types";
+import { ThreadSchema, type Thread, type NewThread } from "$types";
 import BaseDAO from "./BaseDAO";
 
-export default class TheradDAO extends BaseDAO<Thread> {
+export default class TheradDAO extends BaseDAO<Thread, NewThread> {
   constructor(db: DB) {
     super(db, "threads");
+  }
+
+  async get(data: Partial<Thread>): Promise<Thread> {
+    return ThreadSchema.parse(
+      this.convertDbItem(await this.collection.findOne({ data }))
+    );
   }
 
   async getAll(): Promise<Thread[]> {
@@ -19,15 +25,18 @@ export default class TheradDAO extends BaseDAO<Thread> {
     return ThreadSchema.parse(this.convertDbItem(data));
   }
 
-  async insert(data: Thread): Promise<void> {
-    // todo: return id ??
+  async insert(data: NewThread): Promise<string> {
+    return this.collection
+      .insertOne(data)
+      .then((res) => res.insertedId)
+      .toString();
   }
 
-  async update(data: Thread): Promise<void> {
-    // todo: chybí id
+  async update(id: string, data: {}): Promise<void> {
+    // todo ...
   }
 
-  async delete(data: Thread): Promise<void> {
-    // todo: chybí id
+  async delete(data: Thread): Promise<boolean> {
+    return this.collection.deleteOne({ data }).then((res) => res.acknowledged);
   }
 }

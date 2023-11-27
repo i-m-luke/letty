@@ -12,10 +12,18 @@ import {
 // MAIN:
 (() => {
   while (true) {
-    // CLIENT SIDE
+    type A = {
+      propA: string;
+    };
 
+    type B = {
+      propA: string;
+      propB: string;
+    };
     
-
+    const data: Partial<Omit<B, keyof A>> = {
+      propB: "",
+    };
   }
 })();
 

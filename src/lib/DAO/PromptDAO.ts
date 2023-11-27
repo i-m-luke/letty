@@ -1,10 +1,16 @@
 import type { Db as DB } from "mongodb";
-import { PromptSchema, type Prompt } from "$types";
+import { PromptSchema, type Prompt, type NewPrompt } from "$types";
 import BaseDAO from "./BaseDAO";
 
-export default class PromptDAO extends BaseDAO<Prompt> {
+export default class PromptDAO extends BaseDAO<Prompt, NewPrompt> {
   constructor(db: DB) {
     super(db, "prompts");
+  }
+
+  async get(data: Partial<Prompt>): Promise<Prompt> {
+    return PromptSchema.parse(
+      this.convertDbItem(await this.collection.findOne({ data }))
+    );
   }
 
   async getAll(): Promise<Prompt[]> {
@@ -19,15 +25,18 @@ export default class PromptDAO extends BaseDAO<Prompt> {
     return PromptSchema.parse(this.convertDbItem(data));
   }
 
-  async insert(data: Prompt): Promise<void> {
-    // todo: return id ??
+  async insert(data: NewPrompt): Promise<string> {
+    return this.collection
+      .insertOne(data)
+      .then((res) => res.insertedId)
+      .toString();
   }
 
-  async update(data: Prompt): Promise<void> {
-    // todo: chybí id
+  async update(id: string): Promise<void> {
+    // todo ...
   }
 
-  async delete(data: Prompt): Promise<void> {
-    // todo: chybí id
+  async delete(data: Prompt): Promise<boolean> {
+    return this.collection.deleteOne({ data }).then((res) => res.acknowledged);
   }
 }
