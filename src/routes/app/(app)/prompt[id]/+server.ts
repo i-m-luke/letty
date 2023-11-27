@@ -9,16 +9,15 @@ import { v4 as uuid } from "uuid";
 // VYTVOŘENÍ PROMPTU
 export async function POST({ request }) {
   const data: PostRequest = PostRequestSchema.parse(await request.json());
-  const promptInfo: Prompt = {
-    id: uuid(),
-    parentId: data.parentId,
+  const prompt: Prompt = {
+    _id: uuid(),
     name: data.promptName,
     text: data.text,
   };
 
   // promptDataDOA.insertOne(promptInfo);
 
-  return json(promptInfo, { status: 201 });
+  return json(prompt, { status: 201 });
 }
 
 // EDITACE PROMPTU

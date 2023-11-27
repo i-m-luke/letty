@@ -1,26 +1,26 @@
 import type { TreeNodeInfo } from "$lib/components/Tree";
-import { RequestType, type Request } from "../Request";
-import type {
-  DeleteRequest,
-  PostRequestData,
-  DeleteRequestData,
-  PostRequest,
-} from "../Request";
+import { RequestType } from "../Request";
+import type { DeleteRequest, DeleteRequestData, PostRequest } from "../Request";
 import routes from "$routes";
-import { type NewPrompt, PromptSchema, type NewThread, ThreadSchema } from "$types";
-import { ResponseSchema, type Response } from "../Response";
-import type { SafeResponse } from "../SafeResponse";
+import {
+  type NewPrompt,
+  PromptSchema,
+  type NewThread,
+  ThreadSchema,
+  ResponseSchema,
+  type SafeResponse,
+} from "$types";
 
 //#region  IMPURE CODE:
 
 //#region  POST
 
 const fetchPOST = async <TResData>(
-  req: Request,
+  req: PostRequest,
   parseResponseDataFn: (obj: any) => TResData
 ): Promise<SafeResponse<TResData>> => {
   const res = ResponseSchema.parse(
-    fetch("some/route", {
+    await fetch(routes.static.app, {
       method: "POST",
       body: JSON.stringify(req),
       headers: {

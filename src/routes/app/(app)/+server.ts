@@ -1,14 +1,13 @@
 import { json } from "@sveltejs/kit";
 import type { RouteParams } from "./$types";
-import type { Response as _Response } from "./Response";
+import type { Response as _Response } from "$types";
 import {
   RequestType,
   DeleteRequestSchema,
   PostRequestSchema,
-  RequestSchema,
-  type Request,
+  type PostRequest,
 } from "./Request";
-import type { PostRequestData, DeleteRequest, DeleteRequestData } from "./Request";
+import type { DeleteRequest, DeleteRequestData } from "./Request";
 import {
   NewPromptSchema,
   type NewPrompt,
@@ -17,18 +16,17 @@ import {
   type Thread,
   NewThreadSchema,
 } from "$types";
-import { ZodObject, z } from "zod";
-import type { SafeResponse } from "./SafeResponse";
+import { z } from "zod";
 
 export const POST = async ({ request }) =>
-  json(handlePOST(RequestSchema.parse(request)));
+  json(handlePOST(PostRequestSchema.parse(await request.json())));
 
 export async function DELETE({ request, params }) {
   handleDELETE(DeleteRequestSchema.parse(await request.json()), params);
   return json({}, { status: 201 });
 }
 
-const handlePOST = (request: Request): _Response => {
+const handlePOST = (request: PostRequest): _Response => {
   switch (request.type) {
     case RequestType.Prompt:
       return handlePostPromptReq(request.data);
@@ -59,7 +57,7 @@ const NewPromptEntriesSchema = NewPromptSchema.omit({ name: true }).extend({
   name: z.string().min(1),
 });
 
-const handlePostPromptReq = (data: NewPrompt): SafeResponse<Prompt> => {
+const handlePostPromptReq = (data: NewPrompt): _Response => {
   const newPrompt = NewPromptSchema.parse(data); // object shape check
   const entriesCheck = NewPromptEntriesSchema.safeParse(newPrompt);
 
@@ -67,6 +65,7 @@ const handlePostPromptReq = (data: NewPrompt): SafeResponse<Prompt> => {
   const prompt: Prompt = {
     ...newPrompt,
     _id: "...id",
+    text: "",
   };
 
   console.log("Prompt POST handled. Data: ", data);
@@ -82,7 +81,7 @@ const NewThreadEntriesSchema = NewThreadSchema.omit({ name: true }).extend({
   name: z.string().min(1),
 });
 
-const handlePostThreadReq = (data: NewThread): SafeResponse<Thread> => {
+const handlePostThreadReq = (data: NewThread): _Response => {
   const newThread = NewThreadSchema.parse(data); // object shape check
   const entriesCheck = NewThreadEntriesSchema.safeParse(newThread);
 

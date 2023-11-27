@@ -3,29 +3,29 @@
     "userId": "101",
     "name": "thread-1",
     "messages": [
-      { "q": "what?", "a": "... :-X" },
-      { "q": "how?", "a": "... :-)" }
+      { "question": "what?", "answer": "... :-X" },
+      { "question": "how?", "answer": "... :-)" }
     ]
   },
   {
     "userId": "101",
     "name": "thread-2",
     "messages": [
-      { "q": "...?", "a": "... :-D" },
-      { "q": "...?", "a": "... :-**" }
+      { "question": "...?", "answer": "... :-D" },
+      { "question": "...?", "answer": "... :-**" }
     ]
   },
   {
     "userId": "101",
     "name": "thread-3",
     "messages": [
-      { "q": "...?", "a": "..." },
-      { "q": "...?!!", "a": "...!!" }
+      { "question": "...?", "answer": "..." },
+      { "question": "...?!!", "answer": "...!!" }
     ]
   },
   {
     "userId": "101",
     "name": "thread-4",
-    "messages": [{ "q": "...?", "a": "..." }]
+    "messages": [{ "question": "...?", "answer": "..." }]
   }
 ]

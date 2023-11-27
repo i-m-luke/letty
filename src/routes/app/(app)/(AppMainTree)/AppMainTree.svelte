@@ -44,16 +44,21 @@
                // V DB se bude muset vytvořit DBNodeItem
                fetchPostThread({ parentId: data._id, name: get(name) })
                   .then((res) => {
-                     threadTreeState.update((current) =>
-                        addNodeToMultipleNodes(
-                           data._id,
-                           current,
-                           new TreeNodeInfo(false, get(type), get(name), {
-                              _id: "TODO",
-                              _folderId: data._id,
-                           })
-                        )
-                     );
+                     if (res.success) {
+                        threadTreeState.update((current) =>
+                           addNodeToMultipleNodes(
+                              data._id,
+                              current,
+                              new TreeNodeInfo(false, get(type), get(name), {
+                                 _id: "TODO",
+                                 _folderId: data._id,
+                              })
+                           )
+                        );
+                     } else {
+                        // ... process issues (e.g. display invalid data in dialog)
+                        console.log(res.issues);
+                     }
                   })
                   .catch((err) => console.error("ERROR ON THE SERVER:", err)); // NOTE: Vypisovat error do konzole asi není "production ready"
             });
@@ -105,7 +110,7 @@
             confirmed.then(() => {
                const { name, type } = createPromptDialogData;
                // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
-               fetchPostPrompt({ parentId: data._id, name: get(name), text: "...text" })
+               fetchPostPrompt({ parentId: data._id, name: get(name) })
                   .then((res) => {
                      if (res.success) {
                         // ... process data
@@ -121,6 +126,7 @@
                         );
                      } else {
                         // ... process issues (e.g. display invalid data in dialog)
+                        console.log(res.issues);
                      }
                   })
                   .catch((err) => console.error("ERROR ON THE SERVER:", err));
@@ -146,7 +152,7 @@
    const promptContentNodeButtons = [
       // ADD PROMPT BUTTON
       new ButtonInfo({
-         style: addBtnStyle,
+         style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE PROMPT CONTENT"); // TODO CONNECT TO DB
             fetchDeletePrompt(data)
@@ -164,7 +170,7 @@
 <div class="w-full grid place-items-center">
    <div>
       {#if $threadTreeState.length > 0}
-         <span>THREADING:</span>
+         <span class="underline">THREADING:</span>
          <Tree
             nodeOnClickAction={(nodeData) => goto(`${routes.static.thread}${nodeData._id}`)}
             nodeInfoCollection={threadTreeState}
@@ -174,7 +180,7 @@
       {/if}
 
       {#if $promptTreeState.length > 0}
-         <span>PROMPTING:</span>
+         <span class="underline">PROMPTING:</span>
          <Tree
             nodeOnClickAction={(nodeData) => goto(`${routes.static.prompt}${nodeData._id}`)}
             nodeInfoCollection={promptTreeState}

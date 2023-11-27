@@ -7,29 +7,56 @@ import { z } from "zod";
 
 // TODO: Move to $schemas?
 
+export const ParentId = z.object({
+  parentId: z.string().nullable(),
+});
+
 export const WithIdSchema = z.object({
   _id: z.string(),
 });
 
 export const PromptSchema = z
   .object({
-    parentId: z.string().nullable(), // ... null je fuj! ... ale lepší jak undefined
     name: z.string(),
     text: z.string(),
   })
   .merge(WithIdSchema);
 
-export const NewPromptSchema = PromptSchema.omit({ _id: true });
+export const NewPromptSchema = PromptSchema.omit({ _id: true, text: true }).merge(
+  ParentId
+);
+
+export const ThreadMessageSchema = z.object({
+  question: z.string(),
+  answer: z.string(),
+});
 
 export const ThreadSchema = z
   .object({
-    parentId: z.string().nullable(), // ... null je fuj! ... ale lepší jak undefined
     name: z.string(),
-    messages: z.array(z.object({ a: z.string(), q: z.string() })),
+    messages: z.array(ThreadMessageSchema),
   })
   .merge(WithIdSchema);
 
-export const NewThreadSchema = ThreadSchema.omit({ _id: true, messages: true });
+export const NewThreadSchema = ThreadSchema.omit({
+  _id: true,
+  messages: true,
+}).merge(ParentId);
+
+const SuccessfullResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.any(),
+});
+
+const UnsuccessfullResponseSchema = z.object({
+  success: z.literal(false),
+  issues: z.array(z.string()), // musí být key-value, aby bylo možné u dialogu říct, čeho se dané issue týká
+});
+
+export const ResponseSchema = z.discriminatedUnion("success", [
+  SuccessfullResponseSchema,
+  UnsuccessfullResponseSchema,
+]);
 
 //#endregion
 
@@ -38,6 +65,10 @@ export type NewPrompt = z.infer<typeof NewPromptSchema>; // Zašle se v requestu
 export type Prompt = z.infer<typeof PromptSchema>; // Získá se z response na clientu
 export type NewThread = z.infer<typeof NewThreadSchema>; // Zašle se v requestu na server (proto je vynechána prop "id")
 export type Thread = z.infer<typeof ThreadSchema>; // Získá se z response na clientu
+export type ThreadMessage = z.infer<typeof ThreadMessageSchema>;
+export type SuccessfullResponse = z.infer<typeof SuccessfullResponseSchema>;
+export type UnsuccessfullResponse = z.infer<typeof UnsuccessfullResponseSchema>;
+export type Response = z.infer<typeof ResponseSchema>;
 
 export type FolderData = {
   name: string;
@@ -53,5 +84,9 @@ export type DBNode<TData> = {
   parentId?: string;
   data: TData;
 } & WithId;
+
+export type SafeResponse<TData> =
+  | Exclude<Response, SuccessfullResponse>
+  | (Omit<SuccessfullResponse, "data"> & { data: TData });
 
 export type DBItem<Data> = MongoWithId<Document> & Data;
