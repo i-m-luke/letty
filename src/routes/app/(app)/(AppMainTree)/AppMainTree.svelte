@@ -2,7 +2,7 @@
    import routes from "$routes";
    import { get, type Writable } from "svelte/store";
    import { goto } from "$app/navigation";
-   import { Tree, TreeNodeInfo, TreeNodeType, type TreeNodeInfoData } from "$lib/components/Tree";
+   import { Tree, TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
    import {
       fetchPostThread,
@@ -13,7 +13,6 @@
       fetchDeletePromptFolder,
       removeNodeFromMultipleNodes,
       addNodeToMultipleNodes,
-      fetchPostPromptFolder,
    } from "./$logic";
    import { DialogProxy } from "$lib/components/Dialog";
    import CreateDialogData from "./CreateDialogData";
