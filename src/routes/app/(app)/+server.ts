@@ -1,17 +1,9 @@
 import { json } from "@sveltejs/kit";
 import { z } from "zod";
-import type { RouteParams } from "./$types";
-import type { NewPrompt, Response as _Response } from "$types";
+import type { Response as _Response } from "$types";
 import { RequestType, DeleteRequestSchema, PostRequestSchema } from "./Request";
 import type { DeleteRequest, DeleteRequestData, PostRequest } from "./Request";
-import { PostNewPromptSchema, PostNewThreadSchema } from "$types";
-import type {
-  PostNewPrompt,
-  PostNewThread,
-  Prompt,
-  NewThread,
-  Thread,
-} from "$types";
+import type { PostNewPrompt, PostNewThread, Prompt, Thread } from "$types";
 import db from "$db";
 import PromptDAO from "$lib/DAO/PromptDAO";
 import TheradDAO from "$lib/DAO/ThreadDAO";
@@ -72,7 +64,6 @@ const handlePostPromptReq = async (data: PostNewPrompt): Promise<_Response> => {
   const prompt: Prompt = await promptDAO.insert(newPrompt);
   promptFoldersDAO.addItem(data.parentId, prompt._id);
 
-  console.log("Prompt POST handled. Data: ", data);
   return { success: true, data: prompt };
 };
 
@@ -90,7 +81,7 @@ const handlePostThreadReq = async (data: PostNewThread): Promise<_Response> => {
 
   const { parentId, ...newThread } = data;
   const thread: Thread = await threadDAO.insert(newThread);
-  await threadFoldersDAO.addItem(data.parentId, thread._id);
+  threadFoldersDAO.addItem(data.parentId, thread._id);
 
   return { success: true, data: thread };
 };
@@ -98,11 +89,9 @@ const handlePostThreadReq = async (data: PostNewThread): Promise<_Response> => {
 const handleDeletePromptReq = (data: DeleteRequestData) => {
   promptDAO.deleteById(data._id);
   promptFoldersDAO.removeItem(data.parentId, data._id);
-  console.log("Prompt DELETE handled. Data: ", data);
 };
 
 const handleDeleteThreadReq = (data: DeleteRequestData) => {
   threadDAO.deleteById(data._id);
   threadFoldersDAO.removeItem(data.parentId, data._id);
-  console.log("Thread DELETE handled. Data:", data);
 };
