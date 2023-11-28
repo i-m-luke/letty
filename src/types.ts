@@ -1,18 +1,34 @@
-import type { WithId as MongoWithId, Document } from "mongodb";
-import { z } from "zod";
+import { ZodObject, z, type ZodRawShape } from "zod";
 
 // TODO: Přesunout sem TreeNodeInfo, atd. (z components)
 
 //#region  SCHEMAs
 
-// TODO: Move to $schemas?
-
-export const ParentId = z.object({
+export const WithParentIdSchema = z.object({
   parentId: z.string().nullable(),
 });
 
 export const WithIdSchema = z.object({
   _id: z.string(),
+});
+
+const WithDataSchema = z.object({
+  data: z.any(),
+});
+
+// NOTE: Bude sloužit k validaci např. při přístupu k userId property
+export const BaseDBItemSchema = z
+  .object({
+    userId: z.string(),
+  })
+  .merge(WithIdSchema);
+
+export const DBNodeSchema =
+  BaseDBItemSchema.merge(WithParentIdSchema).merge(WithDataSchema);
+
+export const FolderDataSchema = z.object({
+  name: z.string(),
+  itemsIds: z.array(z.string()), // NOTE: Nehodí se spíš na DBNode? K čemu je parentId?
 });
 
 export const PromptSchema = z
@@ -23,7 +39,7 @@ export const PromptSchema = z
   .merge(WithIdSchema);
 
 export const NewPromptSchema = PromptSchema.omit({ _id: true, text: true }).merge(
-  ParentId
+  WithParentIdSchema
 );
 
 export const ThreadMessageSchema = z.object({
@@ -41,7 +57,7 @@ export const ThreadSchema = z
 export const NewThreadSchema = ThreadSchema.omit({
   _id: true,
   messages: true,
-}).merge(ParentId);
+}).merge(WithParentIdSchema);
 
 const SuccessfullResponseSchema = z.object({
   success: z.literal(true),
@@ -61,32 +77,30 @@ export const ResponseSchema = z.discriminatedUnion("success", [
 //#endregion
 
 export type WithId = z.infer<typeof WithIdSchema>;
-export type NewPrompt = z.infer<typeof NewPromptSchema>; // Zašle se v requestu na server (proto je vynechána prop "id")
-export type Prompt = z.infer<typeof PromptSchema>; // Získá se z response na clientu
-export type NewThread = z.infer<typeof NewThreadSchema>; // Zašle se v requestu na server (proto je vynechána prop "id")
-export type Thread = z.infer<typeof ThreadSchema>; // Získá se z response na clientu
+export type NewPrompt = z.infer<typeof NewPromptSchema>;
+export type Prompt = z.infer<typeof PromptSchema>;
+export type NewThread = z.infer<typeof NewThreadSchema>;
+export type Thread = z.infer<typeof ThreadSchema>;
 export type ThreadMessage = z.infer<typeof ThreadMessageSchema>;
 export type SuccessfullResponse = z.infer<typeof SuccessfullResponseSchema>;
 export type UnsuccessfullResponse = z.infer<typeof UnsuccessfullResponseSchema>;
 export type Response = z.infer<typeof ResponseSchema>;
+export type FolderData = z.infer<typeof FolderDataSchema>;
 
-export type FolderData = {
-  name: string;
-  itemsIds: string[];
+export type DBNode<TData> = z.infer<typeof DBNodeSchema> & {
+  data: TData;
 };
+
+export type NewDBNode<TData> = Omit<DBNode<TData>, keyof WithId>;
+
+export const DBNodeSchemaWithData = <TObject extends ZodRawShape>(
+  dataSchema: ZodObject<TObject>
+) => DBNodeSchema.extend({ data: dataSchema });
 
 export type ContentData = {
   name: string;
 } & WithId;
 
-export type DBNode<TData> = {
-  userId: string;
-  parentId?: string;
-  data: TData;
-} & WithId;
-
 export type SafeResponse<TData> =
   | Exclude<Response, SuccessfullResponse>
   | (Omit<SuccessfullResponse, "data"> & { data: TData });
-
-export type DBItem<Data> = MongoWithId<Document> & Data;

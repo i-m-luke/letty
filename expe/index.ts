@@ -1,5 +1,5 @@
 import { log } from "./logging"; // facade pattern
-import { ZodError, z } from "zod";
+import { ZodObject, ZodRawShape, ZodSchema, strictObject, z } from "zod";
 
 import {
   sendMessage,
@@ -12,18 +12,10 @@ import {
 // MAIN:
 (() => {
   while (true) {
-    type A = {
-      propA: string;
-    };
+    const schema = z.object({});
 
-    type B = {
-      propA: string;
-      propB: string;
-    };
-    
-    const data: Partial<Omit<B, keyof A>> = {
-      propB: "",
-    };
+    const fn = <T extends ZodRawShape>(schema: ZodObject<T>) => {};
+    fn(schema);
   }
 })();
 
