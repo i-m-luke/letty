@@ -2,7 +2,7 @@ import { type Db as DB, type WithId, type Document, ObjectId } from "mongodb";
 import type { WithId as _WithId } from "$types";
 import type { ZodSchema } from "zod";
 
-export default abstract class BaseDAO<TObject, TNewObject> {
+export default abstract class BaseDAO<TObject, TNewObject extends Object> {
   protected collection;
   private objectSchema;
   constructor(db: DB, collectionName: string, objectSchema: ZodSchema<TObject>) {
@@ -28,11 +28,16 @@ export default abstract class BaseDAO<TObject, TNewObject> {
     return this.objectSchema.parse(this.convertDbItem(data));
   }
 
-  async insert(data: TNewObject): Promise<string> {
-    return this.collection
-      .insertOne({ doc: data })
-      .then((res) => res.insertedId)
-      .toString();
+  async insert(data: TNewObject): Promise<TObject> {
+    return this.objectSchema.parse(
+      this.convertDbItem(
+        await this.collection
+          .insertOne({ userId: "TODO: Added from BaseDAO.insert", ...data })
+          .then((res) =>
+            this.collection.findOne({ _id: res.insertedId }).then((res) => res)
+          )
+      )
+    );
   }
 
   async update(

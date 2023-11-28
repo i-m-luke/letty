@@ -42,7 +42,7 @@
                // NOTE:
                // U fetch requestu se bude muset specifikovat, že se jedná o folder
                // V DB se bude muset vytvořit DBNodeItem
-               fetchPostThread({ parentId: data._id, name: get(name) })
+               fetchPostThread({ name: get(name), messages: [] })
                   .then((res) => {
                      if (res.success) {
                         threadTreeState.update((current) =>
@@ -110,7 +110,7 @@
             confirmed.then(() => {
                const { name, type } = createPromptDialogData;
                // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
-               fetchPostPrompt({ parentId: data._id, name: get(name) })
+               fetchPostPrompt({ name: get(name), text: "" })
                   .then((res) => {
                      if (res.success) {
                         // ... process data

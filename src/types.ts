@@ -26,6 +26,8 @@ export const BaseDBItemSchema = z
 export const DBNodeSchema =
   BaseDBItemSchema.merge(WithParentIdSchema).merge(WithDataSchema);
 
+export const NewDBNodeSchema = DBNodeSchema.omit({ _id: true });
+
 export const FolderDataSchema = z.object({
   name: z.string(),
   itemsIds: z.array(z.string()), // NOTE: Nehodí se spíš na DBNode? K čemu je parentId?
@@ -38,9 +40,7 @@ export const PromptSchema = z
   })
   .merge(WithIdSchema);
 
-export const NewPromptSchema = PromptSchema.omit({ _id: true, text: true }).merge(
-  WithParentIdSchema
-);
+export const NewPromptSchema = PromptSchema.omit({ _id: true });
 
 export const ThreadMessageSchema = z.object({
   question: z.string(),
@@ -56,8 +56,7 @@ export const ThreadSchema = z
 
 export const NewThreadSchema = ThreadSchema.omit({
   _id: true,
-  messages: true,
-}).merge(WithParentIdSchema);
+});
 
 const SuccessfullResponseSchema = z.object({
   success: z.literal(true),
@@ -91,7 +90,9 @@ export type DBNode<TData> = z.infer<typeof DBNodeSchema> & {
   data: TData;
 };
 
-export type NewDBNode<TData> = Omit<DBNode<TData>, keyof WithId>;
+export type NewDBNode<TData> = z.infer<typeof NewDBNodeSchema> & {
+  data: TData;
+};
 
 export const DBNodeSchemaWithData = <TObject extends ZodRawShape>(
   dataSchema: ZodObject<TObject>
