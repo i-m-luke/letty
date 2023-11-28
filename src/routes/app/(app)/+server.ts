@@ -1,23 +1,33 @@
 import { json } from "@sveltejs/kit";
 import { z } from "zod";
 import type { RouteParams } from "./$types";
-import type { Response as _Response } from "$types";
+import type { NewPrompt, Response as _Response } from "$types";
 import { RequestType, DeleteRequestSchema, PostRequestSchema } from "./Request";
 import type { DeleteRequest, DeleteRequestData, PostRequest } from "./Request";
-import { NewPromptSchema, NewThreadSchema } from "$types";
-import type { NewPrompt, Prompt, NewThread, Thread } from "$types";
+import { PostNewPromptSchema, PostNewThreadSchema } from "$types";
+import type {
+  PostNewPrompt,
+  PostNewThread,
+  Prompt,
+  NewThread,
+  Thread,
+} from "$types";
 import db from "$db";
 import PromptDAO from "$lib/DAO/PromptDAO";
 import TheradDAO from "$lib/DAO/ThreadDAO";
+import ThreadFoldersDAO from "$lib/DAO/ThreadFoldersDAO";
+import PromptFoldersDAO from "$lib/DAO/PromptFoldersDAO";
 
 const promptDAO = new PromptDAO(db);
 const threadDAO = new TheradDAO(db);
+const promptFoldersDAO = new PromptFoldersDAO(db);
+const threadFoldersDAO = new ThreadFoldersDAO(db);
 
 export const POST = async ({ request }) =>
   json(await handlePOST(PostRequestSchema.parse(await request.json())));
 
-export const DELETE = async ({ request, params }) =>
-  json(await handleDELETE(DeleteRequestSchema.parse(await request.json()), params), {
+export const DELETE = async ({ request }) =>
+  json(await handleDELETE(DeleteRequestSchema.parse(await request.json())), {
     status: 201,
   });
 
@@ -32,14 +42,14 @@ const handlePOST = async (request: PostRequest): Promise<_Response> => {
   }
 };
 
-const handleDELETE = async (request: DeleteRequest, params: RouteParams) => {
+const handleDELETE = async (request: DeleteRequest) => {
   const { type, data } = request;
   switch (type) {
     case RequestType.Prompt:
-      handleDeletePromptReq(data, params); // TODO: return item was removed successfully?
+      handleDeletePromptReq(data); // TODO: return item was removed successfully?
       break;
     case RequestType.Thread:
-      handleDeleteThreadReq(data, params); // TODO: return item was removed successfully?
+      handleDeleteThreadReq(data); // TODO: return item was removed successfully?
       break;
     default:
       throw new Error("Error while handling POST request");
@@ -47,56 +57,52 @@ const handleDELETE = async (request: DeleteRequest, params: RouteParams) => {
 };
 
 // IMPURE CODE:
+const NewPromptEntriesSchema = z.object({ name: z.string().min(1) });
+const handlePostPromptReq = async (data: PostNewPrompt): Promise<_Response> => {
+  const entriesCheck = NewPromptEntriesSchema.safeParse(data);
 
-const NewPromptEntriesSchema = NewPromptSchema.omit({ name: true }).extend({
-  name: z.string().min(1),
-});
+  if (!entriesCheck.success) {
+    return {
+      success: false,
+      issues: entriesCheck.error.errors.map((err) => err.message), // NOTE: Bude musete být key-value, aby bylo možno vyhodnotit, jaká hodnota byla v dialogu chybně zadána
+    };
+  }
 
-const handlePostPromptReq = async (data: NewPrompt): Promise<_Response> => {
-  const newPrompt = NewPromptSchema.parse(data); // object shape check
-  const entriesCheck = NewPromptEntriesSchema.safeParse(newPrompt);
-
-  // ... some DB stuff
-  const prompt: Prompt = await promptDAO.insert(data);
-  // TODO: Add prompt ID to promptFolders (promptFoldersDAO.update will update data.itemsIds)
+  const { parentId, ...newPrompt } = data;
+  const prompt: Prompt = await promptDAO.insert(newPrompt);
+  promptFoldersDAO.addItem(data.parentId, prompt._id);
 
   console.log("Prompt POST handled. Data: ", data);
-  return entriesCheck.success
-    ? { success: true, data: prompt }
-    : {
-        success: false,
-        issues: entriesCheck.error.errors.map((err) => err.message),
-      };
+  return { success: true, data: prompt };
 };
 
-const NewThreadEntriesSchema = NewThreadSchema.omit({ name: true }).extend({
-  name: z.string().min(1),
-});
+const NewThreadEntriesSchema = z.object({ name: z.string().min(1) });
 
-const handlePostThreadReq = async (data: NewThread): Promise<_Response> => {
-  const newThread = NewThreadSchema.parse(data); // object shape check
-  const entriesCheck = NewThreadEntriesSchema.safeParse(newThread);
+const handlePostThreadReq = async (data: PostNewThread): Promise<_Response> => {
+  const entriesCheck = NewThreadEntriesSchema.safeParse(data);
 
-  // ... some DB stuff
-  const thread: Thread = await threadDAO.insert(data);
-  // TODO: Add thread ID to threadFolders (threadFoldersDAO.update will update data.itemsIds)
+  if (!entriesCheck.success) {
+    return {
+      success: false,
+      issues: entriesCheck.error.errors.map((err) => err.message), // NOTE: Bude musete být key-value, aby bylo možno vyhodnotit, jaká hodnota byla v dialogu chybně zadána
+    };
+  }
 
-  console.log("Thread POST handled. Data:", data);
-  return entriesCheck.success
-    ? { success: true, data: thread }
-    : {
-        success: false,
-        issues: entriesCheck.error.errors.map((err) => err.message),
-      };
+  const { parentId, ...newThread } = data;
+  const thread: Thread = await threadDAO.insert(newThread);
+  await threadFoldersDAO.addItem(data.parentId, thread._id);
+
+  return { success: true, data: thread };
 };
 
-// ... but accessing DB makes it also inpure, so whatever
-const handleDeletePromptReq = (data: DeleteRequestData, params: RouteParams) => {
-  /* ... store some data */
+const handleDeletePromptReq = (data: DeleteRequestData) => {
+  promptDAO.deleteById(data._id);
+  promptFoldersDAO.removeItem(data.parentId, data._id);
   console.log("Prompt DELETE handled. Data: ", data);
 };
 
-const handleDeleteThreadReq = (data: DeleteRequestData, params: RouteParams) => {
-  /* ... store some data */
+const handleDeleteThreadReq = (data: DeleteRequestData) => {
+  threadDAO.deleteById(data._id);
+  threadFoldersDAO.removeItem(data.parentId, data._id);
   console.log("Thread DELETE handled. Data:", data);
 };

@@ -5,7 +5,7 @@ import { ZodObject, z, type ZodRawShape } from "zod";
 //#region  SCHEMAs
 
 export const WithParentIdSchema = z.object({
-  parentId: z.string().nullable(),
+  parentId: z.string().optional(),
 });
 
 export const WithIdSchema = z.object({
@@ -41,6 +41,9 @@ export const PromptSchema = z
   .merge(WithIdSchema);
 
 export const NewPromptSchema = PromptSchema.omit({ _id: true });
+export const PostNewPromptSchema = NewPromptSchema.merge(
+  WithParentIdSchema.required()
+);
 
 export const ThreadMessageSchema = z.object({
   question: z.string(),
@@ -57,6 +60,10 @@ export const ThreadSchema = z
 export const NewThreadSchema = ThreadSchema.omit({
   _id: true,
 });
+
+export const PostNewThreadSchema = NewThreadSchema.merge(
+  WithParentIdSchema.required()
+);
 
 const SuccessfullResponseSchema = z.object({
   success: z.literal(true),
@@ -76,10 +83,12 @@ export const ResponseSchema = z.discriminatedUnion("success", [
 //#endregion
 
 export type WithId = z.infer<typeof WithIdSchema>;
-export type NewPrompt = z.infer<typeof NewPromptSchema>;
 export type Prompt = z.infer<typeof PromptSchema>;
-export type NewThread = z.infer<typeof NewThreadSchema>;
+export type NewPrompt = z.infer<typeof NewPromptSchema>;
+export type PostNewPrompt = z.infer<typeof PostNewPromptSchema>;
 export type Thread = z.infer<typeof ThreadSchema>;
+export type NewThread = z.infer<typeof NewThreadSchema>;
+export type PostNewThread = z.infer<typeof PostNewThreadSchema>;
 export type ThreadMessage = z.infer<typeof ThreadMessageSchema>;
 export type SuccessfullResponse = z.infer<typeof SuccessfullResponseSchema>;
 export type UnsuccessfullResponse = z.infer<typeof UnsuccessfullResponseSchema>;

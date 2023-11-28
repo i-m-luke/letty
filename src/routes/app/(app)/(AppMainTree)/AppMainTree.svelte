@@ -35,14 +35,13 @@
       new ButtonInfo({
          style: addBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
-            console.log("TODO: ADD THREAD FOLDER/CONTENT"); // TODO: CONNECT TO DB
             const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
             confirmed.then(async () => {
                const { name, type } = createThreadDialogData;
                // NOTE:
                // U fetch requestu se bude muset specifikovat, že se jedná o folder
                // V DB se bude muset vytvořit DBNodeItem
-               fetchPostThread({ name: get(name), messages: [] })
+               fetchPostThread({ parentId: data._id, name: get(name), messages: [] })
                   .then((res) => {
                      if (res.success) {
                         threadTreeState.update((current) =>
@@ -72,7 +71,7 @@
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE THREAD FOLDER/CONTENT"); // TODO CONNECT TO DB
             // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
-            fetchDeleteThread(data)
+            fetchDeleteThread({ _id: data._id, parentId: data._folderId })
                .then((res) => {
                   threadTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
@@ -87,7 +86,7 @@
          style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE THREAD CONTENT"); // TODO CONNECT TO DB
-            fetchDeletePrompt(data)
+            fetchDeleteThread({ _id: data._id, parentId: data._folderId })
                .then((res) => {
                   threadTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
@@ -105,12 +104,11 @@
       new ButtonInfo({
          style: addBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
-            console.log("TODO: ADD PROMPT FOLDER/CONTENT"); // TODO CONNECT TO DB
             const { confirmed, canceled } = createPromptDialogProxy.showModalAndWaitTillClosed();
             confirmed.then(() => {
                const { name, type } = createPromptDialogData;
                // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
-               fetchPostPrompt({ name: get(name), text: "" })
+               fetchPostPrompt({ parentId: data._id, name: get(name), text: "" })
                   .then((res) => {
                      if (res.success) {
                         // ... process data
@@ -140,7 +138,7 @@
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE PROMPT FOLDER/CONTENT"); // TODO CONNECT TO DB
             // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
-            fetchDeletePrompt(data)
+            fetchDeletePrompt({ parentId: data._folderId, _id: data._id })
                .then((res) => {
                   promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })
@@ -150,12 +148,12 @@
    ];
 
    const promptContentNodeButtons = [
-      // ADD PROMPT BUTTON
+      // REMOVE PROMPT BUTTON
       new ButtonInfo({
          style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
             console.log("TODO: REMOVE PROMPT CONTENT"); // TODO CONNECT TO DB
-            fetchDeletePrompt(data)
+            fetchDeletePrompt({ parentId: data._folderId, _id: data._id })
                .then((res) => {
                   promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
                })

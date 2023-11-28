@@ -9,6 +9,8 @@ import {
   ThreadSchema,
   ResponseSchema,
   type SafeResponse,
+  type PostNewThread,
+  type PostNewPrompt,
 } from "$types";
 
 //#region  IMPURE CODE:
@@ -31,10 +33,10 @@ const fetchPOST = async <TResData>(
   return res.success ? { ...res, data: parseResponseDataFn(res.data) } : { ...res };
 };
 
-export const fetchPostThread = async (data: NewThread) =>
+export const fetchPostThread = async (data: PostNewThread) =>
   fetchPOST({ type: RequestType.Thread, data }, ThreadSchema.parse);
 
-export const fetchPostPrompt = async (data: NewPrompt) =>
+export const fetchPostPrompt = async (data: PostNewPrompt) =>
   fetchPOST({ type: RequestType.Prompt, data }, PromptSchema.parse);
 
 //#endregion

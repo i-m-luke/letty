@@ -47,8 +47,15 @@ export default abstract class BaseDAO<TObject, TNewObject extends Object> {
     this.collection.updateOne({ _id: new ObjectId(id) }, data);
   }
 
-  async delete(data: TObject): Promise<boolean> {
+  async delete(data: Partial<Omit<TObject, keyof _WithId>>): Promise<boolean> {
     return this.collection.deleteOne({ data }).then((res) => res.acknowledged);
+  }
+
+  async deleteById(id: string): Promise<boolean> {
+    const temp = await this.collection.findOne({ _id: new ObjectId(id) });
+    return this.collection
+      .deleteOne({ _id: new ObjectId(id) })
+      .then((res) => res.acknowledged);
   }
 
   protected convertDbItem(item: WithId<Document> | null) {
