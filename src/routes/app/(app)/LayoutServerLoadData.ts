@@ -1,9 +1,9 @@
-import type { FolderData, Thread, DBNode, Prompt } from "$types";
+import type { Folder, Thread, DBNode, Prompt } from "$types";
 
 type LayoutServerLoadData = {
   threadData: Thread[];
   promptData: Prompt[];
-  threadFolders: DBNode<FolderData>[];
-  promptFolders: DBNode<FolderData>[];
+  threadFolders: DBNode<Folder>[];
+  promptFolders: DBNode<Folder>[];
 };
 export default LayoutServerLoadData;

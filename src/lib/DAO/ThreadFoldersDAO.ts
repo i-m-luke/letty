@@ -1,9 +1,9 @@
 import { BaseDBNodeDAO } from "./BaseDBNodeDAO";
 import type { Db as DB } from "mongodb";
-import { DBNodeSchemaWithData, FolderDataSchema, type FolderData } from "$types";
+import { FolderDBNodeSchema, type Folder } from "$types";
 
-export default class ThreadFoldersDAO extends BaseDBNodeDAO<FolderData> {
+export default class ThreadFoldersDAO extends BaseDBNodeDAO<Folder> {
   constructor(db: DB) {
-    super(db, "threadFolders", DBNodeSchemaWithData(FolderDataSchema));
+    super(db, "threadFolders", FolderDBNodeSchema);
   }
 }

@@ -3,35 +3,35 @@ import { ZodObject, z, type ZodRawShape } from "zod";
 // TODO: Přesunout sem TreeNodeInfo, atd. (z components)
 
 //#region  SCHEMAs
+export const WithIdSchema = z.object({
+  _id: z.string(),
+});
 
 export const WithParentIdSchema = z.object({
   parentId: z.string().optional(),
-});
-
-export const WithIdSchema = z.object({
-  _id: z.string(),
 });
 
 const WithDataSchema = z.object({
   data: z.any(),
 });
 
-// NOTE: Bude sloužit k validaci např. při přístupu k userId property
-export const BaseDBItemSchema = z
-  .object({
-    userId: z.string(),
-  })
-  .merge(WithIdSchema);
-
 export const DBNodeSchema =
-  BaseDBItemSchema.merge(WithParentIdSchema).merge(WithDataSchema);
+  WithIdSchema.merge(WithParentIdSchema).merge(WithDataSchema);
+
+export const DBNodeSchemaWithData = <TObject extends ZodRawShape>(
+  dataSchema: ZodObject<TObject>
+) => DBNodeSchema.extend({ data: dataSchema });
 
 export const NewDBNodeSchema = DBNodeSchema.omit({ _id: true });
 
-export const FolderDataSchema = z.object({
+export const FolderSchema = z.object({
   name: z.string(),
   itemsIds: z.array(z.string()), // NOTE: Nehodí se spíš na DBNode? K čemu je parentId?
 });
+
+export const FolderDBNodeSchema = DBNodeSchemaWithData(FolderSchema);
+
+export const NewFolderDBNodeSchema = FolderDBNodeSchema.omit({ _id: true });
 
 export const PromptSchema = z
   .object({
@@ -93,7 +93,9 @@ export type ThreadMessage = z.infer<typeof ThreadMessageSchema>;
 export type SuccessfullResponse = z.infer<typeof SuccessfullResponseSchema>;
 export type UnsuccessfullResponse = z.infer<typeof UnsuccessfullResponseSchema>;
 export type Response = z.infer<typeof ResponseSchema>;
-export type FolderData = z.infer<typeof FolderDataSchema>;
+export type Folder = z.infer<typeof FolderSchema>;
+export type FolderDBNode = z.infer<typeof FolderDBNodeSchema>;
+export type NewFolderDBNode = z.infer<typeof NewFolderDBNodeSchema>;
 
 export type DBNode<TData> = z.infer<typeof DBNodeSchema> & {
   data: TData;
@@ -102,10 +104,6 @@ export type DBNode<TData> = z.infer<typeof DBNodeSchema> & {
 export type NewDBNode<TData> = z.infer<typeof NewDBNodeSchema> & {
   data: TData;
 };
-
-export const DBNodeSchemaWithData = <TObject extends ZodRawShape>(
-  dataSchema: ZodObject<TObject>
-) => DBNodeSchema.extend({ data: dataSchema });
 
 export type ContentData = {
   name: string;

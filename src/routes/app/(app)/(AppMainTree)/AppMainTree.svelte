@@ -2,15 +2,18 @@
    import routes from "$routes";
    import { get, type Writable } from "svelte/store";
    import { goto } from "$app/navigation";
-   import { Tree, TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
+   import { Tree, TreeNodeInfo, TreeNodeType, type TreeNodeInfoData } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
    import {
       fetchPostThread,
       fetchPostPrompt,
       fetchDeleteThread,
       fetchDeletePrompt,
+      fetchDeleteThreadFolder,
+      fetchDeletePromptFolder,
       removeNodeFromMultipleNodes,
       addNodeToMultipleNodes,
+      fetchPostPromptFolder,
    } from "./$logic";
    import { DialogProxy } from "$lib/components/Dialog";
    import CreateDialogData from "./CreateDialogData";
@@ -36,9 +39,9 @@
          style: addBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
             const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
-            confirmed.then(async () => {
+            confirmed.then(() => {
                const { name, type } = createThreadDialogData;
-               // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
+               // TODO: Podle "type" bude nutné provést buď fetch pro folder nebo pro content
                fetchPostThread({ parentId: data._id, name: get(name), messages: [] })
                   .then((res) => {
                      if (res.success) {
@@ -46,8 +49,8 @@
                            addNodeToMultipleNodes(
                               data._id,
                               current,
-                              new TreeNodeInfo(false, get(type), get(name), {
-                                 _id: "TODO",
+                              new TreeNodeInfo(false, get(type), res.data.name, {
+                                 _id: res.data._id,
                                  _folderId: data._id,
                               })
                            )
@@ -68,11 +71,10 @@
          style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
             // TODO: Mazání folders není hotové!
-            // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
             console.log("TODO: REMOVE THREAD FOLDER/CONTENT");
-            fetchDeleteThread({ _id: data._id, parentId: data._folderId })
+            fetchDeleteThreadFolder({ _id: data._id, parentId: data._folderId })
                .then((res) => {
-                  threadTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
+                  console.log("TODO");
                })
                .catch((err) => console.error("ERROR ON THE SERVER:", err));
          },
@@ -105,7 +107,7 @@
             const { confirmed, canceled } = createPromptDialogProxy.showModalAndWaitTillClosed();
             confirmed.then(() => {
                const { name, type } = createPromptDialogData;
-               // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
+               // TODO: Podle "type" bude nutné provést buď fetch pro folder nebo pro content
                fetchPostPrompt({ parentId: data._id, name: get(name), text: "" })
                   .then((res) => {
                      if (res.success) {
@@ -113,8 +115,8 @@
                            addNodeToMultipleNodes(
                               data._id,
                               current,
-                              new TreeNodeInfo(false, get(type), get(name), {
-                                 _id: "TODO", // získá se z res
+                              new TreeNodeInfo(false, get(type), res.data.name, {
+                                 _id: res.data._id,
                                  _folderId: data._id,
                               })
                            )
@@ -134,11 +136,10 @@
          style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
             // TODO: Mazání folders není hotové!
-            // NOTE: U fetch requestu se bude muset specifikovat, že se jedná o folder
             console.log("TODO: REMOVE PROMPT FOLDER/CONTENT");
-            fetchDeletePrompt({ parentId: data._folderId, _id: data._id })
+            fetchDeletePromptFolder({ parentId: data._folderId, _id: data._id })
                .then((res) => {
-                  promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
+                  console.log("TODO");
                })
                .catch((err) => console.error("ERROR ON THE SERVER:", err));
          },

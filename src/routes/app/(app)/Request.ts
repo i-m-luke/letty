@@ -1,4 +1,5 @@
 import {
+  NewFolderDBNodeSchema,
   PostNewPromptSchema,
   PostNewThreadSchema,
   WithParentIdSchema,
@@ -8,6 +9,8 @@ import { z } from "zod";
 export enum RequestType {
   Thread = "Thread",
   Prompt = "Prompt",
+  PromptFolder = "PromptFolder",
+  ThreadFolder = "ThreadFolder",
 }
 
 export const DeleteRequestDataSchema = z
@@ -28,6 +31,14 @@ export type DeleteRequest = z.infer<typeof DeleteRequestSchema>;
 export const PostRequestSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal(RequestType.Thread), data: PostNewThreadSchema }),
   z.object({ type: z.literal(RequestType.Prompt), data: PostNewPromptSchema }),
+  z.object({
+    type: z.literal(RequestType.PromptFolder),
+    data: NewFolderDBNodeSchema,
+  }),
+  z.object({
+    type: z.literal(RequestType.ThreadFolder),
+    data: NewFolderDBNodeSchema,
+  }),
 ]);
 
 export type PostRequest = z.infer<typeof PostRequestSchema>;

@@ -3,14 +3,14 @@ import { RequestType } from "../Request";
 import type { DeleteRequest, DeleteRequestData, PostRequest } from "../Request";
 import routes from "$routes";
 import {
-  type NewPrompt,
   PromptSchema,
-  type NewThread,
   ThreadSchema,
+  FolderDBNodeSchema,
   ResponseSchema,
   type SafeResponse,
   type PostNewThread,
   type PostNewPrompt,
+  type NewFolderDBNode,
 } from "$types";
 
 //#region  IMPURE CODE:
@@ -39,6 +39,12 @@ export const fetchPostThread = async (data: PostNewThread) =>
 export const fetchPostPrompt = async (data: PostNewPrompt) =>
   fetchPOST({ type: RequestType.Prompt, data }, PromptSchema.parse);
 
+export const fetchPostPromptFolder = async (data: NewFolderDBNode) =>
+  fetchPOST({ type: RequestType.PromptFolder, data }, FolderDBNodeSchema.parse);
+
+export const fetchPostThreadFolder = async (data: NewFolderDBNode) =>
+  fetchPOST({ type: RequestType.ThreadFolder, data }, FolderDBNodeSchema.parse);
+
 //#endregion
 
 //#region  DELETE
@@ -63,8 +69,15 @@ export const fetchDELETE = async (type: RequestType, data: DeleteRequestData) =>
 
 export const fetchDeleteThread = (data: DeleteRequestData) =>
   fetchDELETE(RequestType.Thread, data);
+
 export const fetchDeletePrompt = (data: DeleteRequestData) =>
   fetchDELETE(RequestType.Prompt, data);
+
+export const fetchDeletePromptFolder = (data: DeleteRequestData) =>
+  fetchDELETE(RequestType.ThreadFolder, data);
+
+export const fetchDeleteThreadFolder = (data: DeleteRequestData) =>
+  fetchDELETE(RequestType.PromptFolder, data);
 
 //#endregion
 
