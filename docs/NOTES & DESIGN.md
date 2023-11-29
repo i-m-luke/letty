@@ -55,41 +55,42 @@
 
 # DESIGN
 
-    # Unit Tests:
-        - Půjde plně otestovat na Svelte v5: Runes umožňí maximálně oddělit logiku od komponenty (ViewModel)
-        - Jak se řeší UI testing u sveltu?
-        - Phind odpověd: https://www.phind.com/search?cache=j0zoxt84j0suxxt5xpa3b59u
-            Unit Testing with Jest and Svelte Testing Library
+## Unit Tests:
 
-            Install Jest and Svelte Testing Library:
-            npm install --save-dev @testing-library/svelte jest
-            Configure Jest to work with Svelte. You need to install some additional dependencies:
-            npm install --save-dev svelte-jester babel-jest @testing-library/jest-dom
-            Update your package.json to use Jest for running tests and add a transform configuration for .svelte files:
-            "scripts": {
-                "test": "jest src",
-                "test:watch": "npm run test -- --watch"
+    - Půjde plně otestovat na Svelte v5: Runes umožňí maximálně oddělit logiku od komponenty (ViewModel)
+    - Jak se řeší UI testing u sveltu?
+    - Phind odpověd: https://www.phind.com/search?cache=j0zoxt84j0suxxt5xpa3b59u
+        Unit Testing with Jest and Svelte Testing Library
+
+        Install Jest and Svelte Testing Library:
+        npm install --save-dev @testing-library/svelte jest
+        Configure Jest to work with Svelte. You need to install some additional dependencies:
+        npm install --save-dev svelte-jester babel-jest @testing-library/jest-dom
+        Update your package.json to use Jest for running tests and add a transform configuration for .svelte files:
+        "scripts": {
+            "test": "jest src",
+            "test:watch": "npm run test -- --watch"
+        },
+        "jest": {
+            "transform": {
+            "^.+\\.js$": "babel-jest",
+            "^.+\\.svelte$": "svelte-jester"
             },
-            "jest": {
-                "transform": {
-                "^.+\\.js$": "babel-jest",
-                "^.+\\.svelte$": "svelte-jester"
-                },
-                "moduleFileExtensions": ["js", "svelte"]
-            }
-            Write a test for your component. For example, if you have a component that fetches data, you can mock the fetch function and assert that the component behaves correctly:
-            import '@testing-library/jest-dom';
-            import { render } from "@testing-library/svelte";
-            import Component from "./Component.svelte";
+            "moduleFileExtensions": ["js", "svelte"]
+        }
+        Write a test for your component. For example, if you have a component that fetches data, you can mock the fetch function and assert that the component behaves correctly:
+        import '@testing-library/jest-dom';
+        import { render } from "@testing-library/svelte";
+        import Component from "./Component.svelte";
 
-            describe("Component", () => {
-                test("should fetch data and render it", async () => {
-                const { getByText } = render(Component);
-                // Wait for the fetch to complete and the component to update
-                const item = await waitFor(() => getByText('Fetched item'));
-                expect(item).toBeInTheDocument();
-                });
+        describe("Component", () => {
+            test("should fetch data and render it", async () => {
+            const { getByText } = render(Component);
+            // Wait for the fetch to complete and the component to update
+            const item = await waitFor(() => getByText('Fetched item'));
+            expect(item).toBeInTheDocument();
             });
+        });
 
 ## Technologie:
 
@@ -255,6 +256,93 @@
                 b) Onznačí se více zpráv na které bude chtít uživatel reagovat: V tomto případě se otevře nové okno
             - u openai API requestu provést priming skrze messages u chatCompletion.create
             - viz img/react-to-messages.jpg
+
+## Rework datového modelu
+
+    - Prompt, Thread, Folder budou DBNode: týká se DB kolekcí prompts, threads, promptFolders, threadFolders
+    - DBNode bude mít _id a parentId, nebude mít data: { itemsIds }
+
+    DBNode: { _id, parentId } // type DBNode = { _id: ..., parentId: ... }
+    Prompt: DBNode & { name, text }
+    Thread: DBNode & { name, messages }
+    Folder: DBNode
+
+### Transformace dat z DB:
+
+    type DBNode = {
+      id: string;
+      parentId: string;
+      data: {
+        name: string;
+      };
+    };
+
+    type TreeNodeInfo = {
+      id: string;
+      folderId: string;
+      isFolder: boolean;
+      childNodes?: TreeNodeInfo[];
+      data: { name: string };
+    };
+
+    const filter = <T>(items: T[], predicate: (item: T) => boolean) => {
+      const newItems = [...items];
+      const filtered: T[] = [];
+      const rest: T[] = [];
+      while (items.length > 0) {
+        const item = newItems.pop();
+        if (item === undefined) break;
+        const targetColl = predicate(item) ? filtered : rest;
+        targetColl.push(item);
+      }
+      return { filtered, rest };
+    };
+
+    const transformDBNodeToTreeNode = (
+      currentFolderNode: DBNode,
+      contentNodes: DBNode[],
+      folderNodes: DBNode[]
+    ): TreeNodeInfo => {
+      const { filtered: filteredContentNodes, rest: restContentNodes } = filter(
+        contentNodes,
+        (node) => node.id === currentFolderNode.id
+      );
+      const contentChildNodes = filteredContentNodes.map(
+        ({ id, parentId, data: { name } }) => {
+          return {
+            id,
+            folderId: parentId,
+            isFolder: false,
+            data: { name },
+          };
+        }
+      );
+
+      const { filtered: filteredFolderNodes, rest: restFolderNodes } = filter(
+        folderNodes,
+        (node) => node.id === currentFolderNode.id
+      );
+      const folderChildNodes = filteredFolderNodes.map((node) =>
+        transformDBNodeToTreeNode(node, restContentNodes, restFolderNodes)
+      );
+
+      return {
+        id: currentFolderNode.id,
+        folderId: currentFolderNode.parentId,
+        isFolder: true,
+        childNodes: [...folderChildNodes, ...contentChildNodes],
+        data: {
+          name: currentFolderNode.data.name,
+        },
+      };
+    };
+
+    const folderNodes: DBNode[] = [{ id: "1", parentId: "", data: { name: "" } }];
+    const contentNodes: DBNode[] = [];
+    // filtered root nodes
+    const treeNodes = folderNodes
+      .filter((node) => node.parentId === "")
+      .map((rootNode) => transformDBNodeToTreeNode(rootNode, contentNodes, folderNodes));
 
 # LOGO
 

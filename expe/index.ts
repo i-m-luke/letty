@@ -1,5 +1,5 @@
 import { log } from "./logging"; // facade pattern
-import { ZodObject, ZodRawShape, ZodSchema, strictObject, z } from "zod";
+import { ZodError, ZodObject, ZodRawShape, ZodSchema, strictObject, z } from "zod";
 
 import {
   sendMessage,
@@ -12,10 +12,80 @@ import {
 // MAIN:
 (() => {
   while (true) {
-    const schema = z.object({});
+    type DBNode = {
+      id: string;
+      parentId: string;
+      data: {
+        name: string;
+      };
+    };
 
-    const fn = <T extends ZodRawShape>(schema: ZodObject<T>) => {};
-    fn(schema);
+    type TreeNodeInfo = {
+      id: string;
+      folderId: string;
+      isFolder: boolean;
+      childNodes?: TreeNodeInfo[];
+      data: { name: string };
+    };
+
+    const filter = <T>(items: T[], predicate: (item: T) => boolean) => {
+      const newItems = [...items];
+      const filtered: T[] = [];
+      const rest: T[] = [];
+      while (items.length > 0) {
+        const item = newItems.pop();
+        if (item === undefined) break;
+        const targetColl = predicate(item) ? filtered : rest;
+        targetColl.push(item);
+      }
+      return { filtered, rest };
+    };
+
+    const transformDBNodeToTreeNode = (
+      currentFolderNode: DBNode,
+      contentNodes: DBNode[],
+      folderNodes: DBNode[]
+    ): TreeNodeInfo => {
+      const { filtered: filteredContentNodes, rest: restContentNodes } = filter(
+        contentNodes,
+        (node) => node.id === currentFolderNode.id
+      );
+      const contentChildNodes = filteredContentNodes.map(
+        ({ id, parentId, data: { name } }) => {
+          return {
+            id,
+            folderId: parentId,
+            isFolder: false,
+            data: { name },
+          };
+        }
+      );
+
+      const { filtered: filteredFolderNodes, rest: restFolderNodes } = filter(
+        folderNodes,
+        (node) => node.id === currentFolderNode.id
+      );
+      const folderChildNodes = filteredFolderNodes.map((node) =>
+        transformDBNodeToTreeNode(node, restContentNodes, restFolderNodes)
+      );
+
+      return {
+        id: currentFolderNode.id,
+        folderId: currentFolderNode.parentId,
+        isFolder: true,
+        childNodes: [...folderChildNodes, ...contentChildNodes],
+        data: {
+          name: currentFolderNode.data.name,
+        },
+      };
+    };
+
+    const folderNodes: DBNode[] = [{ id: "1", parentId: "", data: { name: "" } }];
+    const contentNodes: DBNode[] = [];
+    // filtered root nodes
+    const treeNodes = folderNodes
+      .filter((node) => node.parentId === "")
+      .map((rootNode) => transformDBNodeToTreeNode(rootNode, contentNodes, folderNodes));
   }
 })();
 

@@ -26,7 +26,7 @@ export const NewDBNodeSchema = DBNodeSchema.omit({ _id: true });
 
 export const FolderSchema = z.object({
   name: z.string(),
-  itemsIds: z.array(z.string()), // NOTE: Nehodí se spíš na DBNode? K čemu je parentId?
+  itemsIds: z.array(z.string()), // NOTE: Nehodí se spíš na DBNode?
 });
 
 export const FolderDBNodeSchema = DBNodeSchemaWithData(FolderSchema);
