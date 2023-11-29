@@ -25,10 +25,7 @@ export class DialogProxy extends EventTarget {
     });
   }
 
-  showModalAndWaitTillClosed(): {
-    confirmed: Promise<unknown>;
-    canceled: Promise<unknown>;
-  } {
+  showModalAndWaitTillClosed() {
     this.dialog?.dispatchEvent(new Event("show"));
     this.dialog?.showModal();
     return {
