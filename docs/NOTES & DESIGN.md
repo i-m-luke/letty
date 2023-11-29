@@ -259,6 +259,7 @@
 
 ## Rework datového modelu
 
+    - Rework provést ve vlastní větvy
     - Prompt, Thread, Folder budou DBNode: týká se DB kolekcí prompts, threads, promptFolders, threadFolders
     - DBNode bude mít _id a parentId, nebude mít data: { itemsIds }
 
