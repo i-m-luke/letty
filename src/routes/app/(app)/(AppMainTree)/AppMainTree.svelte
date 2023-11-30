@@ -128,7 +128,7 @@
             confirmed.then(() => {
                const { name, type } = createPromptDialogData;
                // TODO: Podle "type" bude nutné provést buď fetch pro folder nebo pro content
-               // TODO: viz ADD THREAD FOLDER BUTTON
+               // TODO: viz THREAD FOLDER NODE ADD BUTTON
                fetchPostPrompt({ parentId: data._id, name: get(name), text: "" })
                   .then((res) => {
                      if (res.success) {

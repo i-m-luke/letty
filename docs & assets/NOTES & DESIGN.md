@@ -1,4 +1,4 @@
-# NÁZEV PRODUKTU: letty.io ???
+# NÁZEV PRODUKTU: letty.io
 
     Další návrhy:
         - moth-ai, mothai, mothe
