@@ -41,7 +41,7 @@
       // THREAD FOLDER NODE ADD BUTTON
       new ButtonInfo({
          style: addBtnStyle,
-         onClickAction: async (treeNodeData: TreeNodeInfoData) => {
+         onClickAction: (treeNodeData: TreeNodeInfoData) => {
             const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
             confirmed.then(async () => {
                const type = get(createThreadDialogData.type);
@@ -110,31 +110,33 @@
       // PROMPT FOLDER NODE ADD BUTTON
       new ButtonInfo({
          style: addBtnStyle,
-         onClickAction: (data: TreeNodeInfoData) => {
+         onClickAction: (treeNodeData: TreeNodeInfoData) => {
             const { confirmed, canceled } = createPromptDialogProxy.showModalAndWaitTillClosed();
-            confirmed.then(() => {
-               const { name, type } = createPromptDialogData;
-               // TODO: Podle "type" bude nutné provést buď fetch pro folder nebo pro content
-               // TODO: viz THREAD FOLDER NODE ADD BUTTON
-               fetchPostPrompt({ parentId: data._id, name: get(name), text: "" })
-                  .then((res) => {
-                     if (res.success) {
-                        promptTreeState.update((current) =>
-                           addNodeToMultipleNodes(
-                              data._id,
-                              current,
-                              new TreeNodeInfo(false, get(type), res.data.name, {
-                                 _id: res.data._id,
-                                 _folderId: data._id,
-                              })
-                           )
-                        );
-                     } else {
-                        // ... process issues (e.g. display invalid data in dialog)
-                        console.log(res.issues);
-                     }
-                  })
-                  .catch((err) => console.error("ERROR ON THE SERVER:", err));
+            confirmed.then(async () => {
+               const type = get(createPromptDialogData.type);
+               const name = get(createPromptDialogData.name);
+               const res = await (async () => {
+                  switch (type) {
+                     case TreeNodeType.Content:
+                        return fetchPostPrompt({ parentId: treeNodeData._id, name, text: "" });
+                     case TreeNodeType.Folder:
+                        return fetchPostPromptFolder({ parentId: treeNodeData._id, name });
+                     default:
+                        throw new Error("Invalid TreeNodeType");
+                  }
+               })();
+
+               if (res.success) {
+                  const { _id, parentId, name } = res.data;
+                  const newTreeNode = new TreeNodeInfo(false, type, name, {
+                     _id,
+                     _folderId: parentId,
+                  });
+                  promptTreeState.update((current) => addNodeToMultipleNodes(treeNodeData._id, current, newTreeNode));
+               } else {
+                  // ... process issues (e.g. display invalid data in dialog)
+                  console.log(res.issues);
+               }
             });
             canceled.then(() => console.log("dialog canceled"));
          },
