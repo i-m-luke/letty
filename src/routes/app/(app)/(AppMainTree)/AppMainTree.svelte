@@ -66,7 +66,7 @@
                               _folderId: treeNodeData._folderId,
                            });
                         // TODO: +server.ts
-                        return fetchPostPromptFolder({ parentId: treeNodeData._id, data: { name, itemsIds: [] } }).then((res) =>
+                        return fetchPostPromptFolder({ parentId: treeNodeData._id, name }).then((res) =>
                            convertResponse(res, convertData)
                         );
                      }

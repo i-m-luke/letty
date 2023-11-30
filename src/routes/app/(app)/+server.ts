@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { Folder, NewFolder, Response as _Response } from "$types";
 import { RequestType, DeleteRequestSchema, PostRequestSchema } from "./Request";
 import type { DeleteRequest, DeleteRequestData, PostRequest } from "./Request";
-import type { PostNewPrompt, PostNewThread, Prompt, Thread } from "$types";
+import type { NewPrompt, NewThread, Prompt, Thread } from "$types";
 import db from "$db";
 import PromptDAO from "$lib/DAO/PromptDAO";
 import TheradDAO from "$lib/DAO/ThreadDAO";
@@ -54,7 +54,7 @@ const handleDELETE = async (request: DeleteRequest) => {
 
 // IMPURE CODE:
 const NewPromptEntriesSchema = z.object({ name: z.string().min(1) });
-const handlePostPromptReq = async (data: PostNewPrompt): Promise<_Response> => {
+const handlePostPromptReq = async (data: NewPrompt): Promise<_Response> => {
   const entriesCheck = NewPromptEntriesSchema.safeParse(data);
 
   if (!entriesCheck.success) {
@@ -64,8 +64,7 @@ const handlePostPromptReq = async (data: PostNewPrompt): Promise<_Response> => {
     };
   }
 
-  const { parentId, ...newPrompt } = data;
-  const prompt: Prompt = await promptDAO.insert(newPrompt);
+  const prompt: Prompt = await promptDAO.insert(data);
   promptFoldersDAO.addItem(data.parentId, prompt._id);
 
   return { success: true, data: prompt };
@@ -73,7 +72,7 @@ const handlePostPromptReq = async (data: PostNewPrompt): Promise<_Response> => {
 
 const NewThreadEntriesSchema = z.object({ name: z.string().min(1) });
 
-const handlePostThreadReq = async (data: PostNewThread): Promise<_Response> => {
+const handlePostThreadReq = async (data: NewThread): Promise<_Response> => {
   const entriesCheck = NewThreadEntriesSchema.safeParse(data);
 
   if (!entriesCheck.success) {
@@ -83,8 +82,7 @@ const handlePostThreadReq = async (data: PostNewThread): Promise<_Response> => {
     };
   }
 
-  const { parentId, ...newThread } = data;
-  const thread: Thread = await threadDAO.insert(newThread);
+  const thread: Thread = await threadDAO.insert(data);
   threadFoldersDAO.addItem(data.parentId, thread._id);
 
   return { success: true, data: thread };
@@ -95,10 +93,7 @@ const handlePostThreadFolder = async (data: NewFolder): Promise<_Response> => {
   const folder: Folder = {
     _id: "TODO",
     parentId: "TODO",
-    data: {
-      name: data.data.name,
-      itemsIds: [],
-    },
+    name: data.name,
   };
   return {
     success: true,
@@ -111,10 +106,7 @@ const handlePostPromptFolder = async (data: NewFolder): Promise<_Response> => {
   const folder: Folder = {
     _id: "TODO",
     parentId: "TODO",
-    data: {
-      name: data.data.name,
-      itemsIds: [],
-    },
+    name: data.name,
   };
   return {
     success: true,

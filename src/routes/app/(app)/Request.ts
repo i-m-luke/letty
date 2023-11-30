@@ -1,7 +1,7 @@
 import {
   NewFolderSchema,
-  PostNewPromptSchema,
-  PostNewThreadSchema,
+  NewPromptSchema,
+  NewThreadSchema,
   WithParentIdSchema,
 } from "$types";
 import { z } from "zod";
@@ -29,8 +29,8 @@ export const DeleteRequestSchema = z.object({
 export type DeleteRequest = z.infer<typeof DeleteRequestSchema>;
 
 export const PostRequestSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal(RequestType.Thread), data: PostNewThreadSchema }),
-  z.object({ type: z.literal(RequestType.Prompt), data: PostNewPromptSchema }),
+  z.object({ type: z.literal(RequestType.Thread), data: NewThreadSchema }),
+  z.object({ type: z.literal(RequestType.Prompt), data: NewPromptSchema }),
   z.object({
     type: z.literal(RequestType.PromptFolder),
     data: NewFolderSchema,

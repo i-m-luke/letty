@@ -1,0 +1,26 @@
+[
+  {
+    "_id": {
+      "$oid": "656470ae5c5b7aa94a40a369"
+    },
+    "parentId": "",
+    "userId": "101",
+    "name": "first folder"
+  },
+  {
+    "_id": {
+      "$oid": "656470ae5c5b7aa94a40a36a"
+    },
+    "parentId": "656470ae5c5b7aa94a40a369",
+    "userId": "101",
+    "name": "second folder"
+  },
+  {
+    "_id": {
+      "$oid": "656470ae5c5b7aa94a40a36b"
+    },
+    "parentId": "",
+    "userId": "101",
+    "name": "third folder"
+  }
+]

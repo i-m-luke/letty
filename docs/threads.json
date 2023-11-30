@@ -1,0 +1,70 @@
+[
+  {
+    "_id": {
+      "$oid": "656472605c5b7aa94a40a375"
+    },
+    "parentId": "656470ae5c5b7aa94a40a369",
+    "userId": "101",
+    "name": "thread-1",
+    "messages": [
+      {
+        "question": "what?",
+        "answer": "... :-X"
+      },
+      {
+        "question": "how?",
+        "answer": "... :-)"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "656472605c5b7aa94a40a376"
+    },
+    "parentId": "656470ae5c5b7aa94a40a369",
+    "userId": "101",
+    "name": "thread-2",
+    "messages": [
+      {
+        "question": "...?",
+        "answer": "... :-D"
+      },
+      {
+        "question": "...?",
+        "answer": "... :-**"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "656472605c5b7aa94a40a377"
+    },
+    "parentId": "656470ae5c5b7aa94a40a36b",
+    "userId": "101",
+    "name": "thread-3",
+    "messages": [
+      {
+        "question": "...?",
+        "answer": "..."
+      },
+      {
+        "question": "...?!!",
+        "answer": "...!!"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "656472605c5b7aa94a40a378"
+    },
+    "parentId": "656470ae5c5b7aa94a40a36b",
+    "userId": "101",
+    "name": "thread-4",
+    "messages": [
+      {
+        "question": "...?",
+        "answer": "..."
+      }
+    ]
+  }
+]

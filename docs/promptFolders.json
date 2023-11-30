@@ -1,0 +1,34 @@
+[
+  {
+    "_id": {
+      "$oid": "6564709f5c5b7aa94a40a363"
+    },
+    "parentId": "",
+    "userId": "101",
+    "name": "first folder"
+  },
+  {
+    "_id": {
+      "$oid": "6564709f5c5b7aa94a40a364"
+    },
+    "parentId": "6564709f5c5b7aa94a40a363",
+    "userId": "101",
+    "name": "second folder"
+  },
+  {
+    "_id": {
+      "$oid": "6564709f5c5b7aa94a40a365"
+    },
+    "parentId": "6564709f5c5b7aa94a40a364",
+    "userId": "101",
+    "name": "third folder"
+  },
+  {
+    "_id": {
+      "$oid": "6564709f5c5b7aa94a40a366"
+    },
+    "parentId": "",
+    "userId": "101",
+    "name": "fourth folder"
+  }
+]

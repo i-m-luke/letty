@@ -16,55 +16,46 @@ const WithDataSchema = z.object({
   data: z.any(),
 });
 
-export const DBNodeSchema =
-  WithIdSchema.merge(WithParentIdSchema).merge(WithDataSchema);
+export const DBNodeSchema = WithIdSchema.merge(WithParentIdSchema);
 
-export const DBNodeSchemaWithData = <TObject extends ZodRawShape>(
+export const BaseDBNodeSchema = <TObject extends ZodRawShape>(
   dataSchema: ZodObject<TObject>
-) => DBNodeSchema.extend({ data: dataSchema });
+) => DBNodeSchema.merge(dataSchema);
 
 export const NewDBNodeSchema = DBNodeSchema.omit({ _id: true });
 
-export const FolderSchema = DBNodeSchemaWithData(
+export const FolderSchema = BaseDBNodeSchema(
   z.object({
     name: z.string(),
-    itemsIds: z.array(z.string()), // NOTE: Nehodí se spíš na DBNode?
   })
 );
 
 export const NewFolderSchema = FolderSchema.omit({ _id: true });
 
-export const PromptSchema = z
-  .object({
+export const PromptSchema = BaseDBNodeSchema(
+  z.object({
     name: z.string(),
     text: z.string(),
   })
-  .merge(WithIdSchema);
+);
 
 export const NewPromptSchema = PromptSchema.omit({ _id: true });
-export const PostNewPromptSchema = NewPromptSchema.merge(
-  WithParentIdSchema.required()
-);
 
 export const ThreadMessageSchema = z.object({
   question: z.string(),
   answer: z.string(),
 });
 
-export const ThreadSchema = z
-  .object({
+export const ThreadSchema = BaseDBNodeSchema(
+  z.object({
     name: z.string(),
     messages: z.array(ThreadMessageSchema),
   })
-  .merge(WithIdSchema);
+);
 
 export const NewThreadSchema = ThreadSchema.omit({
   _id: true,
 });
-
-export const PostNewThreadSchema = NewThreadSchema.merge(
-  WithParentIdSchema.required()
-);
 
 const SuccessfullResponseSchema = z.object({
   success: z.literal(true),
@@ -84,12 +75,11 @@ export const ResponseSchema = z.discriminatedUnion("success", [
 //#endregion
 
 export type WithId = z.infer<typeof WithIdSchema>;
+export type WithParentId = z.infer<typeof WithParentIdSchema>;
 export type Prompt = z.infer<typeof PromptSchema>;
 export type NewPrompt = z.infer<typeof NewPromptSchema>;
-export type PostNewPrompt = z.infer<typeof PostNewPromptSchema>;
 export type Thread = z.infer<typeof ThreadSchema>;
 export type NewThread = z.infer<typeof NewThreadSchema>;
-export type PostNewThread = z.infer<typeof PostNewThreadSchema>;
 export type ThreadMessage = z.infer<typeof ThreadMessageSchema>;
 export type SuccessfullResponse = z.infer<typeof SuccessfullResponseSchema>;
 export type UnsuccessfullResponse = z.infer<typeof UnsuccessfullResponseSchema>;

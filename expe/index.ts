@@ -91,11 +91,13 @@ while (true) {
     { id: "3", parentId: "2", data: { name: "A" } },
   ];
   // filtered root nodes
-  const treeNodes = folderNodes
-    .filter((node) => node.parentId === "")
-    .map((rootNode) =>
-      transformDBNodeToTreeNode(rootNode, contentNodes, folderNodes)
-    );
+  const { filtered: rootFolderNodes, rest: restFolderNodes } = filter(
+    folderNodes,
+    (node) => node.parentId === ""
+  );
+  const treeNodes = rootFolderNodes.map((rootNode) =>
+    transformDBNodeToTreeNode(rootNode, contentNodes, restFolderNodes)
+  );
 
   console.log(treeNodes);
 }

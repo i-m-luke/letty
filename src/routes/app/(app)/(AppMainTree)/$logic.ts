@@ -8,8 +8,8 @@ import {
   FolderSchema,
   ResponseSchema,
   type SafeResponse,
-  type PostNewThread,
-  type PostNewPrompt,
+  type NewThread,
+  type NewPrompt,
   type NewFolder,
 } from "$types";
 
@@ -33,10 +33,10 @@ const fetchPOST = async <TResData>(
   return res.success ? { ...res, data: parseResponseDataFn(res.data) } : { ...res };
 };
 
-export const fetchPostThread = async (data: PostNewThread) =>
+export const fetchPostThread = async (data: NewThread) =>
   fetchPOST({ type: RequestType.Thread, data }, ThreadSchema.parse);
 
-export const fetchPostPrompt = async (data: PostNewPrompt) =>
+export const fetchPostPrompt = async (data: NewPrompt) =>
   fetchPOST({ type: RequestType.Prompt, data }, PromptSchema.parse);
 
 export const fetchPostPromptFolder = async (data: NewFolder) =>
