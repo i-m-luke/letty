@@ -3,6 +3,7 @@ import { ZodObject, z, type ZodRawShape } from "zod";
 // TODO: Přesunout sem TreeNodeInfo, atd. (z components)
 
 //#region  SCHEMAs
+
 export const WithIdSchema = z.object({
   _id: z.string(),
 });
@@ -24,14 +25,14 @@ export const DBNodeSchemaWithData = <TObject extends ZodRawShape>(
 
 export const NewDBNodeSchema = DBNodeSchema.omit({ _id: true });
 
-export const FolderSchema = z.object({
-  name: z.string(),
-  itemsIds: z.array(z.string()), // NOTE: Nehodí se spíš na DBNode?
-});
+export const FolderSchema = DBNodeSchemaWithData(
+  z.object({
+    name: z.string(),
+    itemsIds: z.array(z.string()), // NOTE: Nehodí se spíš na DBNode?
+  })
+);
 
-export const FolderDBNodeSchema = DBNodeSchemaWithData(FolderSchema);
-
-export const NewFolderDBNodeSchema = FolderDBNodeSchema.omit({ _id: true });
+export const NewFolderSchema = FolderSchema.omit({ _id: true });
 
 export const PromptSchema = z
   .object({
@@ -94,8 +95,7 @@ export type SuccessfullResponse = z.infer<typeof SuccessfullResponseSchema>;
 export type UnsuccessfullResponse = z.infer<typeof UnsuccessfullResponseSchema>;
 export type Response = z.infer<typeof ResponseSchema>;
 export type Folder = z.infer<typeof FolderSchema>;
-export type FolderDBNode = z.infer<typeof FolderDBNodeSchema>;
-export type NewFolderDBNode = z.infer<typeof NewFolderDBNodeSchema>;
+export type NewFolder = z.infer<typeof NewFolderSchema>;
 
 export type DBNode<TData> = z.infer<typeof DBNodeSchema> & {
   data: TData;

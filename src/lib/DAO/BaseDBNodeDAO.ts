@@ -3,11 +3,11 @@ import type { DBNode, NewDBNode } from "$types";
 import BaseDAO from "./BaseDAO";
 import type { ZodSchema } from "zod";
 
-export abstract class BaseDBNodeDAO<TData> extends BaseDAO<
-  DBNode<TData>,
-  NewDBNode<TData>
-> {
-  constructor(db: DB, collectionName: string, dataSchema: ZodSchema<DBNode<TData>>) {
+export abstract class BaseDBNodeDAO<
+  TObject,
+  TNewObject extends object
+> extends BaseDAO<TObject, TNewObject> {
+  constructor(db: DB, collectionName: string, dataSchema: ZodSchema<TObject>) {
     super(db, collectionName, dataSchema);
   }
 
@@ -19,7 +19,6 @@ export abstract class BaseDBNodeDAO<TData> extends BaseDAO<
   }
 
   async removeItem(parentId: string, itemId: string) {
-    const temp = await this.collection.findOne({ _id: new ObjectId(parentId) });
     this.collection.updateOne(
       { _id: new ObjectId(parentId) },
       { $pull: { "data.itemsIds": itemId } }

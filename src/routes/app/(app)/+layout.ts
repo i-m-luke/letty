@@ -1,5 +1,5 @@
 import type LayoutLoadData from "./LayoutLoadData";
-import type { DBNode, Folder, ContentData } from "$types";
+import type { ContentData, Folder } from "$types";
 import { TreeNodeInfo, TreeNodeType } from "$lib/components/Tree/index";
 import { writable } from "svelte/store";
 
@@ -23,7 +23,7 @@ export function load({ data }): LayoutLoadData {
 }
 
 const transformFolderDBNodeToTreeState = (
-  folderDbNodes: DBNode<Folder>[],
+  folderDbNodes: Folder[],
   contentDbNodes: ContentData[]
 ): TreeNodeInfo[] => {
   const rootFolderDBNodes = folderDbNodes.filter((dbNode) => dbNode.parentId === "");
@@ -38,8 +38,8 @@ const transformFolderDBNodeToTreeState = (
 };
 
 const transformFolderDBNodeToTreeNodeInfo = (
-  currentFolderDbNode: DBNode<Folder>,
-  folderDbNodes: DBNode<Folder>[],
+  currentFolderDbNode: Folder,
+  folderDbNodes: Folder[],
   contentDbNodes: ContentData[],
   isRootNode: boolean
 ): TreeNodeInfo => {

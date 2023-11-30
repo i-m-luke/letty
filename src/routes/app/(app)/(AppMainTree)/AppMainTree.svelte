@@ -48,30 +48,28 @@
                const name = get(createThreadDialogData.name);
                const res = (() => {
                   switch (type) {
-                     case TreeNodeType.Content:
+                     case TreeNodeType.Content: {
+                        const convertData = (data: Thread) =>
+                           new TreeNodeInfo(false, type, name, {
+                              _id: data._id,
+                              _folderId: treeNodeData._folderId,
+                           });
                         return fetchPostThread({ parentId: treeNodeData._id, name, messages: [] }).then((res) =>
-                           convertResponse(
-                              res,
-                              ({ name, _id }) =>
-                                 new TreeNodeInfo(false, type, name, {
-                                    _id,
-                                    _folderId: treeNodeData._folderId,
-                                 })
-                           )
+                           convertResponse(res, convertData)
                         );
+                     }
 
-                     case TreeNodeType.Folder:
+                     case TreeNodeType.Folder: {
+                        const convertData = (data: Folder) =>
+                           new TreeNodeInfo(false, type, name, {
+                              _id: data._id,
+                              _folderId: treeNodeData._folderId,
+                           });
                         // TODO: +server.ts
                         return fetchPostPromptFolder({ parentId: treeNodeData._id, data: { name, itemsIds: [] } }).then((res) =>
-                           convertResponse(
-                              res,
-                              ({ data: { name }, _id, parentId }) =>
-                                 new TreeNodeInfo(false, type, name, {
-                                    _id,
-                                    _folderId: parentId,
-                                 })
-                           )
+                           convertResponse(res, convertData)
                         );
+                     }
                   }
                })();
 

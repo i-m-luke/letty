@@ -5,12 +5,12 @@ import routes from "$routes";
 import {
   PromptSchema,
   ThreadSchema,
-  FolderDBNodeSchema,
+  FolderSchema,
   ResponseSchema,
   type SafeResponse,
   type PostNewThread,
   type PostNewPrompt,
-  type NewFolderDBNode,
+  type NewFolder,
 } from "$types";
 
 //#region  IMPURE CODE:
@@ -39,11 +39,11 @@ export const fetchPostThread = async (data: PostNewThread) =>
 export const fetchPostPrompt = async (data: PostNewPrompt) =>
   fetchPOST({ type: RequestType.Prompt, data }, PromptSchema.parse);
 
-export const fetchPostPromptFolder = async (data: NewFolderDBNode) =>
-  fetchPOST({ type: RequestType.PromptFolder, data }, FolderDBNodeSchema.parse);
+export const fetchPostPromptFolder = async (data: NewFolder) =>
+  fetchPOST({ type: RequestType.PromptFolder, data }, FolderSchema.parse);
 
-export const fetchPostThreadFolder = async (data: NewFolderDBNode) =>
-  fetchPOST({ type: RequestType.ThreadFolder, data }, FolderDBNodeSchema.parse);
+export const fetchPostThreadFolder = async (data: NewFolder) =>
+  fetchPOST({ type: RequestType.ThreadFolder, data }, FolderSchema.parse);
 
 //#endregion
 

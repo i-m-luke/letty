@@ -1,5 +1,5 @@
 import {
-  NewFolderDBNodeSchema,
+  NewFolderSchema,
   PostNewPromptSchema,
   PostNewThreadSchema,
   WithParentIdSchema,
@@ -33,11 +33,11 @@ export const PostRequestSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal(RequestType.Prompt), data: PostNewPromptSchema }),
   z.object({
     type: z.literal(RequestType.PromptFolder),
-    data: NewFolderDBNodeSchema,
+    data: NewFolderSchema,
   }),
   z.object({
     type: z.literal(RequestType.ThreadFolder),
-    data: NewFolderDBNodeSchema,
+    data: NewFolderSchema,
   }),
 ]);
 

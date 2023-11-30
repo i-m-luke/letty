@@ -1,6 +1,6 @@
 import { json } from "@sveltejs/kit";
 import { z } from "zod";
-import type { FolderDBNode, NewFolderDBNode, Response as _Response } from "$types";
+import type { Folder, NewFolder, Response as _Response } from "$types";
 import { RequestType, DeleteRequestSchema, PostRequestSchema } from "./Request";
 import type { DeleteRequest, DeleteRequestData, PostRequest } from "./Request";
 import type { PostNewPrompt, PostNewThread, Prompt, Thread } from "$types";
@@ -90,9 +90,9 @@ const handlePostThreadReq = async (data: PostNewThread): Promise<_Response> => {
   return { success: true, data: thread };
 };
 
-const handlePostThreadFolder = async (data: NewFolderDBNode): Promise<_Response> => {
+const handlePostThreadFolder = async (data: NewFolder): Promise<_Response> => {
   console.log("TODO: handlePostThreadFolder");
-  const folder: FolderDBNode = {
+  const folder: Folder = {
     _id: "TODO",
     parentId: "TODO",
     data: {
@@ -106,9 +106,9 @@ const handlePostThreadFolder = async (data: NewFolderDBNode): Promise<_Response>
   };
 };
 
-const handlePostPromptFolder = async (data: NewFolderDBNode): Promise<_Response> => {
+const handlePostPromptFolder = async (data: NewFolder): Promise<_Response> => {
   console.log("TODO: handlePostPromptFolder");
-  const folder: FolderDBNode = {
+  const folder: Folder = {
     _id: "TODO",
     parentId: "TODO",
     data: {

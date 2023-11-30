@@ -1,9 +1,9 @@
 import { BaseDBNodeDAO } from "./BaseDBNodeDAO";
 import type { Db as DB } from "mongodb";
-import { FolderDBNodeSchema, type Folder } from "$types";
+import { FolderSchema, type Folder, type NewFolder } from "$types";
 
-export default class PromptFoldersDAO extends BaseDBNodeDAO<Folder> {
+export default class PromptFoldersDAO extends BaseDBNodeDAO<Folder, NewFolder> {
   constructor(db: DB) {
-    super(db, "promptFolders", FolderDBNodeSchema);
+    super(db, "promptFolders", FolderSchema);
   }
 }
