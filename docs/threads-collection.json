@@ -1,6 +1,7 @@
 [
   {
     "userId": "101",
+    "parentId": "",
     "name": "thread-1",
     "messages": [
       { "question": "what?", "answer": "... :-X" },
@@ -9,6 +10,7 @@
   },
   {
     "userId": "101",
+    "parentId": "",
     "name": "thread-2",
     "messages": [
       { "question": "...?", "answer": "... :-D" },
@@ -17,6 +19,7 @@
   },
   {
     "userId": "101",
+    "parentId": "",
     "name": "thread-3",
     "messages": [
       { "question": "...?", "answer": "..." },
@@ -25,6 +28,7 @@
   },
   {
     "userId": "101",
+    "parentId": "",
     "name": "thread-4",
     "messages": [{ "question": "...?", "answer": "..." }]
   }

@@ -2,33 +2,21 @@
   {
     "userId": "101",
     "parentId": "",
-    "data": {
-      "name": "first folder",
-      "itemsIds": []
-    }
+    "name": "first folder"
   },
   {
     "userId": "101",
     "parentId": "",
-    "data": {
-      "name": "second folder",
-      "itemsIds": []
-    }
+    "name": "second folder"
   },
   {
     "userId": "101",
     "parentId": "",
-    "data": {
-      "name": "third folder",
-      "itemsIds": []
-    }
+    "name": "third folder"
   },
   {
     "userId": "101",
     "parentId": "",
-    "data": {
-      "name": "fourth folder",
-      "itemsIds": []
-    }
+    "name": "fourth folder"
   }
 ]
