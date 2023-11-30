@@ -8,7 +8,7 @@ export const WithIdSchema = z.object({
 });
 
 export const WithParentIdSchema = z.object({
-  parentId: z.string().optional(),
+  parentId: z.string(),
 });
 
 const WithDataSchema = z.object({

@@ -2,7 +2,7 @@
    import routes from "$routes";
    import { get, type Writable } from "svelte/store";
    import { goto } from "$app/navigation";
-   import { Tree, TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
+   import { Tree, TreeNodeInfo, TreeNodeType, type TreeNodeInfoData } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
    import {
       fetchPostThread,
@@ -13,10 +13,12 @@
       fetchDeletePromptFolder,
       removeNodeFromMultipleNodes,
       addNodeToMultipleNodes,
+      fetchPostPromptFolder,
    } from "./$logic";
    import { DialogProxy } from "$lib/components/Dialog";
    import CreateDialogData from "./CreateDialogData";
    import CreateDialog from "./CreateDialog.svelte";
+   import type { Folder, SafeResponse, Thread } from "$types";
 
    let createThreadDialogProxy = new DialogProxy();
    let createThreadDialogData = new CreateDialogData();
@@ -29,43 +31,64 @@
 
    //#region thread buttons
 
-   const addBtnStyle = "fa-solid fa-circle-plus";
-   const removeBtnStyle = "fa-solid fa-circle-minus";
+   const addBtnStyle = "fa-solid fa-plus";
+   const removeBtnStyle = "fa-solid fa-trash";
+
+   const convertResponse = <TData>(res: SafeResponse<TData>, convertDataToTreeNodeInfoFn: (data: TData) => TreeNodeInfo) =>
+      res.success ? { ...res, data: convertDataToTreeNodeInfoFn(res.data) } : { ...res };
 
    const threadFolderNodeButtons = [
-      // ADD THREAD FOLDER BUTTON
+      // THREAD FOLDER NODE ADD BUTTON
       new ButtonInfo({
          style: addBtnStyle,
-         onClickAction: (data: TreeNodeInfoData) => {
+         onClickAction: (treeNodeData: TreeNodeInfoData) => {
             const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
             confirmed.then(() => {
-               const { name, type } = createThreadDialogData;
-               // TODO: Podle "type" bude nutné provést buď fetch pro folder nebo pro content
-               fetchPostThread({ parentId: data._id, name: get(name), messages: [] })
-                  .then((res) => {
-                     if (res.success) {
-                        threadTreeState.update((current) =>
-                           addNodeToMultipleNodes(
-                              data._id,
-                              current,
-                              new TreeNodeInfo(false, get(type), res.data.name, {
-                                 _id: res.data._id,
-                                 _folderId: data._id,
-                              })
+               const type = get(createThreadDialogData.type);
+               const name = get(createThreadDialogData.name);
+               const res = (() => {
+                  switch (type) {
+                     case TreeNodeType.Content:
+                        return fetchPostThread({ parentId: treeNodeData._id, name, messages: [] }).then((res) =>
+                           convertResponse(
+                              res,
+                              ({ name, _id }) =>
+                                 new TreeNodeInfo(false, type, name, {
+                                    _id,
+                                    _folderId: treeNodeData._folderId,
+                                 })
                            )
                         );
-                     } else {
-                        // ... process issues (e.g. display invalid data in dialog)
-                        console.log(res.issues);
-                     }
-                  })
-                  .catch((err) => console.error("ERROR ON THE SERVER:", err)); // NOTE: Vypisovat error do konzole asi není "production ready"
+
+                     case TreeNodeType.Folder:
+                        // TODO: +server.ts
+                        return fetchPostPromptFolder({ parentId: treeNodeData._id, data: { name, itemsIds: [] } }).then((res) =>
+                           convertResponse(
+                              res,
+                              ({ data: { name }, _id, parentId }) =>
+                                 new TreeNodeInfo(false, type, name, {
+                                    _id,
+                                    _folderId: parentId,
+                                 })
+                           )
+                        );
+                  }
+               })();
+
+               res!.then((res) => {
+                  if (res.success) {
+                     threadTreeState.update((current) => addNodeToMultipleNodes(treeNodeData._id, current, res.data));
+                  } else {
+                     // ... process issues (e.g. display invalid data in dialog)
+                     console.log(res.issues);
+                  }
+               });
             });
             canceled.then(() => console.log("dialog canceled"));
          },
       }),
 
-      // REMOVE THREAD FOLDER BUTTON
+      // THREAD FOLDER NODE REMOVE BUTTON
       new ButtonInfo({
          style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
@@ -81,7 +104,7 @@
    ];
 
    const threadContentNodeButtons = [
-      // REMOVE THREAD BUTTON
+      // THREAD NODE REMOVE BUTTON
       new ButtonInfo({
          style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
@@ -99,7 +122,7 @@
    //#region prompt buttons
 
    const promptFolderNodeButtons = [
-      // ADD PROMPT FOLDER BUTTON
+      // PROMPT FOLDER NODE ADD BUTTON
       new ButtonInfo({
          style: addBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
@@ -107,6 +130,7 @@
             confirmed.then(() => {
                const { name, type } = createPromptDialogData;
                // TODO: Podle "type" bude nutné provést buď fetch pro folder nebo pro content
+               // TODO: viz ADD THREAD FOLDER BUTTON
                fetchPostPrompt({ parentId: data._id, name: get(name), text: "" })
                   .then((res) => {
                      if (res.success) {
@@ -130,7 +154,7 @@
             canceled.then(() => console.log("dialog canceled"));
          },
       }),
-      // REMOVE PROMPT FOLDER BUTTON
+      // PROMPT FOLDER NODE REMOVE BUTTON
       new ButtonInfo({
          style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
@@ -146,7 +170,7 @@
    ];
 
    const promptContentNodeButtons = [
-      // REMOVE PROMPT BUTTON
+      // PROMPT NODE REMOVE BUTTON
       new ButtonInfo({
          style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {

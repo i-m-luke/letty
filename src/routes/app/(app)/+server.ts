@@ -1,6 +1,6 @@
 import { json } from "@sveltejs/kit";
 import { z } from "zod";
-import type { Response as _Response } from "$types";
+import type { FolderDBNode, NewFolderDBNode, Response as _Response } from "$types";
 import { RequestType, DeleteRequestSchema, PostRequestSchema } from "./Request";
 import type { DeleteRequest, DeleteRequestData, PostRequest } from "./Request";
 import type { PostNewPrompt, PostNewThread, Prompt, Thread } from "$types";
@@ -29,6 +29,10 @@ const handlePOST = async (request: PostRequest): Promise<_Response> => {
       return handlePostPromptReq(request.data);
     case RequestType.Thread:
       return handlePostThreadReq(request.data);
+    case RequestType.ThreadFolder:
+      return handlePostThreadFolder(request.data);
+    case RequestType.PromptFolder:
+      return handlePostPromptFolder(request.data);
     default:
       throw new Error("ERROR ON SERVER SIDE");
   }
@@ -84,6 +88,38 @@ const handlePostThreadReq = async (data: PostNewThread): Promise<_Response> => {
   threadFoldersDAO.addItem(data.parentId, thread._id);
 
   return { success: true, data: thread };
+};
+
+const handlePostThreadFolder = async (data: NewFolderDBNode): Promise<_Response> => {
+  console.log("TODO: handlePostThreadFolder");
+  const folder: FolderDBNode = {
+    _id: "TODO",
+    parentId: "TODO",
+    data: {
+      name: data.data.name,
+      itemsIds: [],
+    },
+  };
+  return {
+    success: true,
+    data: folder,
+  };
+};
+
+const handlePostPromptFolder = async (data: NewFolderDBNode): Promise<_Response> => {
+  console.log("TODO: handlePostPromptFolder");
+  const folder: FolderDBNode = {
+    _id: "TODO",
+    parentId: "TODO",
+    data: {
+      name: data.data.name,
+      itemsIds: [],
+    },
+  };
+  return {
+    success: true,
+    data: folder,
+  };
 };
 
 const handleDeletePromptReq = (data: DeleteRequestData) => {
