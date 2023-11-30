@@ -13,7 +13,7 @@ export default class ButtonInfo<TData> {
 }
 
 export type ButtonInfoOpts<TData> = {
-  onClickAction?: (data: TData) => void | (() => void);
+  onClickAction?: (data: TData) => void;
   text?: string;
   style?: string;
   formActionName?: string;

@@ -41,46 +41,33 @@
       // THREAD FOLDER NODE ADD BUTTON
       new ButtonInfo({
          style: addBtnStyle,
-         onClickAction: (treeNodeData: TreeNodeInfoData) => {
+         onClickAction: async (treeNodeData: TreeNodeInfoData) => {
             const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
-            confirmed.then(() => {
+            confirmed.then(async () => {
                const type = get(createThreadDialogData.type);
                const name = get(createThreadDialogData.name);
-               const res = (() => {
+               const res = await (() => {
                   switch (type) {
-                     case TreeNodeType.Content: {
-                        const convertData = (data: Thread) =>
-                           new TreeNodeInfo(false, type, name, {
-                              _id: data._id,
-                              _folderId: treeNodeData._folderId,
-                           });
-                        return fetchPostThread({ parentId: treeNodeData._id, name, messages: [] }).then((res) =>
-                           convertResponse(res, convertData)
-                        );
-                     }
-
-                     case TreeNodeType.Folder: {
-                        const convertData = (data: Folder) =>
-                           new TreeNodeInfo(false, type, name, {
-                              _id: data._id,
-                              _folderId: treeNodeData._folderId,
-                           });
-                        // TODO: +server.ts
-                        return fetchPostPromptFolder({ parentId: treeNodeData._id, name }).then((res) =>
-                           convertResponse(res, convertData)
-                        );
-                     }
+                     case TreeNodeType.Content:
+                        return fetchPostThread({ parentId: treeNodeData._id, name, messages: [] });
+                     case TreeNodeType.Folder:
+                        return fetchPostPromptFolder({ parentId: treeNodeData._id, name });
+                     default:
+                        throw new Error("Invalid TreeNodeType");
                   }
                })();
 
-               res!.then((res) => {
-                  if (res.success) {
-                     threadTreeState.update((current) => addNodeToMultipleNodes(treeNodeData._id, current, res.data));
-                  } else {
-                     // ... process issues (e.g. display invalid data in dialog)
-                     console.log(res.issues);
-                  }
-               });
+               if (res.success) {
+                  const { _id, parentId, name } = res.data;
+                  const newTreeNode = new TreeNodeInfo(false, type, name, {
+                     _id,
+                     _folderId: parentId,
+                  });
+                  threadTreeState.update((current) => addNodeToMultipleNodes(treeNodeData._id, current, newTreeNode));
+               } else {
+                  // ... process issues (e.g. display invalid data in dialog)
+                  console.log(res.issues);
+               }
             });
             canceled.then(() => console.log("dialog canceled"));
          },
