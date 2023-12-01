@@ -43,7 +43,7 @@
    //#region thread buttons
 
    const addBtnClassName = "fa-solid fa-plus button";
-   const removeBtnClassName = "fa-solid fa-trash"; 
+   const removeBtnClassName = "fa-solid fa-trash";
    const removeBtnStyle = "font-size: 0.9rem";
 
    const threadFolderNodeAddButton = new ButtonInfo({
@@ -228,5 +228,6 @@
    buttons={[
       { type: DialogButtonType.Confirm, text: "Yes" },
       { type: DialogButtonType.Cancel, text: "No" },
-   ]}>Are you sure to delete?</Dialog
->
+   ]}
+   >Are you sure to delete?
+</Dialog>
