@@ -94,7 +94,7 @@
                   .then(() => {
                      threadTreeState.update((current) => removeNodeFromMultipleNodes(data.id, current));
                   })
-                  .catch((err) => console.error("ERROR ON THE SERVER:", err));
+                  .catch((err) => console.error("ERROR WHILE FETCHING:", err));
             });
          },
       }),
@@ -112,7 +112,7 @@
                   .then(() => {
                      threadTreeState.update((current) => removeNodeFromMultipleNodes(data.id, current));
                   })
-                  .catch((err) => console.error("ERROR ON THE SERVER:", err));
+                  .catch((err) => console.error("ERROR WHILE FETCHING:", err));
             });
          },
       }),
@@ -163,17 +163,14 @@
       new ButtonInfo({
          className: removeBtnClassName,
          style: removeBtnStyle,
-
          onClickAction: (data: TreeNodeInfoData) => {
             const { confirmed } = sureToDeleteDialogProxy.showModalAndWaitTillClosed();
             confirmed.then(() => {
-               // TODO: Mazání folders není hotové!
-               console.log("TODO: REMOVE PROMPT FOLDER/CONTENT");
                fetchDeletePromptFolder({ parentId: data.folderId, _id: data.id })
                   .then(() => {
                      promptTreeState.update((current) => removeNodeFromMultipleNodes(data.id, current));
                   })
-                  .catch((err) => console.error("ERROR ON THE SERVER:", err));
+                  .catch((err) => console.error("ERROR WHILE FETCHING:", err));
             });
          },
       }),
@@ -184,7 +181,6 @@
       new ButtonInfo({
          className: removeBtnClassName,
          style: removeBtnStyle,
-
          onClickAction: (data: TreeNodeInfoData) => {
             const { confirmed } = sureToDeleteDialogProxy.showModalAndWaitTillClosed();
             confirmed.then(() => {
@@ -192,7 +188,7 @@
                   .then(() => {
                      promptTreeState.update((current) => removeNodeFromMultipleNodes(data.id, current));
                   })
-                  .catch((err) => console.error("ERROR ON THE SERVER:", err));
+                  .catch((err) => console.error("ERROR WHILE FETCHING:", err));
             });
          },
       }),
