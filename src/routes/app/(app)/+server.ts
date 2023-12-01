@@ -15,28 +15,76 @@ const threadDAO = new TheradDAO(db);
 const promptFoldersDAO = new PromptFoldersDAO(db);
 const threadFoldersDAO = new ThreadFoldersDAO(db);
 
+const PostEntriesSchema = z.object({ name: z.string().min(1) });
+
+//#region POST
+
 export const POST = async ({ request }) =>
   json(await handlePOST(PostRequestSchema.parse(await request.json())));
+
+const handlePOST = async (request: PostRequest): Promise<_Response> => {
+  switch (request.type) {
+    case RequestType.Prompt:
+      return handlePostReq(request.data, handlePostPromptReqOnSuccess);
+    case RequestType.Thread:
+      return handlePostReq(request.data, handlePostThreadReqOnSuccess);
+    case RequestType.ThreadFolder:
+      return handlePostReq(request.data, handlePostThreadFolderReqOnSuccess);
+    case RequestType.PromptFolder:
+      return handlePostReq(request.data, handlePostPromptFolderReqOnSuccess);
+    default:
+      throw new Error("ERROR ON SERVER SIDE");
+  }
+};
+
+const handlePostPromptReqOnSuccess = async (data: NewPrompt) => {
+  const prompt: Prompt = await promptDAO.insert(data);
+  if (data.parentId !== "") {
+    promptFoldersDAO.addItem(data.parentId, prompt._id);
+  }
+  return prompt;
+};
+
+const handlePostThreadReqOnSuccess = async (data: NewThread) => {
+  const thread: Thread = await threadDAO.insert(data);
+  if (data.parentId !== "") {
+    threadFoldersDAO.addItem(data.parentId, thread._id);
+  }
+  return thread;
+};
+
+const handlePostPromptFolderReqOnSuccess = async (data: NewFolder) =>
+  promptFoldersDAO.insert(data);
+const handlePostThreadFolderReqOnSuccess = async (data: NewFolder) =>
+  threadFoldersDAO.insert(data);
+
+const handlePostReq = async <TInData, TOutData>(
+  data: TInData,
+  onSuccessFn: (data: TInData) => TOutData
+): Promise<_Response> => {
+  const entriesCheck = PostEntriesSchema.safeParse(data);
+
+  if (!entriesCheck.success) {
+    return {
+      success: false,
+      issues: entriesCheck.error.errors.map((err) => err.message), // NOTE: Bude musete být key-value, aby bylo možno vyhodnotit, jaká hodnota byla v dialogu chybně zadána
+    };
+  }
+
+  return {
+    success: true,
+    data: await onSuccessFn(data),
+  };
+};
+
+//#endregion
+
+//#region DELETE
 
 export const DELETE = async ({ request }) =>
   json(await handleDELETE(DeleteRequestSchema.parse(await request.json())), {
     status: 201,
   });
-
-const handlePOST = async (request: PostRequest): Promise<_Response> => {
-  switch (request.type) {
-    case RequestType.Prompt:
-      return handlePostPromptReq(request.data);
-    case RequestType.Thread:
-      return handlePostThreadReq(request.data);
-    case RequestType.ThreadFolder:
-      return handlePostThreadFolderReq(request.data);
-    case RequestType.PromptFolder:
-      return handlePostPromptFolderReq(request.data);
-    default:
-      throw new Error("ERROR ON SERVER SIDE");
-  }
-};
 
 const handleDELETE = async (request: DeleteRequest) => {
   const { type, data } = request;
@@ -56,78 +104,6 @@ const handleDELETE = async (request: DeleteRequest) => {
     default:
       throw new Error("Error while handling POST request");
   }
-};
-
-const PostEntriesSchema = z.object({ name: z.string().min(1) });
-
-// IMPURE CODE:
-const handlePostPromptReq = async (data: NewPrompt): Promise<_Response> => {
-  const entriesCheck = PostEntriesSchema.safeParse(data);
-
-  if (!entriesCheck.success) {
-    return {
-      success: false,
-      issues: entriesCheck.error.errors.map((err) => err.message), // NOTE: Bude musete být key-value, aby bylo možno vyhodnotit, jaká hodnota byla v dialogu chybně zadána
-    };
-  }
-
-  const prompt: Prompt = await promptDAO.insert(data);
-  if (data.parentId !== "") {
-    promptFoldersDAO.addItem(data.parentId, prompt._id);
-  }
-
-  return { success: true, data: prompt };
-};
-
-const handlePostThreadReq = async (data: NewThread): Promise<_Response> => {
-  const entriesCheck = PostEntriesSchema.safeParse(data);
-
-  if (!entriesCheck.success) {
-    return {
-      success: false,
-      issues: entriesCheck.error.errors.map((err) => err.message), // NOTE: Bude musete být key-value, aby bylo možno vyhodnotit, jaká hodnota byla v dialogu chybně zadána
-    };
-  }
-
-  const thread: Thread = await threadDAO.insert(data);
-
-  if (data.parentId !== "") {
-    threadFoldersDAO.addItem(data.parentId, thread._id);
-  }
-
-  return { success: true, data: thread };
-};
-
-const handlePostThreadFolderReq = async (data: NewFolder): Promise<_Response> => {
-  const entriesCheck = PostEntriesSchema.safeParse(data);
-
-  if (!entriesCheck.success) {
-    return {
-      success: false,
-      issues: entriesCheck.error.errors.map((err) => err.message), // NOTE: Bude musete být key-value, aby bylo možno vyhodnotit, jaká hodnota byla v dialogu chybně zadána
-    };
-  }
-
-  return {
-    success: true,
-    data: await threadFoldersDAO.insert(data),
-  };
-};
-
-const handlePostPromptFolderReq = async (data: NewFolder): Promise<_Response> => {
-  const entriesCheck = PostEntriesSchema.safeParse(data);
-
-  if (!entriesCheck.success) {
-    return {
-      success: false,
-      issues: entriesCheck.error.errors.map((err) => err.message), // NOTE: Bude musete být key-value, aby bylo možno vyhodnotit, jaká hodnota byla v dialogu chybně zadána
-    };
-  }
-
-  return {
-    success: true,
-    data: await promptFoldersDAO.insert(data),
-  };
 };
 
 const handleDeletePromptReq = (data: DeleteRequestData) => {
@@ -151,3 +127,5 @@ const handleDeleteThreadFolderReq = (data: DeleteRequestData) => {
 const handleDeletePromptFolderReq = (data: DeleteRequestData) => {
   promptFoldersDAO.deleteById(data._id);
 };
+
+//#endregion

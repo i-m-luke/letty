@@ -11,13 +11,9 @@
 
 # TODO | PLAN
 
-    0. Nastylovat: najít font, nastudovat tailwind
-    0. Vytvořit logo a zaintegrovat jej do AppMainTree
-    1. Napijit fetch buttonů stromu na DB
-    3. AppMainTree
-        - Přepracovat strom
-        - Root node bude mít název Threads/Prompts
-        - Root node nepůjde mazat (nebude mít Remove button) ... Skrze dev-tools však půjde bez problemu tlačítko přidat a zavolat  fetchFci ... Jak se todle dá ošetřit?
+    0. Nastylovat: najít font
+    1. Vytvořit logo a zaintegrovat jej do AppMainTree
+    2. AppMainTree >> CreateDialog - Dokončit validaci data: při success == false musí být v dialogu vypsáno, jaké hodnoty byly špatně zadány (např. prázné text pro name)
     4. ZOD data validation: Přepracovat na parseSafe? Nebude pak způsobovat pád aplikace pokud nastane na server
     5. Logování a handling errorů na serveru: server nesmí padnout!
     6. ... Viz kanban board task
