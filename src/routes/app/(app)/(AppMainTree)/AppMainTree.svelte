@@ -72,7 +72,7 @@
                });
                threadTreeState.update((current) => addNodeToMultipleNodes(treeNodeData.id, current, newTreeNode));
             } else {
-               // ... process issues (e.g. display invalid data in dialog)
+               // TODO: process issues (e.g. display invalid data in dialog)
                console.log(res.issues);
             }
          });
@@ -148,7 +148,7 @@
                });
                promptTreeState.update((current) => addNodeToMultipleNodes(treeNodeData.id, current, newTreeNode));
             } else {
-               // ... process issues (e.g. display invalid data in dialog)
+               // TODO: process issues (e.g. display invalid data in dialog)
                console.log(res.issues);
             }
          });
