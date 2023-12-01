@@ -14,76 +14,88 @@
       removeNodeFromMultipleNodes,
       addNodeToMultipleNodes,
       fetchPostPromptFolder,
+      fetchPostThreadFolder,
    } from "./$logic";
-   import { DialogProxy } from "$lib/components/Dialog";
+   import { DialogButtonType, DialogProxy } from "$lib/components/Dialog";
    import CreateDialogData from "./CreateDialogData";
    import CreateDialog from "./CreateDialog.svelte";
-   import type { Folder, SafeResponse, Thread } from "$types";
+   import Dialog from "$lib/components/Dialog/Dialog.svelte";
 
-   let createThreadDialogProxy = new DialogProxy();
-   let createThreadDialogData = new CreateDialogData();
+   const createThreadDialogProxy = new DialogProxy();
+   const createThreadDialogData = new CreateDialogData();
 
-   let createPromptDialogProxy = new DialogProxy();
-   let createPromptDialogData = new CreateDialogData();
+   const createPromptDialogProxy = new DialogProxy();
+   const createPromptDialogData = new CreateDialogData();
+
+   const sureToDeleteDialogProxy = new DialogProxy();
 
    export let threadTreeState: Writable<TreeNodeInfo[]>;
    export let promptTreeState: Writable<TreeNodeInfo[]>;
 
+   threadTreeState.set([
+      new TreeNodeInfo(TreeNodeType.Root, "THREADING", { folderId: "root", id: "" }, { childNodes: [...get(threadTreeState)] }),
+   ]);
+
+   promptTreeState.set([
+      new TreeNodeInfo(TreeNodeType.Root, "PROMPTING", { folderId: "root", id: "" }, { childNodes: get(promptTreeState) }),
+   ]);
+
    //#region thread buttons
 
-   const addBtnStyle = "fa-solid fa-plus";
-   const removeBtnStyle = "fa-solid fa-trash";
+   const addBtnClassName = "fa-solid fa-plus button";
+   const removeBtnClassName = "fa-solid fa-trash"; // trochu změnšit
+   const removeBtnStyle = "font-size: 0.9rem";
 
-   const convertResponse = <TData>(res: SafeResponse<TData>, convertDataToTreeNodeInfoFn: (data: TData) => TreeNodeInfo) =>
-      res.success ? { ...res, data: convertDataToTreeNodeInfoFn(res.data) } : { ...res };
-
-   const threadFolderNodeButtons = [
-      // THREAD FOLDER NODE ADD BUTTON
-      new ButtonInfo({
-         style: addBtnStyle,
-         onClickAction: (treeNodeData: TreeNodeInfoData) => {
-            const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
-            confirmed.then(async () => {
-               const type = get(createThreadDialogData.type);
-               const name = get(createThreadDialogData.name);
-               const res = await (() => {
-                  switch (type) {
-                     case TreeNodeType.Content:
-                        return fetchPostThread({ parentId: treeNodeData._id, name, messages: [] });
-                     case TreeNodeType.Folder:
-                        return fetchPostPromptFolder({ parentId: treeNodeData._id, name });
-                     default:
-                        throw new Error("Invalid TreeNodeType");
-                  }
-               })();
-
-               if (res.success) {
-                  const { _id, parentId, name } = res.data;
-                  const newTreeNode = new TreeNodeInfo(false, type, name, {
-                     _id,
-                     _folderId: parentId,
-                  });
-                  threadTreeState.update((current) => addNodeToMultipleNodes(treeNodeData._id, current, newTreeNode));
-               } else {
-                  // ... process issues (e.g. display invalid data in dialog)
-                  console.log(res.issues);
+   const threadFolderNodeAddButton = new ButtonInfo({
+      className: addBtnClassName,
+      onClickAction: (treeNodeData: TreeNodeInfoData) => {
+         const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
+         confirmed.then(async () => {
+            const type = get(createThreadDialogData.type);
+            const name = get(createThreadDialogData.name);
+            const res = await (() => {
+               switch (type) {
+                  case TreeNodeType.Content:
+                     return fetchPostThread({ parentId: treeNodeData.id, name, messages: [] });
+                  case TreeNodeType.Folder:
+                     return fetchPostThreadFolder({ parentId: treeNodeData.id, name });
+                  default:
+                     throw new Error("Invalid TreeNodeType");
                }
-            });
-            canceled.then(() => console.log("dialog canceled"));
-         },
-      }),
+            })();
 
+            if (res.success) {
+               const { _id, parentId, name } = res.data;
+               const newTreeNode = new TreeNodeInfo(type, name, {
+                  id: _id,
+                  folderId: parentId,
+               });
+               threadTreeState.update((current) => addNodeToMultipleNodes(treeNodeData.id, current, newTreeNode));
+            } else {
+               // ... process issues (e.g. display invalid data in dialog)
+               console.log(res.issues);
+            }
+         });
+         canceled.then(() => console.log("dialog canceled"));
+      },
+   });
+
+   const threadTreeRootNodeButtons = [threadFolderNodeAddButton];
+   const threadFolderNodeButtons = [
+      threadFolderNodeAddButton,
       // THREAD FOLDER NODE REMOVE BUTTON
       new ButtonInfo({
+         className: removeBtnClassName,
          style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
-            // TODO: Mazání folders není hotové!
-            console.log("TODO: REMOVE THREAD FOLDER/CONTENT");
-            fetchDeleteThreadFolder({ _id: data._id, parentId: data._folderId })
-               .then((res) => {
-                  console.log("TODO");
-               })
-               .catch((err) => console.error("ERROR ON THE SERVER:", err));
+            const { confirmed } = sureToDeleteDialogProxy.showModalAndWaitTillClosed();
+            confirmed.then(() => {
+               fetchDeleteThreadFolder({ _id: data.id, parentId: data.folderId })
+                  .then(() => {
+                     threadTreeState.update((current) => removeNodeFromMultipleNodes(data.id, current));
+                  })
+                  .catch((err) => console.error("ERROR ON THE SERVER:", err));
+            });
          },
       }),
    ];
@@ -91,13 +103,17 @@
    const threadContentNodeButtons = [
       // THREAD NODE REMOVE BUTTON
       new ButtonInfo({
+         className: removeBtnClassName,
          style: removeBtnStyle,
          onClickAction: (data: TreeNodeInfoData) => {
-            fetchDeleteThread({ _id: data._id, parentId: data._folderId })
-               .then((res) => {
-                  threadTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
-               })
-               .catch((err) => console.error("ERROR ON THE SERVER:", err));
+            const { confirmed } = sureToDeleteDialogProxy.showModalAndWaitTillClosed();
+            confirmed.then(() => {
+               fetchDeleteThread({ _id: data.id, parentId: data.folderId })
+                  .then(() => {
+                     threadTreeState.update((current) => removeNodeFromMultipleNodes(data.id, current));
+                  })
+                  .catch((err) => console.error("ERROR ON THE SERVER:", err));
+            });
          },
       }),
    ];
@@ -106,52 +122,59 @@
 
    //#region prompt buttons
 
-   const promptFolderNodeButtons = [
-      // PROMPT FOLDER NODE ADD BUTTON
-      new ButtonInfo({
-         style: addBtnStyle,
-         onClickAction: (treeNodeData: TreeNodeInfoData) => {
-            const { confirmed, canceled } = createPromptDialogProxy.showModalAndWaitTillClosed();
-            confirmed.then(async () => {
-               const type = get(createPromptDialogData.type);
-               const name = get(createPromptDialogData.name);
-               const res = await (async () => {
-                  switch (type) {
-                     case TreeNodeType.Content:
-                        return fetchPostPrompt({ parentId: treeNodeData._id, name, text: "" });
-                     case TreeNodeType.Folder:
-                        return fetchPostPromptFolder({ parentId: treeNodeData._id, name });
-                     default:
-                        throw new Error("Invalid TreeNodeType");
-                  }
-               })();
-
-               if (res.success) {
-                  const { _id, parentId, name } = res.data;
-                  const newTreeNode = new TreeNodeInfo(false, type, name, {
-                     _id,
-                     _folderId: parentId,
-                  });
-                  promptTreeState.update((current) => addNodeToMultipleNodes(treeNodeData._id, current, newTreeNode));
-               } else {
-                  // ... process issues (e.g. display invalid data in dialog)
-                  console.log(res.issues);
+   const promptFolderNodeAddButton = new ButtonInfo({
+      className: addBtnClassName,
+      onClickAction: (treeNodeData: TreeNodeInfoData) => {
+         const { confirmed, canceled } = createPromptDialogProxy.showModalAndWaitTillClosed();
+         confirmed.then(async () => {
+            const type = get(createPromptDialogData.type);
+            const name = get(createPromptDialogData.name);
+            const res = await (async () => {
+               switch (type) {
+                  case TreeNodeType.Content:
+                     return fetchPostPrompt({ parentId: treeNodeData.id, name, text: "" });
+                  case TreeNodeType.Folder:
+                     return fetchPostPromptFolder({ parentId: treeNodeData.id, name });
+                  default:
+                     throw new Error("Invalid TreeNodeType");
                }
-            });
-            canceled.then(() => console.log("dialog canceled"));
-         },
-      }),
+            })();
+
+            if (res.success) {
+               const { _id, parentId, name } = res.data;
+               const newTreeNode = new TreeNodeInfo(type, name, {
+                  id: _id,
+                  folderId: parentId,
+               });
+               promptTreeState.update((current) => addNodeToMultipleNodes(treeNodeData.id, current, newTreeNode));
+            } else {
+               // ... process issues (e.g. display invalid data in dialog)
+               console.log(res.issues);
+            }
+         });
+         canceled.then(() => console.log("dialog canceled"));
+      },
+   });
+
+   const promptTreeRootNodeButtons = [promptFolderNodeAddButton];
+   const promptFolderNodeButtons = [
+      promptFolderNodeAddButton,
       // PROMPT FOLDER NODE REMOVE BUTTON
       new ButtonInfo({
+         className: removeBtnClassName,
          style: removeBtnStyle,
+
          onClickAction: (data: TreeNodeInfoData) => {
-            // TODO: Mazání folders není hotové!
-            console.log("TODO: REMOVE PROMPT FOLDER/CONTENT");
-            fetchDeletePromptFolder({ parentId: data._folderId, _id: data._id })
-               .then((res) => {
-                  console.log("TODO");
-               })
-               .catch((err) => console.error("ERROR ON THE SERVER:", err));
+            const { confirmed } = sureToDeleteDialogProxy.showModalAndWaitTillClosed();
+            confirmed.then(() => {
+               // TODO: Mazání folders není hotové!
+               console.log("TODO: REMOVE PROMPT FOLDER/CONTENT");
+               fetchDeletePromptFolder({ parentId: data.folderId, _id: data.id })
+                  .then(() => {
+                     promptTreeState.update((current) => removeNodeFromMultipleNodes(data.id, current));
+                  })
+                  .catch((err) => console.error("ERROR ON THE SERVER:", err));
+            });
          },
       }),
    ];
@@ -159,13 +182,18 @@
    const promptContentNodeButtons = [
       // PROMPT NODE REMOVE BUTTON
       new ButtonInfo({
+         className: removeBtnClassName,
          style: removeBtnStyle,
+
          onClickAction: (data: TreeNodeInfoData) => {
-            fetchDeletePrompt({ parentId: data._folderId, _id: data._id })
-               .then((res) => {
-                  promptTreeState.update((current) => removeNodeFromMultipleNodes(data._id, current));
-               })
-               .catch((err) => console.error("ERROR ON THE SERVER:", err));
+            const { confirmed } = sureToDeleteDialogProxy.showModalAndWaitTillClosed();
+            confirmed.then(() => {
+               fetchDeletePrompt({ parentId: data.folderId, _id: data.id })
+                  .then(() => {
+                     promptTreeState.update((current) => removeNodeFromMultipleNodes(data.id, current));
+                  })
+                  .catch((err) => console.error("ERROR ON THE SERVER:", err));
+            });
          },
       }),
    ];
@@ -176,22 +204,22 @@
 <div class="w-full grid place-items-center">
    <div>
       {#if $threadTreeState.length > 0}
-         <span class="underline">THREADING:</span>
          <Tree
-            nodeOnClickAction={(nodeData) => goto(`${routes.static.thread}${nodeData._id}`)}
+            nodeOnClickAction={(nodeData) => goto(`${routes.static.thread}${nodeData.id}`)}
             nodeInfoCollection={threadTreeState}
             contentNodeButtons={threadContentNodeButtons}
             folderNodeButtons={threadFolderNodeButtons}
+            rootNodeButtons={threadTreeRootNodeButtons}
          />
       {/if}
 
       {#if $promptTreeState.length > 0}
-         <span class="underline">PROMPTING:</span>
          <Tree
-            nodeOnClickAction={(nodeData) => goto(`${routes.static.prompt}${nodeData._id}`)}
+            nodeOnClickAction={(nodeData) => goto(`${routes.static.prompt}${nodeData.id}`)}
             nodeInfoCollection={promptTreeState}
             contentNodeButtons={promptContentNodeButtons}
             folderNodeButtons={promptFolderNodeButtons}
+            rootNodeButtons={promptTreeRootNodeButtons}
          />
       {/if}
    </div>
@@ -199,3 +227,10 @@
 
 <CreateDialog dialogProxy={createThreadDialogProxy} data={createThreadDialogData} />
 <CreateDialog dialogProxy={createPromptDialogProxy} data={createPromptDialogData} />
+<Dialog
+   proxy={sureToDeleteDialogProxy}
+   buttons={[
+      { type: DialogButtonType.Confirm, text: "Yes" },
+      { type: DialogButtonType.Cancel, text: "No" },
+   ]}>Are you sure to delete?</Dialog
+>

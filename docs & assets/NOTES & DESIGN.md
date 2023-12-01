@@ -19,7 +19,8 @@
         - Root node bude mít název Threads/Prompts
         - Root node nepůjde mazat (nebude mít Remove button) ... Skrze dev-tools však půjde bez problemu tlačítko přidat a zavolat  fetchFci ... Jak se todle dá ošetřit?
     4. ZOD data validation: Přepracovat na parseSafe? Nebude pak způsobovat pád aplikace pokud nastane na server
-    5. ... Viz kanban board task
+    5. Logování a handling errorů na serveru: server nesmí padnout!
+    6. ... Viz kanban board task
 
 # TERMINOLOGIE
 

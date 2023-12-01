@@ -7,7 +7,7 @@ export class DialogProxy extends EventTarget {
     super();
   }
 
-  _onCanceled: (e?: Event) => void = (e?: Event) => {};
+  private _onCanceled: (e?: Event) => void = (e?: Event) => {};
   set onCanceled(value: (e?: Event) => void) {
     this.removeEventListener(DialogButtonType.Cancel.toString(), this._onCanceled);
     this._onCanceled = value;
@@ -16,7 +16,7 @@ export class DialogProxy extends EventTarget {
     });
   }
 
-  _onConfirmed: (e?: Event) => void = (e?: Event) => {};
+  private _onConfirmed: (e?: Event) => void = (e?: Event) => {};
   set onConfirmed(value: (e?: Event) => void) {
     this.removeEventListener(DialogButtonType.Confirm.toString(), this._onConfirmed);
     this._onConfirmed = value;

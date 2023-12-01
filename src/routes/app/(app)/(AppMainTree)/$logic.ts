@@ -74,10 +74,10 @@ export const fetchDeletePrompt = (data: DeleteRequestData) =>
   fetchDELETE(RequestType.Prompt, data);
 
 export const fetchDeletePromptFolder = (data: DeleteRequestData) =>
-  fetchDELETE(RequestType.ThreadFolder, data);
+  fetchDELETE(RequestType.PromptFolder, data);
 
 export const fetchDeleteThreadFolder = (data: DeleteRequestData) =>
-  fetchDELETE(RequestType.PromptFolder, data);
+  fetchDELETE(RequestType.ThreadFolder, data);
 
 //#endregion
 
@@ -97,7 +97,7 @@ export const addNodeToMultipleNodes = (
     return {
       ...node,
       childNodes:
-        node.data._id === targetNodeId
+        node.data.id === targetNodeId
           ? [...newChildNodes, nodeToAdd]
           : newChildNodes,
     };
@@ -108,7 +108,7 @@ export const removeNodeFromMultipleNodes = (
   nodes: TreeNodeInfo[]
 ): TreeNodeInfo[] => {
   return nodes
-    .filter((node) => node.data._id !== targetNodeId)
+    .filter((node) => node.data.id !== targetNodeId)
     .map((node) => {
       return {
         ...node,
@@ -135,7 +135,7 @@ export const addNodeToSingleNode = (
     nodes: TreeNodeInfo[]
   ): TreeNodeInfo | undefined => {
     for (const node of nodes) {
-      if (node.data._id === id) return node;
+      if (node.data.id === id) return node;
       const foundNode = findNodeById(id, node.childNodes);
       if (foundNode) return foundNode;
     }
@@ -159,7 +159,7 @@ export const removeNodeFromSingleNode = (
 
   if (!successfull) {
     const targetNodeIndex = currentNode.childNodes.findIndex(
-      (childNode) => childNode.data._id === targetNode.data._id
+      (childNode) => childNode.data.id === targetNode.data.id
     );
     if (targetNodeIndex > -1) {
       const childNodes = newChildNodes.splice(targetNodeIndex, 1);

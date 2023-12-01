@@ -1,6 +1,6 @@
 import type LayoutLoadData from "./LayoutLoadData";
-import type { ContentData, Folder, WithId, WithParentId } from "$types";
-import { TreeNode, TreeNodeInfo, TreeNodeType } from "$lib/components/Tree/index";
+import type { DBNode, Folder, WithId, WithParentId } from "$types";
+import { TreeNodeInfo, TreeNodeType } from "$lib/components/Tree/index";
 import { writable } from "svelte/store";
 
 type Content = {
@@ -12,21 +12,38 @@ type Content = {
 export function load({ data }): LayoutLoadData {
   const { threadData, promptData, threadFolders, promptFolders } = data;
 
+  const filterRootContentNodes = (contentData: ({ name: string } & DBNode)[]) =>
+    contentData
+      .filter((data) => data.parentId === "")
+      .map(
+        (data) =>
+          new TreeNodeInfo(TreeNodeType.Content, data.name, {
+            id: data._id,
+            folderId: "",
+          })
+      );
+
   const { filtered: rootThreadFolderNodes, rest: restThreadFolderNodes } = filter(
     threadFolders,
     (node) => node.parentId === ""
   );
-  const threadTreeNodeInfo = rootThreadFolderNodes.map((folderNode) =>
-    transformDBNodeToTreeNode(folderNode, threadData, restThreadFolderNodes)
-  );
+  const threadTreeNodeInfo = [
+    ...rootThreadFolderNodes.map((folderNode) =>
+      transformDBNodeToTreeNode(folderNode, threadData, restThreadFolderNodes)
+    ),
+    ...filterRootContentNodes(threadData),
+  ];
 
   const { filtered: rootPromptFolderNodes, rest: restPromptFolderNodes } = filter(
     promptFolders,
     (node) => node.parentId === ""
   );
-  const promptTreeNodeInfo = rootPromptFolderNodes.map((folderNode) =>
-    transformDBNodeToTreeNode(folderNode, promptData, restPromptFolderNodes)
-  );
+  const promptTreeNodeInfo = [
+    ...rootPromptFolderNodes.map((folderNode) =>
+      transformDBNodeToTreeNode(folderNode, promptData, restPromptFolderNodes)
+    ),
+    ...filterRootContentNodes(promptData),
+  ];
 
   return {
     threadTreeState: writable(threadTreeNodeInfo),
@@ -58,9 +75,9 @@ const transformDBNodeToTreeNode = (
     (node) => node.parentId === currentFolderNode._id
   );
   const contentChildNodes = filteredContentNodes.map(({ _id, parentId, name }) => {
-    return new TreeNodeInfo(false, TreeNodeType.Content, name, {
-      _id,
-      _folderId: parentId,
+    return new TreeNodeInfo(TreeNodeType.Content, name, {
+      id: _id,
+      folderId: parentId,
     });
   });
 
@@ -73,68 +90,12 @@ const transformDBNodeToTreeNode = (
   );
 
   return new TreeNodeInfo(
-    false,
     TreeNodeType.Folder,
     currentFolderNode.name,
     {
-      _id: currentFolderNode._id,
-      _folderId: currentFolderNode.parentId,
+      id: currentFolderNode._id,
+      folderId: currentFolderNode.parentId,
     },
     { childNodes: [...folderChildNodes, ...contentChildNodes] }
   );
 };
-
-// const transformFolderDBNodeToTreeState = (
-//   folderDbNodes: Folder[],
-//   contentDbNodes: ContentData[]
-// ): TreeNodeInfo[] => {
-//   const rootFolderDBNodes = folderDbNodes.filter((dbNode) => dbNode.parentId === "");
-//   return rootFolderDBNodes.map((rootFolderDBNode) =>
-//     transformFolderDBNodeToTreeNodeInfo(
-//       rootFolderDBNode,
-//       folderDbNodes,
-//       contentDbNodes,
-//       true
-//     )
-//   );
-// };
-
-// const transformFolderDBNodeToTreeNodeInfo = (
-//   currentFolderDbNode: Folder,
-//   folderDbNodes: Folder[],
-//   contentDbNodes: ContentData[],
-//   isRootNode: boolean
-// ): TreeNodeInfo => {
-//   const subfolderNodes = folderDbNodes
-//     .filter((folderDbNode) => folderDbNode.parentId === currentFolderDbNode._id)
-//     .map((dbNodeSubnode) =>
-//       transformFolderDBNodeToTreeNodeInfo(
-//         dbNodeSubnode,
-//         folderDbNodes,
-//         contentDbNodes,
-//         false
-//       )
-//     );
-
-//   const contentNodes = contentDbNodes
-//     .filter((folderItem) =>
-//       currentFolderDbNode.data.itemsIds.includes(folderItem._id)
-//     )
-//     .map(
-//       ({ name, _id }) =>
-//         new TreeNodeInfo(false, TreeNodeType.Content, name, {
-//           _id,
-//           _folderId: currentFolderDbNode._id,
-//         })
-//     );
-
-//   return new TreeNodeInfo(
-//     isRootNode,
-//     TreeNodeType.Folder,
-//     currentFolderDbNode.data.name,
-//     { _id: currentFolderDbNode._id, _folderId: currentFolderDbNode.parentId ?? "" },
-//     {
-//       childNodes: [...subfolderNodes, ...contentNodes],
-//     }
-//   );
-// };

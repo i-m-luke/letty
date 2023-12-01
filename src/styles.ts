@@ -17,19 +17,11 @@ const classes: Readonly<Classes> = {
 Object.freeze(classes);
 
 class GlobalStyles {
-  private _color;
-  private _class;
+  readonly color;
+  readonly class;
   constructor() {
-    this._color = colors;
-    this._class = classes;
-  }
-
-  get color() {
-    return this._color;
-  }
-
-  get class() {
-    return this._class;
+    this.color = colors;
+    this.class = classes;
   }
 
   build(...args: string[]) {

@@ -9,32 +9,29 @@ export type TreeNodeInfoOpts = {
 };
 
 export type TreeNodeInfoData = {
-  _id: string;
-  _folderId: string;
+  id: string;
+  folderId: string;
 };
 
 export enum TreeNodeType {
   Folder = "folder",
   Content = "content",
+  Root = "root",
   Unknown = "unkown",
 }
 
 export class TreeNodeInfo {
-  isRoot: boolean;
   type: TreeNodeType;
   text: string;
   data: TreeNodeInfoData;
-
   childNodes: TreeNodeInfo[] = [];
 
   constructor(
-    isRoot: boolean,
     type: TreeNodeType,
     text: string,
     data: TreeNodeInfoData,
     opts?: TreeNodeInfoOpts
   ) {
-    this.isRoot = isRoot;
     this.type = type;
     this.text = text;
     this.data = data;

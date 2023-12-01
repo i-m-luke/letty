@@ -1,4 +1,4 @@
-import type { Thread, DBNode, Prompt, Folder } from "$types";
+import type { Thread, Prompt, Folder } from "$types";
 
 type LayoutServerLoadData = {
   threadData: Thread[];

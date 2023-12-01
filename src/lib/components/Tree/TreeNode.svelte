@@ -6,39 +6,55 @@
 
    export let nodeInfo: TreeNodeInfo;
    export let nodeOnClickAction: ((nodeData: TreeNodeInfoData) => void) | (() => void) = () => {};
-   export let contentNodeAdditionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
-   export let folderNodeAdditionalButtons: ButtonInfo<TreeNodeInfoData>[] = [];
+   export let contentNodeButtons: ButtonInfo<TreeNodeInfoData>[] = [];
+   export let folderNodeButtons: ButtonInfo<TreeNodeInfoData>[] = [];
+   export let rootNodeButtons: ButtonInfo<TreeNodeInfoData>[] = [];
 
-   let isFolder: boolean = nodeInfo.type === TreeNodeType.Folder;
+   let { type } = nodeInfo;
    let isOpen: boolean = false;
    $: data = nodeInfo.data;
-   $: nodeStateInText = !isFolder ? "" : isOpen ? "(opened)" : "(closed)";
+   $: folderClassName = isOpen ? "fa-solid fa-folder-open" : "fa-solid fa-folder";
 
-   const additionalButtons: ButtonInfo<TreeNodeInfoData>[] = isFolder
-      ? folderNodeAdditionalButtons
-      : contentNodeAdditionalButtons;
+   const buttons: ButtonInfo<TreeNodeInfoData>[] = (() => {
+      switch (type) {
+         case TreeNodeType.Folder:
+            return folderNodeButtons;
+         case TreeNodeType.Content:
+            return contentNodeButtons;
+         case TreeNodeType.Root:
+            return rootNodeButtons;
+         default:
+            throw new Error("Invalid TreeNodeType");
+      }
+   })();
 
    const toggleIsOpen: () => void = () => (isOpen = !isOpen);
-   const nodeOnClickEvent = isFolder
-      ? toggleIsOpen
-      : (): void => {
-           nodeOnClickAction(data);
-        };
+   const nodeOnClickEvent =
+      type === TreeNodeType.Content
+         ? (): void => {
+              nodeOnClickAction(data);
+           }
+         : toggleIsOpen;
 </script>
 
 <div class="node-container">
    <div class="flex flex-row justify-start space-x-2">
-      {#if !nodeInfo.isRoot}
+      {#if type !== TreeNodeType.Root}
          <div class="connection-container">
             <div class="connection" />
          </div>
       {/if}
 
-      <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}> {`${nodeInfo.text} ${nodeStateInText}`}</span>
+      {#if type === TreeNodeType.Folder || type === TreeNodeType.Root}
+         <span class={folderClassName} />
+      {/if}
 
-      {#each additionalButtons as { text, style, onClickAction, formActionName }}
+      <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent} class="underline">{nodeInfo.text}</span>
+
+      {#each buttons as { text, className, style, onClickAction, formActionName }}
          <button
-            class={styles.build(style ? style : "", "text-transparent bg-clip-text bg-cyan-800")}
+            class={styles.build(className ?? "", "text-transparent bg-clip-text bg-cyan-800")}
+            style={style ?? ""}
             type="button"
             formaction={formActionName}
             on:click={() => onClickAction(data)}
@@ -52,7 +68,7 @@
       <div class="child-nodes" in:fade={{ duration: 1000 }}>
          {#each nodeInfo.childNodes as childNode}
             <!-- TODO - Animace: Položky stromu se budou postupně zobrazovat  -->
-            <svelte:self {nodeOnClickAction} nodeInfo={childNode} {contentNodeAdditionalButtons} {folderNodeAdditionalButtons} />
+            <svelte:self {nodeOnClickAction} nodeInfo={childNode} {contentNodeButtons} {folderNodeButtons} {rootNodeButtons} />
          {/each}
       </div>
    {/if}
@@ -60,12 +76,20 @@
 
 <style>
    span {
-      transition: 0.5s linear;
+      transition: 0.3s ease-in-out;
    }
 
    span:hover {
-      color: yellow;
+      color: rgb(119, 125, 168);
       cursor: pointer;
+   }
+
+   button {
+      transition: 0.3s ease-in-out;
+   }
+
+   button:hover {
+      color: rgb(119, 125, 168);
    }
 
    .node-container,
