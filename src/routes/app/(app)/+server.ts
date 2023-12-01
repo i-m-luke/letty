@@ -9,15 +9,25 @@ import PromptDAO from "$lib/DAO/PromptDAO";
 import TheradDAO from "$lib/DAO/ThreadDAO";
 import ThreadFoldersDAO from "$lib/DAO/ThreadFoldersDAO";
 import PromptFoldersDAO from "$lib/DAO/PromptFoldersDAO";
+import { CreateDialogEntriesIssue } from "./(AppMainTree)/CreateDialogEntriesIssue";
 
 const promptDAO = new PromptDAO(db);
 const threadDAO = new TheradDAO(db);
 const promptFoldersDAO = new PromptFoldersDAO(db);
 const threadFoldersDAO = new ThreadFoldersDAO(db);
 
-const PostEntriesSchema = z.object({ name: z.string().min(1) });
-
 //#region POST
+
+const PostEntriesSchema = z.object({
+  name: z
+    .string({
+      errorMap: () => ({
+        path: CreateDialogEntriesIssue.Name,
+        message: "Name can't be empty",
+      }),
+    })
+    .min(1),
+});
 
 export const POST = async ({ request }) =>
   json(await handlePOST(PostRequestSchema.parse(await request.json())));
@@ -38,25 +48,20 @@ const handlePOST = async (request: PostRequest): Promise<_Response> => {
 };
 
 const handlePostPromptReqOnSuccess = async (data: NewPrompt) => {
-  const prompt: Prompt = await promptDAO.insert(data);
-  if (data.parentId !== "") {
-    promptFoldersDAO.addItem(data.parentId, prompt._id);
-  }
-  return prompt;
+  return await promptDAO.insert(data);
 };
 
 const handlePostThreadReqOnSuccess = async (data: NewThread) => {
-  const thread: Thread = await threadDAO.insert(data);
-  if (data.parentId !== "") {
-    threadFoldersDAO.addItem(data.parentId, thread._id);
-  }
-  return thread;
+  return await threadDAO.insert(data);
 };
 
-const handlePostPromptFolderReqOnSuccess = async (data: NewFolder) =>
-  promptFoldersDAO.insert(data);
-const handlePostThreadFolderReqOnSuccess = async (data: NewFolder) =>
-  threadFoldersDAO.insert(data);
+const handlePostPromptFolderReqOnSuccess = async (data: NewFolder) => {
+  return await promptFoldersDAO.insert(data);
+};
+
+const handlePostThreadFolderReqOnSuccess = async (data: NewFolder) => {
+  return await threadFoldersDAO.insert(data);
+};
 
 const handlePostReq = async <TInData, TOutData>(
   data: TInData,
@@ -67,7 +72,10 @@ const handlePostReq = async <TInData, TOutData>(
   if (!entriesCheck.success) {
     return {
       success: false,
-      issues: entriesCheck.error.errors.map((err) => err.message), // NOTE: Bude musete být key-value, aby bylo možno vyhodnotit, jaká hodnota byla v dialogu chybně zadána
+      issues: entriesCheck.error.errors.map(({ path, message }) => ({
+        type: path[0],
+        message,
+      })), // NOTE: Bude musete být key-value, aby bylo možno vyhodnotit, jaká hodnota byla v dialogu chybně zadána
     };
   }
 
@@ -108,16 +116,10 @@ const handleDELETE = async (request: DeleteRequest) => {
 
 const handleDeletePromptReq = (data: DeleteRequestData) => {
   promptDAO.deleteById(data._id);
-  if (data.parentId !== "") {
-    promptFoldersDAO.removeItem(data.parentId, data._id);
-  }
 };
 
 const handleDeleteThreadReq = (data: DeleteRequestData) => {
   threadDAO.deleteById(data._id);
-  if (data.parentId !== "") {
-    threadFoldersDAO.removeItem(data.parentId, data._id);
-  }
 };
 
 const handleDeleteThreadFolderReq = (data: DeleteRequestData) => {

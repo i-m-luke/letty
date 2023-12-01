@@ -31,7 +31,7 @@ export const NewFolderSchema = FolderSchema.omit({ _id: true });
 export const PromptSchema = BaseDBNodeSchema(
   z.object({
     name: z.string(),
-    text: z.string(),
+    text: z.string().optional(),
   })
 );
 
@@ -45,7 +45,7 @@ export const ThreadMessageSchema = z.object({
 export const ThreadSchema = BaseDBNodeSchema(
   z.object({
     name: z.string(),
-    messages: z.array(ThreadMessageSchema),
+    messages: z.array(ThreadMessageSchema).optional(),
   })
 );
 
@@ -60,7 +60,12 @@ const SuccessfullResponseSchema = z.object({
 
 const UnsuccessfullResponseSchema = z.object({
   success: z.literal(false),
-  issues: z.array(z.string()), // musí být key-value, aby bylo možné u dialogu říct, čeho se dané issue týká
+  issues: z.array(
+    z.object({
+      type: z.string().or(z.number()),
+      message: z.string(),
+    })
+  ), // musí být key-value, aby bylo možné u dialogu říct, čeho se dané issue týká
 });
 
 export const ResponseSchema = z.discriminatedUnion("success", [

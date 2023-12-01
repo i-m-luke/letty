@@ -13,6 +13,7 @@ export async function POST({ request }) {
     _id: uuid(),
     name: data.promptName,
     text: data.text,
+    parentId: data.parentId
   };
 
   // promptDataDOA.insertOne(promptInfo);

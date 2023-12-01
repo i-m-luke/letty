@@ -20,6 +20,7 @@
    import CreateDialogData from "./CreateDialogData";
    import CreateDialog from "./CreateDialog.svelte";
    import Dialog from "$lib/components/Dialog/Dialog.svelte";
+   import { CreateDialogEntriesIssue } from "./CreateDialogEntriesIssue";
 
    const createThreadDialogProxy = new DialogProxy();
    const createThreadDialogData = new CreateDialogData();
@@ -49,14 +50,14 @@
    const threadFolderNodeAddButton = new ButtonInfo({
       className: addBtnClassName,
       onClickAction: (treeNodeData: TreeNodeInfoData) => {
-         const { confirmed, canceled } = createThreadDialogProxy.showModalAndWaitTillClosed();
+         const { confirmed } = createThreadDialogProxy.showModalAndWaitTillClosed();
          confirmed.then(async () => {
             const type = get(createThreadDialogData.type);
             const name = get(createThreadDialogData.name);
             const res = await (() => {
                switch (type) {
                   case TreeNodeType.Content:
-                     return fetchPostThread({ parentId: treeNodeData.id, name, messages: [] });
+                     return fetchPostThread({ parentId: treeNodeData.id, name });
                   case TreeNodeType.Folder:
                      return fetchPostThreadFolder({ parentId: treeNodeData.id, name });
                   default:
@@ -73,10 +74,12 @@
                threadTreeState.update((current) => addNodeToMultipleNodes(treeNodeData.id, current, newTreeNode));
             } else {
                // TODO: process issues (e.g. display invalid data in dialog)
-               console.log(res.issues);
+               // But dialog can't close ... :-/
+               console.log(
+                  "EMPTY NAME ISSUE:" + res.issues.find((issue) => issue.type === CreateDialogEntriesIssue.Name)?.message
+               );
             }
          });
-         canceled.then(() => console.log("dialog canceled"));
       },
    });
 
@@ -125,14 +128,14 @@
    const promptFolderNodeAddButton = new ButtonInfo({
       className: addBtnClassName,
       onClickAction: (treeNodeData: TreeNodeInfoData) => {
-         const { confirmed, canceled } = createPromptDialogProxy.showModalAndWaitTillClosed();
+         const { confirmed } = createPromptDialogProxy.showModalAndWaitTillClosed();
          confirmed.then(async () => {
             const type = get(createPromptDialogData.type);
             const name = get(createPromptDialogData.name);
             const res = await (async () => {
                switch (type) {
                   case TreeNodeType.Content:
-                     return fetchPostPrompt({ parentId: treeNodeData.id, name, text: "" });
+                     return fetchPostPrompt({ parentId: treeNodeData.id, name });
                   case TreeNodeType.Folder:
                      return fetchPostPromptFolder({ parentId: treeNodeData.id, name });
                   default:
@@ -149,10 +152,12 @@
                promptTreeState.update((current) => addNodeToMultipleNodes(treeNodeData.id, current, newTreeNode));
             } else {
                // TODO: process issues (e.g. display invalid data in dialog)
-               console.log(res.issues);
+               // But dialog can't close ... :-/
+               console.log(
+                  "EMPTY NAME ISSUE:" + res.issues.find((issue) => issue.type === CreateDialogEntriesIssue.Name)?.message
+               );
             }
          });
-         canceled.then(() => console.log("dialog canceled"));
       },
    });
 
@@ -229,5 +234,6 @@
       { type: DialogButtonType.Confirm, text: "Yes" },
       { type: DialogButtonType.Cancel, text: "No" },
    ]}
-   >Are you sure to delete?
+>
+   Are you sure to delete?
 </Dialog>
