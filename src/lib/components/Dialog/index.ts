@@ -2,10 +2,23 @@
 // Kvůli testům musela být soubor komponenty (Dialog.svelte) vyjmutou z index.ts (DialogProxy nešlo importovat)
 // Pokud se někdy podaří zprovoznit import svelte komponent, tak zvážit navrácená komponenty do index file
 
+export type DialogElement = {
+  showModal: () => void;
+  close: () => void;
+} & EventTarget;
+
 export class DialogProxy extends EventTarget {
-  private dialog: HTMLDialogElement | undefined;
   constructor() {
     super();
+  }
+
+  private _dialog: DialogElement | undefined;
+  get dialog() {
+    if (!this._dialog) throw new Error("Proxy wasn't initialized yet");
+    return this._dialog;
+  }
+  set dialog(value: DialogElement) {
+    this._dialog = value;
   }
 
   private _onCanceled: (e?: Event) => void = (e?: Event) => {};
@@ -43,7 +56,7 @@ export class DialogProxy extends EventTarget {
     this.dialog?.close();
   }
 
-  init(element: HTMLDialogElement): void {
+  init(element: DialogElement): void {
     this.dialog = element;
   }
 }

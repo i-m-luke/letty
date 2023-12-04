@@ -75,7 +75,7 @@ const handlePostReq = async <TInData, TOutData>(
       issues: entriesCheck.error.errors.map(({ path, message }) => ({
         type: path[0],
         message,
-      })), // NOTE: Bude musete být key-value, aby bylo možno vyhodnotit, jaká hodnota byla v dialogu chybně zadána
+      })),
     };
   }
 
