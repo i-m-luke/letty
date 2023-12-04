@@ -19,7 +19,7 @@
    import { DialogButtonType, DialogProxy } from "$lib/components/Dialog";
    import CreateDialogData from "./CreateDialogData";
    import CreateDialog from "./CreateDialog.svelte";
-   import Dialog from "$lib/components/Dialog/Dialog.svelte";
+   import Dialog from "$lib/components/Dialog.svelte";
    import { CreateDialogEntriesIssue } from "./CreateDialogEntriesIssue";
 
    const createThreadDialogProxy = new DialogProxy();

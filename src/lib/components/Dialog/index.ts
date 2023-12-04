@@ -1,5 +1,6 @@
-import _Dialog from "./Dialog.svelte";
-export const Dialog = _Dialog;
+// NOTE:
+// Kvůli testům musela být soubor komponenty (Dialog.svelte) vyjmutou z index.ts (DialogProxy nešlo importovat)
+// Pokud se někdy podaří zprovoznit import svelte komponent, tak zvážit navrácená komponenty do index file
 
 export class DialogProxy extends EventTarget {
   private dialog: HTMLDialogElement | undefined;

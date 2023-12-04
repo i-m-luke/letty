@@ -1,7 +1,7 @@
 <script lang="ts">
    import { onMount } from "svelte";
-   import type { DialogButtonType, DialogProxy } from "./";
-   import Button from "../Button.svelte";
+   import type { DialogButtonType, DialogProxy } from "./Dialog";
+   import Button from "./Button.svelte";
    import styles from "$styles";
 
    export let proxy: DialogProxy;
