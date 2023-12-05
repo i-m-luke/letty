@@ -1,19 +1,28 @@
 <script lang="ts">
    import { onMount } from "svelte";
-   import type { DialogButtonType, DialogProxy } from "./Dialog";
+   import { DialogButtonType, DialogEventType, type DialogProxy } from "./Dialog";
    import Button from "./Button.svelte";
    import styles from "$styles";
 
    export let proxy: DialogProxy;
    let dialog: HTMLDialogElement;
 
-   // rnm --> setDefaultValues ??
    /**
     * Empty data for the next dialog show session
     */
-   export let dataReset = () => {};
+   export let setDefaultValues = () => {};
    export let buttons: { type: DialogButtonType; text: string }[];
    export let title: string = "";
+
+   const btnEventTypeByBtnType = new Map<DialogButtonType, DialogEventType>([
+      [DialogButtonType.Cancel, DialogEventType.Cancle],
+      [DialogButtonType.Confirm, DialogEventType.Confirm],
+   ]);
+   const getEventType = (btnType: DialogButtonType) => {
+      const eventType = btnEventTypeByBtnType.get(btnType);
+      if (eventType) return eventType;
+      throw new Error("Invalid button type was passed");
+   };
 
    const dialogStyle = styles.build(
       styles.class.mainPanel,
@@ -22,7 +31,7 @@
 
    onMount(() => {
       proxy.init(dialog);
-      dialog.addEventListener("show", dataReset);
+      dialog.addEventListener("show", setDefaultValues);
    });
 </script>
 
@@ -36,7 +45,7 @@
             <Button
                on:click={() => {
                   dialog.close();
-                  proxy.dispatchEvent(new Event(type));
+                  proxy.dispatchEvent(new Event(getEventType(type)));
                }}
                {text}
             />

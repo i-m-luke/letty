@@ -26,7 +26,7 @@
       { type: DialogButtonType.Confirm, text: "ADD" },
       { type: DialogButtonType.Cancel, text: "CLOSE" },
    ]}
-   {dataReset}
+   setDefaultValues={dataReset}
 >
    <div class="flex flex-col space-y-2">
       <GroupBox name="... What type?" borderIsVisible={true}>
