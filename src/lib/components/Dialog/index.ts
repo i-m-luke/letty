@@ -14,7 +14,7 @@ export class DialogProxy extends EventTarget {
 
   private _dialog: DialogElement | undefined;
   get dialog() {
-    if (!this._dialog) throw new Error("Proxy wasn't initialized yet");
+    if (!this._dialog) throw new DialogProxyError("Proxy wasn't initialized yet");
     return this._dialog;
   }
   set dialog(value: DialogElement) {
@@ -61,7 +61,49 @@ export class DialogProxy extends EventTarget {
   }
 }
 
+// // Dialog.svelte >>
+
+// dialogProxy.dispatchEvent(new Event("onClose"))
+
+// // DialogProxy.ts >>
+
+// showDialogAndWait...({beforeClose?: () =>boolean | undefined, beforeConfirm?: () => boolean | undefined)} {
+
+// // todo: eventy se musí mazat stejně jako u set onClosed ...
+// this.addEventListener("onClose", () => {
+//     // co je navraceno, když fce bude vracet void?
+//     if (!beforeClose || beforeClose()) {
+//       this.dispatchEvent(new Event("closed"))
+//       dialog.close();
+//     }
+//   })
+
+//   // todo: to samé pro onConfirm
+//   // todo: Dialog.svelte bude dispatchovat onClose, namísto closed event
+
+//   return {
+//     confirmed: ...,
+//     closed: ...,
+//   }
+// }
+
+// const onConfirm = () => {
+//   const res = await fetch()
+//   if (!res.succes) {
+//     // todo: jak předat issues?
+//     return false
+//   }
+
+//   // ...addNode
+
+//   return true
+// }
+
+// showDialogAndWait...({onConfirm})
+
 export enum DialogButtonType {
   Confirm = "confirm", // = event name
   Cancel = "close",
 }
+
+export class DialogProxyError extends Error {}

@@ -1,4 +1,8 @@
-import { DialogProxy, type DialogElement } from "../lib/components/Dialog";
+import {
+  DialogProxy,
+  DialogProxyError,
+  type DialogElement,
+} from "../lib/components/Dialog";
 
 class FakeDialogElement extends EventTarget {
   showModal() {}
@@ -12,11 +16,13 @@ describe("DialogProxy", () => {
     unit = new DialogProxy();
     fakeDialogElement = new FakeDialogElement();
   });
-  test("Not initialized", () => {
-    expect(() => unit.dialog).toThrow();
+  test("not initialized", () => {
+    expect(() => unit.dialog).toThrow(DialogProxyError); 
   });
-  test("Initialized", () => {
+  test("initialized", () => {
     unit.init(fakeDialogElement);
-    expect(() => unit.dialog).not.toThrow();
+    expect(() => unit.dialog).not.toThrow(DialogProxyError);
   });
 });
+
+class SomeError extends Error {}
