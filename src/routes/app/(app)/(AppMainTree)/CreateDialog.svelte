@@ -11,7 +11,7 @@
 
    const { name, type } = data;
 
-   const dataReset = () => {
+   const setDefaultValues = () => {
       name.set("");
       type.set(TreeNodeType.Content);
    };
@@ -26,7 +26,7 @@
       { type: DialogButtonType.Confirm, text: "ADD" },
       { type: DialogButtonType.Cancel, text: "CLOSE" },
    ]}
-   setDefaultValues={dataReset}
+   {setDefaultValues}
 >
    <div class="flex flex-col space-y-2">
       <GroupBox name="... What type?" borderIsVisible={true}>
@@ -43,6 +43,9 @@
       </GroupBox>
       <GroupBox name="... What name?" borderIsVisible={true}>
          <TextInput bind:value={$name} />
+         <!-- TODO: -->
+         <!-- <span>{data.nameIssue}</span> -->
+         <!-- invalid name entered -->
       </GroupBox>
    </div>
 </Dialog>

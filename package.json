@@ -20,6 +20,7 @@
     "@sveltejs/kit": "^1.5.0",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/svelte": "^4.0.5",
+    "@testing-library/user-event": "^14.5.1",
     "@types/jest": "^29.5.10",
     "@types/uuid": "^9.0.1",
     "autoprefixer": "^10.4.16",
@@ -49,9 +50,15 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.[j|t]sx?$": "babel-jest",
-      "^.+\\.svelte$": "svelte-jester"
-    }
+      "^.+\\.[j|t]sx?$": "ts-jest",
+      "^.+\\.svelte$": [
+        "svelte-jester",
+        {
+          "preprocess": true
+        }
+      ]
+    },
+    "extensionsToTreatAsEsm": [".svelte"]
   },
   "prettier": {
     "printWidth": 85,

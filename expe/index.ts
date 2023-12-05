@@ -11,97 +11,15 @@ import {
 
 // MAIN:
 while (true) {
-  // test
+  let fn: () => void | undefined | number;
+  fn = () => 10;
+  console.log("num", fn());
+  fn = () => {};
+  console.log("void", fn());
+  fn = () => undefined;
+  console.log("undefined", fn());
 
-  type DBNode = {
-    id: string;
-    parentId: string;
-    data: {
-      name: string;
-    };
-  };
-
-  type TreeNodeInfo = {
-    id: string;
-    folderId: string;
-    isFolder: boolean;
-    childNodes?: TreeNodeInfo[];
-    data: { name: string };
-  };
-
-  // NOTE: Použít namísto této fce Object.groupBy? Provést benchmark!
-  const filter = <T>(items: T[], predicate: (item: T) => boolean) => {
-    const newItems = [...items];
-    const filtered: T[] = [];
-    const rest: T[] = [];
-    while (items.length > 0) {
-      const item = newItems.pop();
-      if (item === undefined) break;
-      const targetColl = predicate(item) ? filtered : rest;
-      targetColl.push(item);
-    }
-    return { filtered, rest };
-  };
-
-  const transformDBNodeToTreeNode = (
-    currentFolderNode: DBNode,
-    contentNodes: DBNode[],
-    folderNodes: DBNode[]
-  ): TreeNodeInfo => {
-    const { filtered: filteredContentNodes, rest: restContentNodes } = filter(
-      contentNodes,
-      (node) => node.parentId === currentFolderNode.id
-    );
-    const contentChildNodes = filteredContentNodes.map(
-      ({ id, parentId, data: { name } }) => {
-        return {
-          id,
-          folderId: parentId,
-          isFolder: false,
-          data: { name },
-        };
-      }
-    );
-
-    const { filtered: filteredFolderNodes, rest: restFolderNodes } = filter(
-      folderNodes,
-      (node) => node.parentId === currentFolderNode.id
-    );
-    const folderChildNodes = filteredFolderNodes.map((node) =>
-      transformDBNodeToTreeNode(node, restContentNodes, restFolderNodes)
-    );
-
-    return {
-      id: currentFolderNode.id,
-      folderId: currentFolderNode.parentId,
-      isFolder: true,
-      childNodes: [...folderChildNodes, ...contentChildNodes],
-      data: {
-        name: currentFolderNode.data.name,
-      },
-    };
-  };
-
-  const folderNodes: DBNode[] = [
-    { id: "1", parentId: "", data: { name: "A" } },
-    { id: "2", parentId: "1", data: { name: "B" } },
-    { id: "3", parentId: "", data: { name: "C" } },
-  ];
-  const contentNodes: DBNode[] = [
-    { id: "1", parentId: "1", data: { name: "A" } },
-    { id: "2", parentId: "1", data: { name: "B" } },
-    { id: "3", parentId: "2", data: { name: "A" } },
-  ];
-  // filtered root nodes
-  const { filtered: rootFolderNodes, rest: restFolderNodes } = filter(
-    folderNodes,
-    (node) => node.parentId === ""
-  );
-  const treeNodes = rootFolderNodes.map((rootNode) =>
-    transformDBNodeToTreeNode(rootNode, contentNodes, restFolderNodes)
-  );
-
-  console.log(treeNodes);
+  debugger;
 }
 
 debugger;

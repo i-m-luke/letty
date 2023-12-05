@@ -15,7 +15,7 @@
    export let title: string = "";
 
    const btnEventTypeByBtnType = new Map<DialogButtonType, DialogEventType>([
-      [DialogButtonType.Cancel, DialogEventType.Cancle],
+      [DialogButtonType.Cancel, DialogEventType.Cancel],
       [DialogButtonType.Confirm, DialogEventType.Confirm],
    ]);
    const getEventType = (btnType: DialogButtonType) => {
@@ -31,7 +31,8 @@
 
    onMount(() => {
       proxy.init(dialog);
-      dialog.addEventListener("show", setDefaultValues);
+      dialog.addEventListener(DialogEventType.Show, setDefaultValues);
+      dialog.addEventListener("cancel", () => proxy.dispatchEvent(new Event(DialogEventType.Cancel)));
    });
 </script>
 
@@ -42,15 +43,9 @@
       <slot />
       <div class="w-full p-2 grid grid-flow-col justify-stretch space-x-20">
          {#each buttons as { type, text }}
-            <Button
-               on:click={() => {
-                  dialog.close();
-                  proxy.dispatchEvent(new Event(getEventType(type)));
-               }}
-               {text}
-            />
+            <Button on:click={() => proxy.dispatchEvent(new Event(getEventType(type)))} {text} />
          {/each}
-      </div>
+      </div> 
    </div>
 </dialog>
 
