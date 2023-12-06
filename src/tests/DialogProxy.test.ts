@@ -119,13 +119,26 @@ describe("DialogProxy", () => {
       });
 
       test("return false", async () => {
+        // arrange:
+        let proceed: boolean;
         const { canceled } = unit.showModalAndWaitTillClosed({
-          beforeConfirm: () => false,
+          beforeConfirm: () => proceed,
         });
+
+        // act #1
+        proceed = false;
         dispatchConfirm();
-        // assert
-        // TODO: expect(fakeDialogElement.open).toBe(false);
+        // assert #1
+        // expect(fakeDialogElement.open).toBe(true);
         expect(await promiseState(canceled)).toEqual(PromiseState.Pending);
+
+        // TODO: Po druhém dispatchnutí se musí dialog uzavřít a promise fulfillnout
+        // // act #2
+        // proceed = true;
+        // dispatchConfirm();
+        // // assert #2
+        // // expect(fakeDialogElement.open).toBe(false);
+        // expect(await promiseState(canceled)).toEqual(PromiseState.Fulfilled);
       });
     });
   });
