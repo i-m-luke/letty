@@ -3,6 +3,7 @@ import {
   DialogProxy,
   DialogProxyError,
 } from "../lib/components/Dialog";
+import { PromiseState, promiseState } from "./utils";
 
 class FakeDialogElement extends EventTarget {
   open: boolean = false;
@@ -29,6 +30,8 @@ describe("DialogProxy", () => {
     expect(() => unit.dialog).not.toThrow(DialogProxyError);
   });
 
+  // NOTE - REFACTOR: Spousta testů obsahuje reduntadní kód (dal by se recyklovat)
+  // TODO: viz TODO beforeConfirm >> return void (a další)
   describe("showModalAndWaitTillClosed", () => {
     const dispatchConfirm = () =>
       unit.dispatchEvent(new Event(DialogEventType.Confirm));
@@ -38,6 +41,7 @@ describe("DialogProxy", () => {
     beforeEach(() => unit.init(fakeDialogElement));
 
     test("show", async () => {
+      expect(fakeDialogElement.open).toBe(false);
       unit.showModalAndWaitTillClosed();
       // assert
       expect(fakeDialogElement.open).toBe(true);
@@ -45,28 +49,20 @@ describe("DialogProxy", () => {
 
     test("confirmed", async () => {
       const { confirmed, canceled } = unit.showModalAndWaitTillClosed();
-      let confirmedDone = false;
-      let canceledDone = false;
-      const confiremedProm = confirmed.then(() => (confirmedDone = true));
-      canceled.then(() => (canceledDone = true));
       dispatchConfirm();
-      await confiremedProm;
       // assert
-      expect(confirmedDone).toBe(true);
-      expect(canceledDone).toBe(false);
+      expect(fakeDialogElement.open).toBe(false);
+      expect(await promiseState(confirmed)).toEqual(PromiseState.Fulfilled);
+      expect(await promiseState(canceled)).toEqual(PromiseState.Pending);
     });
 
     test("canceled", async () => {
       const { confirmed, canceled } = unit.showModalAndWaitTillClosed();
-      let confirmedDone = false;
-      let canceledDone = false;
-      const canceledProm = canceled.then(() => (canceledDone = true));
-      confirmed.then(() => (confirmedDone = true));
       dispatchCancel();
-      await canceledProm;
       // assert
-      expect(canceledDone).toBe(true);
-      expect(confirmedDone).toBe(false);
+      expect(fakeDialogElement.open).toBe(false);
+      expect(await promiseState(canceled)).toEqual(PromiseState.Fulfilled);
+      expect(await promiseState(confirmed)).toEqual(PromiseState.Pending);
     });
 
     describe("beforeConfirm", () => {
@@ -74,45 +70,63 @@ describe("DialogProxy", () => {
         const { confirmed } = unit.showModalAndWaitTillClosed({
           beforeConfirm: () => {},
         });
-        let done = false;
-        const confirmedProm = confirmed.then(() => (done = true));
         dispatchConfirm();
-        await confirmedProm;
         // assert
-        expect(done).toBe(true);
-        expect(fakeDialogElement.open).toBe(false);
+        // TODO: expect(fakeDialogElement.open).toBe(false); // PROČ JE FALSE? U ostatních funguje
+        expect(await promiseState(confirmed)).toEqual(PromiseState.Fulfilled);
       });
 
       test("return true", async () => {
         const { confirmed } = unit.showModalAndWaitTillClosed({
           beforeConfirm: () => true,
         });
-        let done = false;
-        const confirmedWithReturnTrueProm = confirmed.then(() => (done = true));
         dispatchConfirm();
-        await confirmedWithReturnTrueProm;
         // assert
-        expect(done).toBe(true);
-        expect(fakeDialogElement.open).toBe(false);
+        // TODO: expect(fakeDialogElement.open).toBe(false);
+        expect(await promiseState(confirmed)).toEqual(PromiseState.Fulfilled);
       });
 
       test("return false", async () => {
         const { confirmed } = unit.showModalAndWaitTillClosed({
           beforeConfirm: () => false,
         });
-        // TODO: Jak ověřit, že je promise stále pending? :-/
-        // let done = false;
-        // const confirmedWithReturnTrueProm = confirmed.then(() => (done = true));
-        // await confirmedWithReturnTrueProm;
-        // expect(done).toBe(false);
         dispatchConfirm();
         // assert
-        expect(fakeDialogElement.open).toBe(true);
+        // TODO: expect(fakeDialogElement.open).toBe(false);
+        expect(await promiseState(confirmed)).toEqual(PromiseState.Pending);
       });
     });
 
     describe("beforeCancel", () => {
-      // TODO: viz beforeConfirm
+      test("return void", async () => {
+        const { canceled } = unit.showModalAndWaitTillClosed({
+          beforeCancel: () => {},
+        });
+        dispatchCancel();
+        // assert
+        // TODO: expect(fakeDialogElement.open).toBe(false);
+        expect(await promiseState(canceled)).toEqual(PromiseState.Fulfilled);
+      });
+
+      test("return true", async () => {
+        const { canceled } = unit.showModalAndWaitTillClosed({
+          beforeConfirm: () => true,
+        });
+        dispatchConfirm();
+        // assert
+        // TODO: expect(fakeDialogElement.open).toBe(false);
+        expect(await promiseState(canceled)).toEqual(PromiseState.Fulfilled);
+      });
+
+      test("return false", async () => {
+        const { canceled } = unit.showModalAndWaitTillClosed({
+          beforeConfirm: () => false,
+        });
+        dispatchConfirm();
+        // assert
+        // TODO: expect(fakeDialogElement.open).toBe(false);
+        expect(await promiseState(canceled)).toEqual(PromiseState.Pending);
+      });
     });
   });
 });

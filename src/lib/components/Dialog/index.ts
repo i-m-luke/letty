@@ -7,7 +7,22 @@ export type DialogElement = {
   close: () => void;
 } & EventTarget;
 
-// TODO: Přesunout do vlastního modulu
+export enum DialogButtonType {
+  Confirm = "confirm",
+  Cancel = "close",
+}
+
+export enum DialogEventType {
+  Cancel = "onCancle",
+  Confirm = "onConfirm",
+  Confirmed = "confirmed",
+  Canceled = "canceled",
+  Show = "show",
+}
+
+export class DialogProxyError extends Error {}
+
+// TODO: Přesunout do vlastního modulu ???
 export class DialogProxy extends EventTarget {
   constructor() {
     super();
@@ -58,28 +73,7 @@ export class DialogProxy extends EventTarget {
     });
   }
 
-  // AppMainTree.svelte >>
-  // const onConfirm = () => {
-  //   const res = await fetch()
-  //   if (!res.succes) {
-  //     // todo: jak předat issues?
-  //     return false
-  //   }
-
-  //   // ...addNode
-
-  //   return true
-  // }
-
-  // showDialogAndWait...({onConfirm})
-
-  showModalAndWaitTillClosed(
-    opts?: Partial<{
-      beforeCancel: () => boolean | void | Promise<boolean> | Promise<void>;
-      beforeConfirm: () => boolean | void | Promise<boolean> | Promise<void>;
-    }>
-  ) {
-    // NOTE: Je nutné toString ? OK : Projít reference položek DialogEventType a odstranit toString()
+  showModalAndWaitTillClosed(opts?: ShowModalAndWaitTillClosedOpts) {
     this.dialog?.dispatchEvent(new Event(DialogEventType.Show));
     this.dialog?.showModal();
 
@@ -99,6 +93,32 @@ export class DialogProxy extends EventTarget {
         this.close();
         this.dispatchEvent(new Event(dispatchEventType));
       };
+
+    // JE TOTO OK?
+    // const onCancel = async () => {
+    //   if (opts?.beforeCancel) {
+    //     const proceed = await opts?.beforeCancel();
+    //     if (proceed !== undefined && !proceed) {
+    //       this.onCancel = onCancel;
+    //       return;
+    //     }
+    //   }
+    //   this.close();
+    //   this.dispatchEvent(new Event(DialogEventType.Canceled));
+    // };
+
+    // let onCancel: () => void;
+    // onCancel = async () => {
+    //   if (opts?.beforeCancel) {
+    //     const proceed = await opts?.beforeCancel();
+    //     if (proceed !== undefined && !proceed) {
+    //       this.onCancel = onCancel;
+    //       return;
+    //     }
+    //   }
+    //   this.close();
+    //   this.dispatchEvent(new Event(DialogEventType.Canceled));
+    // };
 
     this.onCancel = createBeforeEvent(DialogEventType.Canceled, opts?.beforeCancel);
     this.onConfirm = createBeforeEvent(
@@ -125,17 +145,15 @@ export class DialogProxy extends EventTarget {
   }
 }
 
-export enum DialogButtonType {
-  Confirm = "confirm",
-  Cancel = "close",
-}
+type BeforeFn = () => boolean | void | Promise<boolean> | Promise<void>;
 
-export enum DialogEventType {
-  Cancel = "onCancle",
-  Confirm = "onConfirm",
-  Confirmed = "confirmed",
-  Canceled = "canceled",
-  Show = "show",
-}
-
-export class DialogProxyError extends Error {}
+type ShowModalAndWaitTillClosedOpts = Partial<{
+  /**
+   * Returning boolean signals whether after event should be dispatched (true) or not (false). The event is always dispatched if no value is returned (void) or no before function is passsed.
+   */
+  beforeCancel: BeforeFn;
+  /**
+   * Returning boolean signals whether after event should be dispatched (true) or not (false). The event is always dispatched if no value is returned (void) or no before function is passsed.
+   */
+  beforeConfirm: BeforeFn;
+}>;

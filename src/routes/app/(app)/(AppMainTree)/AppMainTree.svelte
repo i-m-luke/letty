@@ -50,44 +50,46 @@
    const threadFolderNodeAddButton = new ButtonInfo({
       className: addBtnClassName,
       onClickAction: (treeNodeData: TreeNodeInfoData) => {
-         //#region TODO:
+         //#region TODO - REWORK:
 
-         // const beforeConfirm = async () => {
-         //    const type = get(createThreadDialogData.type);
-         //    const name = get(createThreadDialogData.name);
-         //    const res = await (() => {
-         //       switch (type) {
-         //          case TreeNodeType.Content:
-         //             return fetchPostThread({ parentId: treeNodeData.id, name });
-         //          case TreeNodeType.Folder:
-         //             return fetchPostThreadFolder({ parentId: treeNodeData.id, name });
-         //          default:
-         //             throw new Error("Invalid TreeNodeType");
-         //       }
-         //    })();
+         const beforeConfirm = async () => {
+            const type = get(createThreadDialogData.type);
+            const name = get(createThreadDialogData.name);
+            const res = await (() => {
+               switch (type) {
+                  case TreeNodeType.Content:
+                     return fetchPostThread({ parentId: treeNodeData.id, name });
+                  case TreeNodeType.Folder:
+                     return fetchPostThreadFolder({ parentId: treeNodeData.id, name });
+                  default:
+                     throw new Error("Invalid TreeNodeType");
+               }
+            })();
 
-         //    if (res.success) {
-         //       const { _id, parentId, name } = res.data;
-         //       const newTreeNode = new TreeNodeInfo(type, name, {
-         //          id: _id,
-         //          folderId: parentId,
-         //       });
-         //       threadTreeState.update((current) => addNodeToMultipleNodes(treeNodeData.id, current, newTreeNode));
-         //       return true;
-         //    } else {
-         //       // TODO: process issues (e.g. display invalid data in dialog)
-         //       // But dialog can't close ... :-/
-         //       console.log(
-         //          "EMPTY NAME ISSUE:" + res.issues.find((issue) => issue.type === CreateDialogEntriesIssue.Name)?.message
-         //       );
-         //       return false;
-         //       // WARNING:
-         //       // Pokud je poprvé navráceno false (např. špatně zadané hodnoty) a poté je navrácení true, tak se nic neprovede
-         //       // Příčina je v tom, že se eventy po odbavení odstraní
-         //    }
-         // };
+            if (!res.success) {
+               // WARNING:
+               // Pokud je poprvé navráceno false (např. špatně zadané hodnoty) a poté je navrácení true, tak se nic neprovede
+               // Příčina je v tom, že se eventy po odbavení odstraní
+               // TODO: process issues (e.g. display invalid data in dialog)
+               // But dialog can't close ... :-/
+               console.log(
+                  "EMPTY NAME ISSUE:" + res.issues.find((issue) => issue.type === CreateDialogEntriesIssue.Name)?.message
+               );
 
-         // createThreadDialogProxy.showModalAndWaitTillClosed({ beforeConfirm });
+               return false;
+            }
+
+            const { data } = res;
+            const newTreeNode = new TreeNodeInfo(type, data.name, {
+               id: data._id,
+               folderId: data.parentId,
+            });
+            threadTreeState.update((current) => addNodeToMultipleNodes(treeNodeData.id, current, newTreeNode));
+
+            return true;
+         };
+
+         // BPSD: createThreadDialogProxy.showModalAndWaitTillClosed({ beforeConfirm });
 
          //#endregion
 

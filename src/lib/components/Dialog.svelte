@@ -1,3 +1,6 @@
+<!-- NOTE: Kvůli testům musela být soubor komponenty (Dialog.svelte) vyjmutou z index.ts (DialogProxy nešlo importovat)
+Pokud se někdy podaří zprovoznit import svelte komponent, tak zvážit navrácená komponenty do index file -->
+
 <script lang="ts">
    import { onMount } from "svelte";
    import { DialogButtonType, DialogEventType, type DialogProxy } from "./Dialog";
@@ -45,7 +48,7 @@
          {#each buttons as { type, text }}
             <Button on:click={() => proxy.dispatchEvent(new Event(getEventType(type)))} {text} />
          {/each}
-      </div> 
+      </div>
    </div>
 </dialog>
 

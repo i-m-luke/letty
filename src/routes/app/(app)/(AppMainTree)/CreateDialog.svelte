@@ -1,6 +1,6 @@
 <script lang="ts">
    import Dialog from "$lib/components/Dialog.svelte";
-   import { DialogButtonType, type DialogProxy } from "$lib/components/Dialog";
+   import { DialogButtonType as DialogButtonActionType, type DialogProxy } from "$lib/components/Dialog";
    import TextInput from "$lib/components/TextInput.svelte";
    import { TreeNodeType } from "$lib/components/Tree";
    import type CreateDialogData from "./CreateDialogData";
@@ -23,8 +23,8 @@
    bind:proxy={dialogProxy}
    title={"What item would you like to create?"}
    buttons={[
-      { type: DialogButtonType.Confirm, text: "ADD" },
-      { type: DialogButtonType.Cancel, text: "CLOSE" },
+      { type: DialogButtonActionType.Confirm, text: "ADD" },
+      { type: DialogButtonActionType.Cancel, text: "CLOSE" },
    ]}
    {setDefaultValues}
 >
