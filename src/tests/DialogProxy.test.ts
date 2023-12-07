@@ -110,7 +110,7 @@ describe("DialogProxy", () => {
         await promiseStateMock(confirmed);
 
         // assert:
-        expect(await promiseStateMock.mock.results[0].value).toBe(
+        expect(await promiseStateMock.mock.results[0].value).toEqual(
           PromiseState.Pending
         );
         expect(await promiseStateMock.mock.results[1].value).toEqual(
@@ -165,7 +165,7 @@ describe("DialogProxy", () => {
         await promiseStateMock(canceled);
 
         // assert:
-        expect(await promiseStateMock.mock.results[0].value).toBe(
+        expect(await promiseStateMock.mock.results[0].value).toEqual(
           PromiseState.Pending
         );
         expect(await promiseStateMock.mock.results[1].value).toEqual(
