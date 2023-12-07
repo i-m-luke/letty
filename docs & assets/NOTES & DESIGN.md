@@ -11,7 +11,6 @@
 
 # TODO | PLAN
 
-    0. AppMainTree >> CreateDialog - Dokončit validaci data: při success == false musí být v dialogu vypsáno, jaké hodnoty byly špatně zadány (např. prázné text pro name)
     1. Vytvořit logo a zaintegrovat jej do AppMainTree
     2. ZOD data validation: Přepracovat na parseSafe? Nebude pak způsobovat pád aplikace pokud nastane na server
     4. Logování a handling errorů na serveru: server nesmí padnout!
