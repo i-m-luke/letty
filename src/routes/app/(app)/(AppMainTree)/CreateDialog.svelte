@@ -9,10 +9,11 @@
    export let dialogProxy: DialogProxy;
    export let data: CreateDialogData;
 
-   const { name, type } = data;
+   const { name, type, nameIssue } = data;
 
    const setDefaultValues = () => {
       name.set("");
+      nameIssue.set("");
       type.set(TreeNodeType.Content);
    };
 
@@ -43,9 +44,7 @@
       </GroupBox>
       <GroupBox name="... What name?" borderIsVisible={true}>
          <TextInput bind:value={$name} />
-         <!-- TODO: -->
-         <!-- <span>{data.nameIssue}</span> -->
-         <!-- invalid name entered -->
+         <span>{$nameIssue}</span>
       </GroupBox>
    </div>
 </Dialog>

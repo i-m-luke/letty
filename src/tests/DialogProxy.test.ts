@@ -20,6 +20,8 @@ describe("DialogProxy", () => {
     fakeDialogElement = new FakeDialogElement();
   });
 
+  afterEach(() => jest.restoreAllMocks());
+
   test("not initialized", () => {
     expect(() => unit.dialog).toThrow(DialogProxyError);
   });
@@ -87,13 +89,37 @@ describe("DialogProxy", () => {
       });
 
       test("return false", async () => {
-        const { confirmed } = unit.showModalAndWaitTillClosed({
-          beforeConfirm: () => false,
+        // arrange:
+        const beforeConfirmMock = jest.fn();
+        const { canceled } = unit.showModalAndWaitTillClosed({
+          beforeConfirm: beforeConfirmMock,
         });
+        const promiseStateMock = jest.fn(
+          async (promise) => await promiseState(promise)
+        );
+
+        // act:
+        beforeConfirmMock.mockReturnValue(false);
         dispatchConfirm();
-        // assert
-        // TODO: expect(fakeDialogElement.open).toBe(false);
-        expect(await promiseState(confirmed)).toEqual(PromiseState.Pending);
+        const dialogStateOnFalse = fakeDialogElement.open;
+        await promiseStateMock(canceled);
+
+        // TODO:
+        // beforeConfirmMock.mockReturnValue(true);
+        // dispatchConfirm();
+        // const dialogStateOnTrue = fakeDialogElement.open;
+        // await promiseStateMock(canceled);
+
+        // assert:
+        expect(await promiseStateMock.mock.results[0].value).toBe(
+          PromiseState.Pending
+        );
+        expect(dialogStateOnFalse).toBe(true);
+        // TODO:
+        // expect(promiseStateMock.mock.results[1].value).toEqual(
+        //   PromiseState.Fulfilled
+        // );
+        // expect(dialogStateOnFalse).toBe(false);
       });
     });
 
@@ -110,9 +136,9 @@ describe("DialogProxy", () => {
 
       test("return true", async () => {
         const { canceled } = unit.showModalAndWaitTillClosed({
-          beforeConfirm: () => true,
+          beforeCancel: () => true,
         });
-        dispatchConfirm();
+        dispatchCancel();
         // assert
         // TODO: expect(fakeDialogElement.open).toBe(false);
         expect(await promiseState(canceled)).toEqual(PromiseState.Fulfilled);
@@ -120,25 +146,36 @@ describe("DialogProxy", () => {
 
       test("return false", async () => {
         // arrange:
-        let proceed: boolean;
+        const beforeCancelMock = jest.fn();
         const { canceled } = unit.showModalAndWaitTillClosed({
-          beforeConfirm: () => proceed,
+          beforeCancel: beforeCancelMock,
         });
+        const promiseStateMock = jest.fn(
+          async (promise) => await promiseState(promise)
+        );
 
-        // act #1
-        proceed = false;
-        dispatchConfirm();
-        // assert #1
-        // expect(fakeDialogElement.open).toBe(true);
-        expect(await promiseState(canceled)).toEqual(PromiseState.Pending);
+        // act:
+        beforeCancelMock.mockReturnValue(false);
+        dispatchCancel();
+        const dialogStateOnFalse = fakeDialogElement.open;
+        await promiseStateMock(canceled);
 
-        // TODO: Po druhém dispatchnutí se musí dialog uzavřít a promise fulfillnout
-        // // act #2
-        // proceed = true;
-        // dispatchConfirm();
-        // // assert #2
-        // // expect(fakeDialogElement.open).toBe(false);
-        // expect(await promiseState(canceled)).toEqual(PromiseState.Fulfilled);
+        // TODO:
+        // beforeConfirmMock.mockReturnValue(true);
+        // dispatchCancel();
+        // const dialogStateOnTrue = fakeDialogElement.open;
+        // await promiseStateMock(canceled);
+
+        // assert:
+        expect(await promiseStateMock.mock.results[0].value).toBe(
+          PromiseState.Pending
+        );
+        expect(dialogStateOnFalse).toBe(true);
+        // TODO:
+        // expect(promiseStateMock.mock.results[1].value).toEqual(
+        //   PromiseState.Fulfilled
+        // );
+        // expect(dialogStateOnFalse).toBe(false);
       });
     });
   });

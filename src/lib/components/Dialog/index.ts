@@ -5,6 +5,7 @@
 export type DialogElement = {
   showModal: () => void;
   close: () => void;
+  open: boolean;
 } & EventTarget;
 
 export enum DialogButtonType {
@@ -80,12 +81,14 @@ export class DialogProxy extends EventTarget {
     const createBeforeEvent =
       (
         dispatchEventType: DialogEventType,
+        setEventFn: () => void,
         beforeFn?: () => boolean | void | Promise<boolean> | Promise<void>
       ) =>
       async () => {
         if (beforeFn) {
           const proceed = await beforeFn();
           if (proceed !== undefined && !proceed) {
+            setEventFn();
             return;
           }
         }
@@ -94,37 +97,19 @@ export class DialogProxy extends EventTarget {
         this.dispatchEvent(new Event(dispatchEventType));
       };
 
-    // JE TOTO OK?
-    // const onCancel = async () => {
-    //   if (opts?.beforeCancel) {
-    //     const proceed = await opts?.beforeCancel();
-    //     if (proceed !== undefined && !proceed) {
-    //       this.onCancel = onCancel;
-    //       return;
-    //     }
-    //   }
-    //   this.close();
-    //   this.dispatchEvent(new Event(DialogEventType.Canceled));
-    // };
-
-    // let onCancel: () => void;
-    // onCancel = async () => {
-    //   if (opts?.beforeCancel) {
-    //     const proceed = await opts?.beforeCancel();
-    //     if (proceed !== undefined && !proceed) {
-    //       this.onCancel = onCancel;
-    //       return;
-    //     }
-    //   }
-    //   this.close();
-    //   this.dispatchEvent(new Event(DialogEventType.Canceled));
-    // };
-
-    this.onCancel = createBeforeEvent(DialogEventType.Canceled, opts?.beforeCancel);
-    this.onConfirm = createBeforeEvent(
+    const onConfirm = createBeforeEvent(
       DialogEventType.Confirmed,
+      () => (this.onConfirm = onConfirm),
       opts?.beforeConfirm
     );
+    this.onConfirm = onConfirm;
+
+    const onCancel = createBeforeEvent(
+      DialogEventType.Canceled,
+      () => (this.onCancel = onCancel),
+      opts?.beforeCancel
+    );
+    this.onCancel = onCancel;
 
     return {
       confirmed: new Promise((resolve) => {
