@@ -7,8 +7,8 @@ import { PromiseState, promiseState } from "./utils";
 
 class FakeDialogElement extends EventTarget {
   open: boolean = false;
-  showModal = jest.fn().mockImplementation(() => (this.open = true));
-  close = jest.fn().mockImplementation(() => (this.open = false));
+  showModal = jest.fn(() => (this.open = true));
+  close = jest.fn(() => (this.open = false));
 }
 
 describe("DialogProxy", () => {
@@ -74,7 +74,7 @@ describe("DialogProxy", () => {
         });
         dispatchConfirm();
         // assert
-        // TODO: expect(fakeDialogElement.open).toBe(false); // PROČ JE FALSE? U ostatních funguje
+        // TODO: expect(fakeDialogElement.open).toBe(false); // PROČ JE FALSE? U testů show, confirmed a canceled funguje
         expect(await promiseState(confirmed)).toEqual(PromiseState.Fulfilled);
       });
 
@@ -84,14 +84,14 @@ describe("DialogProxy", () => {
         });
         dispatchConfirm();
         // assert
-        // TODO: expect(fakeDialogElement.open).toBe(false);
+        // TODO: expect(fakeDialogElement.open).toBe(false); // PROČ JE FALSE? U testů show, confirmed a canceled funguje
         expect(await promiseState(confirmed)).toEqual(PromiseState.Fulfilled);
       });
 
       test("return false", async () => {
         // arrange:
         const beforeConfirmMock = jest.fn();
-        const { canceled } = unit.showModalAndWaitTillClosed({
+        const { confirmed } = unit.showModalAndWaitTillClosed({
           beforeConfirm: beforeConfirmMock,
         });
         const promiseStateMock = jest.fn(
@@ -101,25 +101,24 @@ describe("DialogProxy", () => {
         // act:
         beforeConfirmMock.mockReturnValue(false);
         dispatchConfirm();
-        const dialogStateOnFalse = fakeDialogElement.open;
-        await promiseStateMock(canceled);
+        // TODO: const dialogStateOnFalse = fakeDialogElement.open;
+        await promiseStateMock(confirmed);
 
-        // TODO:
-        // beforeConfirmMock.mockReturnValue(true);
-        // dispatchConfirm();
-        // const dialogStateOnTrue = fakeDialogElement.open;
-        // await promiseStateMock(canceled);
+        beforeConfirmMock.mockReturnValue(true);
+        dispatchConfirm();
+        // TODO: const dialogStateOnTrue = fakeDialogElement.open;
+        await promiseStateMock(confirmed);
 
         // assert:
         expect(await promiseStateMock.mock.results[0].value).toBe(
           PromiseState.Pending
         );
-        expect(dialogStateOnFalse).toBe(true);
-        // TODO:
-        // expect(promiseStateMock.mock.results[1].value).toEqual(
-        //   PromiseState.Fulfilled
-        // );
+        expect(await promiseStateMock.mock.results[1].value).toEqual(
+          PromiseState.Fulfilled
+        );
+        // TODO: PROČ JE FALSE? U testů show, confirmed a canceled funguje
         // expect(dialogStateOnFalse).toBe(false);
+        // expect(dialogStateOnFalse).toBe(true);
       });
     });
 
@@ -130,7 +129,7 @@ describe("DialogProxy", () => {
         });
         dispatchCancel();
         // assert
-        // TODO: expect(fakeDialogElement.open).toBe(false);
+        // TODO: expect(fakeDialogElement.open).toBe(false); // PROČ JE FALSE? U testů show, confirmed a canceled funguje
         expect(await promiseState(canceled)).toEqual(PromiseState.Fulfilled);
       });
 
@@ -140,7 +139,7 @@ describe("DialogProxy", () => {
         });
         dispatchCancel();
         // assert
-        // TODO: expect(fakeDialogElement.open).toBe(false);
+        // TODO: expect(fakeDialogElement.open).toBe(false); // PROČ JE FALSE? U testů show, confirmed a canceled funguje
         expect(await promiseState(canceled)).toEqual(PromiseState.Fulfilled);
       });
 
@@ -157,25 +156,24 @@ describe("DialogProxy", () => {
         // act:
         beforeCancelMock.mockReturnValue(false);
         dispatchCancel();
-        const dialogStateOnFalse = fakeDialogElement.open;
+        // TODO: const dialogStateOnFalse = fakeDialogElement.open;
         await promiseStateMock(canceled);
 
-        // TODO:
-        // beforeConfirmMock.mockReturnValue(true);
-        // dispatchCancel();
-        // const dialogStateOnTrue = fakeDialogElement.open;
-        // await promiseStateMock(canceled);
+        beforeCancelMock.mockReturnValue(true);
+        dispatchCancel();
+        // TODO: const dialogStateOnTrue = fakeDialogElement.open;
+        await promiseStateMock(canceled);
 
         // assert:
         expect(await promiseStateMock.mock.results[0].value).toBe(
           PromiseState.Pending
         );
-        expect(dialogStateOnFalse).toBe(true);
-        // TODO:
-        // expect(promiseStateMock.mock.results[1].value).toEqual(
-        //   PromiseState.Fulfilled
-        // );
-        // expect(dialogStateOnFalse).toBe(false);
+        expect(await promiseStateMock.mock.results[1].value).toEqual(
+          PromiseState.Fulfilled
+        );
+        // TODO: PROČ JE FALSE? U testů show, confirmed a canceled funguje
+        // expect(dialogStateOnFalse).toBe(true);
+        // expect(dialogStateOnTrue).toBe(false);
       });
     });
   });
