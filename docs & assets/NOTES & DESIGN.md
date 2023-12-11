@@ -142,6 +142,13 @@
                     - zobrazí se delete btn
                     - bude možné uzly přesouvat
                     - viz obr img/tree-manager
+            ### Expandování možností buttonů:
+                - viz docs & assets >> hiddent-tree-node-buttons
+                - tlačítka budou skryta pod ikonkou "teček" (1 tečka = 1 skryté tlačít, tzn. 3 tlačítka = 3 tečky jako na img)
+                - po najetí/kliku (pro mobily) se rozbalí možnosti = zobrazí se tlačítka (add, delete, edit)
+                - komponenta stromu bude muset brát jako property komponentu (namísto ButtonInfo)
+                - komponenta, která bude předáváná do komponenty stromu však bude brát ButtonInfo
+                - Jak se bude provádět skyrtí tlačítek? ... Na desktop při ztrátě hover, ale jak na mobilu? Bude komponenta bude obsahuvat "-" tlačítko?
 
     # Loading:
         + Obrazovka se zobrazí při spuštění aplikace
