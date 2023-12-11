@@ -25,7 +25,9 @@ export const FolderDataSchema = z.object({
 });
 export const FolderSchema = BaseDBNodeSchema(FolderDataSchema);
 export const PostFolderSchema = FolderSchema.omit({ _id: true });
-export const UpdateFolderSchema = FolderDataSchema.partial();
+export const UpdateFolderSchema = FolderDataSchema.merge(WithParentIdSchema)
+  .partial()
+  .merge(WithIdSchema);
 
 export const PromptDataSchema = z.object({
   name: z.string(),
@@ -33,7 +35,9 @@ export const PromptDataSchema = z.object({
 });
 export const PromptSchema = BaseDBNodeSchema(PromptDataSchema);
 export const PostPromptSchema = PromptSchema.omit({ _id: true });
-export const UpdatePromptSchema = PromptDataSchema.partial();
+export const UpdatePromptSchema = PromptDataSchema.merge(WithParentIdSchema)
+  .partial()
+  .merge(WithIdSchema);
 
 export const ThreadMessageSchema = z.object({
   question: z.string(),
@@ -45,7 +49,9 @@ export const ThreadDataSchema = z.object({
 });
 export const ThreadSchema = BaseDBNodeSchema(ThreadDataSchema);
 export const PostThreadSchema = ThreadSchema.omit({ _id: true });
-export const UpdateThreadSchema = ThreadDataSchema.partial();
+export const UpdateThreadSchema = ThreadDataSchema.merge(WithParentIdSchema)
+  .partial()
+  .merge(WithIdSchema);
 
 const SuccessfullResponseSchema = z.object({
   success: z.literal(true),
