@@ -44,7 +44,7 @@
       </GroupBox>
       <GroupBox name="... What name?" borderIsVisible={true}>
          <TextInput bind:value={$name} />
-         <span>{$nameIssue}</span>
+         <span class="text-red-600">{$nameIssue}</span>
       </GroupBox>
    </div>
 </Dialog>
