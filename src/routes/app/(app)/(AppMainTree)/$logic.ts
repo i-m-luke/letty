@@ -8,9 +8,9 @@ import {
   FolderSchema,
   ResponseSchema,
   type SafeResponse,
-  type NewThread,
-  type NewPrompt,
-  type NewFolder,
+  type PostThread,
+  type PostPrompt,
+  type PostFolder,
 } from "$types";
 
 //#region  IMPURE CODE:
@@ -33,16 +33,16 @@ const fetchPOST = async <TResData>(
   return res.success ? { ...res, data: parseResponseDataFn(res.data) } : { ...res };
 };
 
-export const fetchPostThread = async (data: NewThread) =>
+export const fetchPostThread = async (data: PostThread) =>
   fetchPOST({ type: RequestType.Thread, data }, ThreadSchema.parse);
 
-export const fetchPostPrompt = async (data: NewPrompt) =>
+export const fetchPostPrompt = async (data: PostPrompt) =>
   fetchPOST({ type: RequestType.Prompt, data }, PromptSchema.parse);
 
-export const fetchPostPromptFolder = async (data: NewFolder) =>
+export const fetchPostPromptFolder = async (data: PostFolder) =>
   fetchPOST({ type: RequestType.PromptFolder, data }, FolderSchema.parse);
 
-export const fetchPostThreadFolder = async (data: NewFolder) =>
+export const fetchPostThreadFolder = async (data: PostFolder) =>
   fetchPOST({ type: RequestType.ThreadFolder, data }, FolderSchema.parse);
 
 //#endregion

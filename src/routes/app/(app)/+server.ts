@@ -1,9 +1,9 @@
 import { json } from "@sveltejs/kit";
 import { z } from "zod";
-import type { NewFolder, Response as _Response } from "$types";
+import type { PostFolder, Response as _Response } from "$types";
 import { RequestType, DeleteRequestSchema, PostRequestSchema } from "./Request";
 import type { DeleteRequest, DeleteRequestData, PostRequest } from "./Request";
-import type { NewPrompt, NewThread } from "$types";
+import type { PostPrompt, PostThread } from "$types";
 import db from "$db";
 import PromptDAO from "$lib/DAO/PromptDAO";
 import TheradDAO from "$lib/DAO/ThreadDAO";
@@ -23,19 +23,19 @@ const threadFoldersDAO = new ThreadFoldersDAO(db);
 export const POST = async ({ request }) =>
   json(await handlePOST(await transformPostRequest(request)));
 
-const insertNewPromptToDB = async (data: NewPrompt) => {
+const insertNewPromptToDB = async (data: PostPrompt) => {
   return await promptDAO.insert(data);
 };
 
-const insertNewThreadToDB = async (data: NewThread) => {
+const insertNewThreadToDB = async (data: PostThread) => {
   return await threadDAO.insert(data);
 };
 
-const insertNewPromptFolderToDB = async (data: NewFolder) => {
+const insertNewPromptFolderToDB = async (data: PostFolder) => {
   return await promptFoldersDAO.insert(data);
 };
 
-const insertNewThreadFolderToDB = async (data: NewFolder) => {
+const insertNewThreadFolderToDB = async (data: PostFolder) => {
   return await threadFoldersDAO.insert(data);
 };
 

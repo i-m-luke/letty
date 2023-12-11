@@ -20,38 +20,32 @@ export const BaseDBNodeSchema = <TObject extends ZodRawShape>(
   dataSchema: ZodObject<TObject>
 ) => DBNodeSchema.merge(dataSchema);
 
-export const FolderSchema = BaseDBNodeSchema(
-  z.object({
-    name: z.string(),
-  })
-);
+export const FolderDataSchema = z.object({
+  name: z.string(),
+});
+export const FolderSchema = BaseDBNodeSchema(FolderDataSchema);
+export const PostFolderSchema = FolderSchema.omit({ _id: true });
+export const UpdateFolderSchema = FolderDataSchema.partial();
 
-export const NewFolderSchema = FolderSchema.omit({ _id: true });
-
-export const PromptSchema = BaseDBNodeSchema(
-  z.object({
-    name: z.string(),
-    text: z.string().optional(),
-  })
-);
-
-export const NewPromptSchema = PromptSchema.omit({ _id: true });
+export const PromptDataSchema = z.object({
+  name: z.string(),
+  text: z.string().optional(),
+});
+export const PromptSchema = BaseDBNodeSchema(PromptDataSchema);
+export const PostPromptSchema = PromptSchema.omit({ _id: true });
+export const UpdatePromptSchema = PromptDataSchema.partial();
 
 export const ThreadMessageSchema = z.object({
   question: z.string(),
   answer: z.string(),
 });
-
-export const ThreadSchema = BaseDBNodeSchema(
-  z.object({
-    name: z.string(),
-    messages: z.array(ThreadMessageSchema).optional(),
-  })
-);
-
-export const NewThreadSchema = ThreadSchema.omit({
-  _id: true,
+export const ThreadDataSchema = z.object({
+  name: z.string(),
+  messages: z.array(ThreadMessageSchema).optional(),
 });
+export const ThreadSchema = BaseDBNodeSchema(ThreadDataSchema);
+export const PostThreadSchema = ThreadSchema.omit({ _id: true });
+export const UpdateThreadSchema = ThreadDataSchema.partial();
 
 const SuccessfullResponseSchema = z.object({
   success: z.literal(true),
@@ -79,16 +73,23 @@ export type WithId = z.infer<typeof WithIdSchema>;
 export type WithParentId = z.infer<typeof WithParentIdSchema>;
 export type DBNode = z.infer<typeof DBNodeSchema>;
 export type NewDBNode = z.infer<typeof NewDBNodeSchema>;
+
 export type Prompt = z.infer<typeof PromptSchema>;
-export type NewPrompt = z.infer<typeof NewPromptSchema>;
-export type Thread = z.infer<typeof ThreadSchema>;
-export type NewThread = z.infer<typeof NewThreadSchema>;
+export type PostPrompt = z.infer<typeof PostPromptSchema>;
+export type UpdatePrompt = z.infer<typeof UpdatePromptSchema>;
+
 export type ThreadMessage = z.infer<typeof ThreadMessageSchema>;
+export type Thread = z.infer<typeof ThreadSchema>;
+export type PostThread = z.infer<typeof PostThreadSchema>;
+export type UpdateThread = z.infer<typeof UpdateThreadSchema>;
+
+export type Folder = z.infer<typeof FolderSchema>;
+export type PostFolder = z.infer<typeof PostFolderSchema>;
+export type UpdateFolder = z.infer<typeof UpdateFolderSchema>;
+
 export type SuccessfullResponse = z.infer<typeof SuccessfullResponseSchema>;
 export type UnsuccessfullResponse = z.infer<typeof UnsuccessfullResponseSchema>;
 export type Response = z.infer<typeof ResponseSchema>;
-export type Folder = z.infer<typeof FolderSchema>;
-export type NewFolder = z.infer<typeof NewFolderSchema>;
 
 export type SafeResponse<TData> =
   | Exclude<Response, SuccessfullResponse>
