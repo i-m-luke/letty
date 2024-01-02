@@ -2,63 +2,69 @@ import { ZodObject, z, type ZodRawShape } from "zod";
 
 // TODO: Přesunout sem TreeNodeInfo, atd. (z components)
 
+export const BaseDBNodeSchema = <TObject extends ZodRawShape>(
+  dataSchema: ZodObject<TObject>
+) => DBNode.merge(dataSchema);
+
 //#region  SCHEMAs
 
-export const WithIdSchema = z.object({
+export const WithId = z.object({
   _id: z.string(),
 });
 
-export const WithParentIdSchema = z.object({
+export const WithParentId = z.object({
   parentId: z.string(),
 });
 
-export const DBNodeSchema = WithIdSchema.merge(WithParentIdSchema);
+export const DBNode = WithId.merge(WithParentId);
 
-export const NewDBNodeSchema = DBNodeSchema.omit({ _id: true });
+export const NewDBNode = DBNode.omit({ _id: true });
 
-export const BaseDBNodeSchema = <TObject extends ZodRawShape>(
-  dataSchema: ZodObject<TObject>
-) => DBNodeSchema.merge(dataSchema);
-
-export const FolderDataSchema = z.object({
+export const FolderData = z.object({
   name: z.string(),
 });
-export const FolderSchema = BaseDBNodeSchema(FolderDataSchema);
-export const PostFolderSchema = FolderSchema.omit({ _id: true });
-export const UpdateFolderSchema = FolderDataSchema.merge(WithParentIdSchema)
-  .partial()
-  .merge(WithIdSchema);
+
+export const Folder = BaseDBNodeSchema(FolderData);
+
+export const PostFolder = Folder.omit({ _id: true });
+
+export const UpdateFolder = FolderData.merge(WithParentId).partial().merge(WithId);
 
 export const PromptDataSchema = z.object({
   name: z.string(),
   text: z.string().optional(),
 });
-export const PromptSchema = BaseDBNodeSchema(PromptDataSchema);
-export const PostPromptSchema = PromptSchema.omit({ _id: true });
-export const UpdatePromptSchema = PromptDataSchema.merge(WithParentIdSchema)
-  .partial()
-  .merge(WithIdSchema);
 
-export const ThreadMessageSchema = z.object({
+export const Prompt = BaseDBNodeSchema(PromptDataSchema);
+
+export const PostPrompt = Prompt.omit({ _id: true });
+
+export const UpdatePrompt = PromptDataSchema.merge(WithParentId)
+  .partial()
+  .merge(WithId);
+
+export const ThreadMessage = z.object({
   question: z.string(),
   answer: z.string(),
 });
-export const ThreadDataSchema = z.object({
-  name: z.string(),
-  messages: z.array(ThreadMessageSchema).optional(),
-});
-export const ThreadSchema = BaseDBNodeSchema(ThreadDataSchema);
-export const PostThreadSchema = ThreadSchema.omit({ _id: true });
-export const UpdateThreadSchema = ThreadDataSchema.merge(WithParentIdSchema)
-  .partial()
-  .merge(WithIdSchema);
 
-const SuccessfullResponseSchema = z.object({
+export const ThreadData = z.object({
+  name: z.string(),
+  messages: z.array(ThreadMessage).optional(),
+});
+
+export const Thread = BaseDBNodeSchema(ThreadData);
+
+export const PostThread = Thread.omit({ _id: true });
+
+export const UpdateThread = ThreadData.merge(WithParentId).partial().merge(WithId);
+
+const SuccessfullResponse = z.object({
   success: z.literal(true),
   data: z.any(),
 });
 
-const UnsuccessfullResponseSchema = z.object({
+const UnsuccessfullResponse = z.object({
   success: z.literal(false),
   issues: z.array(
     z.object({
@@ -68,34 +74,34 @@ const UnsuccessfullResponseSchema = z.object({
   ), // musí být key-value, aby bylo možné u dialogu říct, čeho se dané issue týká
 });
 
-export const ResponseSchema = z.discriminatedUnion("success", [
-  SuccessfullResponseSchema,
-  UnsuccessfullResponseSchema,
+export const Response = z.discriminatedUnion("success", [
+  SuccessfullResponse,
+  UnsuccessfullResponse,
 ]);
 
 //#endregion
 
-export type WithId = z.infer<typeof WithIdSchema>;
-export type WithParentId = z.infer<typeof WithParentIdSchema>;
-export type DBNode = z.infer<typeof DBNodeSchema>;
-export type NewDBNode = z.infer<typeof NewDBNodeSchema>;
+export type WithId = z.infer<typeof WithId>;
+export type WithParentId = z.infer<typeof WithParentId>;
+export type DBNode = z.infer<typeof DBNode>;
+export type NewDBNode = z.infer<typeof NewDBNode>;
 
-export type Prompt = z.infer<typeof PromptSchema>;
-export type PostPrompt = z.infer<typeof PostPromptSchema>;
-export type UpdatePrompt = z.infer<typeof UpdatePromptSchema>;
+export type Prompt = z.infer<typeof Prompt>;
+export type PostPrompt = z.infer<typeof PostPrompt>;
+export type UpdatePrompt = z.infer<typeof UpdatePrompt>;
 
-export type ThreadMessage = z.infer<typeof ThreadMessageSchema>;
-export type Thread = z.infer<typeof ThreadSchema>;
-export type PostThread = z.infer<typeof PostThreadSchema>;
-export type UpdateThread = z.infer<typeof UpdateThreadSchema>;
+export type ThreadMessage = z.infer<typeof ThreadMessage>;
+export type Thread = z.infer<typeof Thread>;
+export type PostThread = z.infer<typeof PostThread>;
+export type UpdateThread = z.infer<typeof UpdateThread>;
 
-export type Folder = z.infer<typeof FolderSchema>;
-export type PostFolder = z.infer<typeof PostFolderSchema>;
-export type UpdateFolder = z.infer<typeof UpdateFolderSchema>;
+export type Folder = z.infer<typeof Folder>;
+export type PostFolder = z.infer<typeof PostFolder>;
+export type UpdateFolder = z.infer<typeof UpdateFolder>;
 
-export type SuccessfullResponse = z.infer<typeof SuccessfullResponseSchema>;
-export type UnsuccessfullResponse = z.infer<typeof UnsuccessfullResponseSchema>;
-export type Response = z.infer<typeof ResponseSchema>;
+export type SuccessfullResponse = z.infer<typeof SuccessfullResponse>;
+export type UnsuccessfullResponse = z.infer<typeof UnsuccessfullResponse>;
+export type Response = z.infer<typeof Response>;
 
 export type SafeResponse<TData> =
   | Exclude<Response, SuccessfullResponse>

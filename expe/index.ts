@@ -9,16 +9,16 @@ import {
   sendMessageWithContext,
 } from "./ai-interface";
 
+function sql(strings: TemplateStringsArray, ...values: string[]) {
+  return values.reduce(
+    (res, curr, index) => `${res}"${curr}"${strings[index + 1]}`,
+    strings[0]
+  );
+}
+
 // MAIN:
 while (true) {
-  let fn: () => void | undefined | number;
-  fn = () => 10;
-  console.log("num", fn());
-  fn = () => {};
-  console.log("void", fn());
-  fn = () => undefined;
-  console.log("undefined", fn());
-
+  console.log(sql`textA ${"; drop table USERS"}${"..."} textB`);
   debugger;
 }
 

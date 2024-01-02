@@ -1,9 +1,4 @@
-import {
-  PostFolderSchema,
-  PostPromptSchema,
-  PostThreadSchema,
-  WithParentIdSchema,
-} from "$types";
+import { PostFolder, PostPrompt, PostThread, WithParentId } from "$types";
 import { z } from "zod";
 
 export enum RequestType {
@@ -17,7 +12,7 @@ export const DeleteRequestDataSchema = z
   .object({
     _id: z.string(),
   })
-  .merge(WithParentIdSchema.required());
+  .merge(WithParentId.required());
 
 export type DeleteRequestData = z.infer<typeof DeleteRequestDataSchema>;
 
@@ -29,15 +24,15 @@ export const DeleteRequestSchema = z.object({
 export type DeleteRequest = z.infer<typeof DeleteRequestSchema>;
 
 export const PostRequestSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal(RequestType.Thread), data: PostThreadSchema }),
-  z.object({ type: z.literal(RequestType.Prompt), data: PostPromptSchema }),
+  z.object({ type: z.literal(RequestType.Thread), data: PostThread }),
+  z.object({ type: z.literal(RequestType.Prompt), data: PostPrompt }),
   z.object({
     type: z.literal(RequestType.PromptFolder),
-    data: PostFolderSchema,
+    data: PostFolder,
   }),
   z.object({
     type: z.literal(RequestType.ThreadFolder),
-    data: PostFolderSchema,
+    data: PostFolder,
   }),
 ]);
 

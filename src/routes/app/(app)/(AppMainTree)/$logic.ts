@@ -3,10 +3,10 @@ import { RequestType } from "../Request";
 import type { DeleteRequest, DeleteRequestData, PostRequest } from "../Request";
 import routes from "$routes";
 import {
-  PromptSchema,
-  ThreadSchema,
-  FolderSchema,
-  ResponseSchema,
+  Prompt,
+  Thread,
+  Folder,
+  Response,
   type SafeResponse,
   type PostThread,
   type PostPrompt,
@@ -21,7 +21,7 @@ const fetchPOST = async <TResData>(
   req: PostRequest,
   parseResponseDataFn: (obj: any) => TResData
 ): Promise<SafeResponse<TResData>> => {
-  const res = ResponseSchema.parse(
+  const res = Response.parse(
     await fetch(routes.static.app, {
       method: "POST",
       body: JSON.stringify(req),
@@ -34,16 +34,16 @@ const fetchPOST = async <TResData>(
 };
 
 export const fetchPostThread = async (data: PostThread) =>
-  fetchPOST({ type: RequestType.Thread, data }, ThreadSchema.parse);
+  fetchPOST({ type: RequestType.Thread, data }, Thread.parse);
 
 export const fetchPostPrompt = async (data: PostPrompt) =>
-  fetchPOST({ type: RequestType.Prompt, data }, PromptSchema.parse);
+  fetchPOST({ type: RequestType.Prompt, data }, Prompt.parse);
 
 export const fetchPostPromptFolder = async (data: PostFolder) =>
-  fetchPOST({ type: RequestType.PromptFolder, data }, FolderSchema.parse);
+  fetchPOST({ type: RequestType.PromptFolder, data }, Folder.parse);
 
 export const fetchPostThreadFolder = async (data: PostFolder) =>
-  fetchPOST({ type: RequestType.ThreadFolder, data }, FolderSchema.parse);
+  fetchPOST({ type: RequestType.ThreadFolder, data }, Folder.parse);
 
 //#endregion
 
