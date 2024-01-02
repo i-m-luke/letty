@@ -83,6 +83,7 @@ export const fetchDeleteThreadFolder = (data: DeleteRequestData) =>
 
 //#endregion
 
+// TODO: TEST
 export const addNodeToMultipleNodes = (
   targetNodeId: string,
   nodes: TreeNodeInfo[],
@@ -103,6 +104,7 @@ export const addNodeToMultipleNodes = (
     };
   });
 
+// TODO: TEST
 export const removeNodeFromMultipleNodes = (
   targetNodeId: string,
   nodes: TreeNodeInfo[]
@@ -117,6 +119,7 @@ export const removeNodeFromMultipleNodes = (
     });
 };
 
+// TODO: TEST
 export const addNodeToSingleNode = (
   targetNodeId: string,
   currentNode: TreeNodeInfo,

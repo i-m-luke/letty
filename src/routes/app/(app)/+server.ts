@@ -18,7 +18,7 @@ const threadFoldersDAO = new ThreadFoldersDAO(db);
 
 //#region POST
 
-// IMPURE CODE:
+//#region IMPURE CODE:
 
 export const POST = async ({ request }) =>
   json(await handlePOST(await transformPostRequest(request)));
@@ -39,15 +39,18 @@ const insertNewThreadFolderToDB = async (data: PostFolder) => {
   return await threadFoldersDAO.insert(data);
 };
 
-// TEST!:
+//#endregion
 
+// TODO: TEST
 const handlePOST = async (request: PostRequest): Promise<_Response> => {
   return handlePostReq(request.data, getInsertToDbFn(request.type));
 };
 
+// TODO: TEST
 const transformPostRequest = async (request: Request) =>
   PostRequestSchema.parse(await request.json());
 
+// TODO: TEST
 const handlePostReq = async <TInData, TOutData>(
   data: TInData,
   insertDataToDbFn: (data: TInData) => TOutData
@@ -81,6 +84,7 @@ const handlePostReq = async <TInData, TOutData>(
   };
 };
 
+// TODO: TEST
 const getInsertToDbFn = (requestType: RequestType) => {
   switch (requestType) {
     case RequestType.Prompt:
@@ -102,7 +106,7 @@ const getInsertToDbFn = (requestType: RequestType) => {
 
 //#region DELETE
 
-// IMPURE CODE:
+//#region IMPURE CODE:
 
 export const DELETE = async ({ request }) =>
   json(await handleDELETE(await transformDeleteRequest(request)), {
@@ -145,8 +149,9 @@ const deletePromptFolderFromDB = (data: DeleteRequestData) => {
   promptFoldersDAO.deleteById(data._id);
 };
 
-// TEST!:
+//#endregion
 
+// TODO: TEST
 const transformDeleteRequest = async (request: Request) =>
   DeleteRequestSchema.parse(await request.json());
 

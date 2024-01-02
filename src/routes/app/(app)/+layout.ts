@@ -51,6 +51,7 @@ export function load({ data }): LayoutLoadData {
   };
 }
 
+// TODO: TEST
 // NOTE: Použít namísto této fce Object.groupBy? Provést benchmark!
 const filter = <T>(items: T[], predicate: (item: T) => boolean) => {
   const newItems = [...items];
@@ -65,6 +66,7 @@ const filter = <T>(items: T[], predicate: (item: T) => boolean) => {
   return { filtered, rest };
 };
 
+// TODO: TEST
 const transformDBNodeToTreeNode = (
   currentFolderNode: Folder,
   contentNodes: Content[],
