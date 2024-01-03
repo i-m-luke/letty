@@ -26,4 +26,16 @@ describe("expe tests", () => {
     fn = () => undefined;
     console.log("undefined", fn());
   });
+
+  test.skip("skipped test", () => {});
+  test.todo("some testcase to implement");
+  test.each([
+    [1, 1, 2],
+    [2, 2, 4],
+  ])(
+    "parametrized test (a: %d; b: %d; expected: a + b = %d)",
+    (a: number, b: number, expected: number) => {
+      expect(a + b).toBe(expected);
+    }
+  );
 });
