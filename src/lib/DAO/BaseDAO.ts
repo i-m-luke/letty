@@ -5,6 +5,9 @@ import type { ZodSchema } from "zod";
 export default abstract class BaseDAO<TObject, TNewObject extends Object> {
   protected collection;
   private objectSchema;
+  // TODO:
+  // Změnit typ parametru "db" na obecný type (namísto konkrétního mongodb db type) ???
+  // Poté půjde při testu použít mock
   constructor(db: DB, collectionName: string, objectSchema: ZodSchema<TObject>) {
     this.collection = db.collection(collectionName);
     this.objectSchema = objectSchema;
