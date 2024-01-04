@@ -220,6 +220,7 @@
                 4. odblokuje se UI
                 5. provede se async fce pro nahrání změn na backend
 
+
     # Kombinování a řetězení promptů:
         - Vytvoří se jaké si "prompt-flow"
         - K promptu bude přitupováno jako k funkci: Výstup promptu se použije jako argument pro prompt další
@@ -231,7 +232,8 @@
         + U threadu bude možné nastavit výchozí prompt: při posílání zprávy bude okamžitě predpripraven prompt (jeho parametry)
 
     # Další:
-        - Vytváření souhrnu threadu/export threadu: Najetí na odpověď/vlákno -> Zobrazí se popup s tlačítkem "export" --> Klik na tlačítko -> uložit do kolekce poznámek/export
+        + Vytváření souhrnu threadu/export threadu: Najetí na odpověď/vlákno -> Zobrazí se popup s tlačítkem "export" --> Klik na tlačítko -> uložit do kolekce poznámek/export
+        + Klonování promptů: Bude se provádět skrze "PromptPage"; Page bude obsahovat clone-btn
 
 ## Logic
 
