@@ -19,7 +19,7 @@ import {
 } from "./types";
 export { CompletionParams, SendMessageOpts, SendMessageResult, ContextMessage };
 
-const CHATGPT_API_KEY = "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";
+const CHATGPT_API_KEY = "TODO"; // TODO: latest key revoked
 
 const config = new Configuration({
   apiKey: CHATGPT_API_KEY,
