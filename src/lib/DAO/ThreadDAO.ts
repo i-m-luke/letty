@@ -1,5 +1,5 @@
 import type { Db as DB } from "mongodb";
-import { Thread, type Thread, type PostThread, type WithId } from "$types";
+import { Thread, type PostThread, type WithId } from "$types";
 import BaseDAO from "./BaseDAO";
 
 export default class TheradDAO extends BaseDAO<Thread, PostThread> {
