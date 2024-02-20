@@ -56,7 +56,7 @@ export class ApiRouteHandler extends BaseRouteHandler {
   }
 
   override process(): boolean {
-    // PROCESS REQUEST ...
+    // PROCESS REQUEST: Use routers (= MVC controller) to process the request
     console.log("ApiHandler performed");
     return true;
   }
