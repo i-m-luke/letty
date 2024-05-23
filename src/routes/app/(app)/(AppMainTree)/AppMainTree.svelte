@@ -23,6 +23,8 @@
       sureToDeleteDialogProxy,
    } = viewModel;
 
+   // NOTE: PROMPTING IS DISABLED (commented out) UNTIL THREADING IS COMPLETE ()
+
    //#region thread buttons
 
    const addBtnClassName = "fa-solid fa-plus button";
@@ -100,7 +102,8 @@
          />
       {/if}
 
-      {#if $promptTreeState.length > 0}
+      <!-- DISABLED UNTIL THREADING IS COMPLETE  -->
+      <!-- {#if $promptTreeState.length > 0}
          <Tree
             nodeOnClickAction={(nodeData) => goto(`${routes.static.prompt}${nodeData.id}`)}
             nodeInfoCollection={promptTreeState}
@@ -108,7 +111,7 @@
             folderNodeButtons={promptFolderNodeButtons}
             rootNodeButtons={promptTreeRootNodeButtons}
          />
-      {/if}
+      {/if} -->
    </div>
 </div>
 

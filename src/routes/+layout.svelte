@@ -8,5 +8,15 @@
 <slot />
 
 <style>
-   /* Empty because of tailwind */
+   :global(.big-text) {
+      font-family: "Nunito";
+      font-weight: 600;
+      font-size: 4rem;
+   }
+
+   :global(.small-text) {
+      font-family: "Nunito";
+      font-weight: 600;
+      font-size: 1.5rem;
+   }
 </style>

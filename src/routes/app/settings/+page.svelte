@@ -1,24 +1,13 @@
-<script lang="ts">
-   import { Select, SelectOptionInfo } from "$lib/components/Select";
-
-   type OptionData = {
-      id: number;
-      text: string;
-   };
-
-   let selectedValue: OptionData;
-   $: selectedValueText = selectedValue
-      ? `ID: ${selectedValue.id}, TEXT: ${selectedValue.text}`
-      : "NONE";
-
-   const selectOptions: SelectOptionInfo<OptionData>[] = [
-      new SelectOptionInfo<OptionData>("Timed", { id: 1, text: "TIMED OPTION" }),
-      new SelectOptionInfo<OptionData>("After every change", {
-         id: 101,
-         text: "AFTER EVERY CHANGE OPTION",
-      }),
-   ];
+<script>
+   import { goto } from "$app/navigation";
+   import routes from "$routes";
 </script>
 
-<Select bind:value={selectedValue} label="Synchronize type" options={selectOptions} />
-<span>Selected synchronize option: {selectedValueText}</span>
+<div class="w-full h-screen grid place-items-center bg-slate-900">
+   <div class="h-1/2">
+      <p class="big-text text-teal-200">... Comming soon ...</p>
+      <div class="grid place-items-center">
+         <button class="small-text text-teal-400" on:click={() => goto(routes.static.app)}>&gt &gt R E T U R N &lt &lt</button>
+      </div>
+   </div>
+</div>
