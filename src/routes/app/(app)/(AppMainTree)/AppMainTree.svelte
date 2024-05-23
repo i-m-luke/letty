@@ -7,6 +7,7 @@
    import CreateDialog from "./CreateDialog.svelte";
    import Dialog from "$lib/components/Dialog.svelte";
    import { ViewModel } from "./ViewModel";
+   import { onMount } from "svelte";
 
    export let threadTreeNodeInfos: TreeNodeInfo[];
    export let promptTreeNodeInfos: TreeNodeInfo[];
@@ -83,6 +84,8 @@
    ];
 
    //#endregion
+
+   onMount(viewModel.dispose); // dispose stores subscriptions
 </script>
 
 <div class="w-full grid place-items-center">
