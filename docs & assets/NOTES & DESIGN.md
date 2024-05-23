@@ -11,11 +11,22 @@
 
 # TODO | PLAN
 
+## Stage 0
+
     1. Vytvořit logo a zaintegrovat jej do AppMainTree
     2. ZOD data validation: Přepracovat na parseSafe? Nebude pak způsobovat pád aplikace pokud nastane na server
+    3. Dokončit Threading a Prompting: Prompting případně vyřadit
+    4. SingIn/SingUp
+    5. Doknčit/Skrýt settings
+    6. Dokončit
+    5. Deploy!
+
+## Stage next
+
     4. Logování a handling errorů na serveru: server nesmí padnout!
     5. Nastylovat: najít font
     6. ... Viz kanban board task
+    7. ... dark/light mode?
 
 # TERMINOLOGIE
 
