@@ -1,45 +1,26 @@
 <script lang="ts">
    import routes from "$routes";
-   import { get, type Writable } from "svelte/store";
    import { goto } from "$app/navigation";
-   import { Tree, TreeNodeInfo, TreeNodeType, type TreeNodeInfoData } from "$lib/components/Tree";
+   import { Tree, TreeNodeInfo, type TreeNodeInfoData } from "$lib/components/Tree";
    import ButtonInfo from "$lib/components/ButtonInfo";
-   import {
-      fetchPostThread,
-      fetchPostPrompt,
-      fetchDeleteThread,
-      fetchDeletePrompt,
-      fetchDeleteThreadFolder,
-      fetchDeletePromptFolder,
-      removeNodeFromMultipleNodes,
-      addNodeToMultipleNodes,
-      fetchPostPromptFolder,
-      fetchPostThreadFolder,
-   } from "./$logic";
-   import { DialogButtonType, DialogProxy } from "$lib/components/Dialog";
-   import CreateDialogData from "./CreateDialogData";
+   import { DialogButtonType } from "$lib/components/Dialog";
    import CreateDialog from "./CreateDialog.svelte";
    import Dialog from "$lib/components/Dialog.svelte";
-   import { CreateDialogEntriesIssue } from "./CreateDialogEntriesIssue";
+   import { ViewModel } from "./ViewModel";
 
-   const createThreadDialogProxy = new DialogProxy();
-   const createThreadDialogData = new CreateDialogData();
+   export let threadTreeNodeInfos: TreeNodeInfo[];
+   export let promptTreeNodeInfos: TreeNodeInfo[];
 
-   const createPromptDialogProxy = new DialogProxy();
-   const createPromptDialogData = new CreateDialogData();
-
-   const sureToDeleteDialogProxy = new DialogProxy();
-
-   export let threadTreeState: Writable<TreeNodeInfo[]>;
-   export let promptTreeState: Writable<TreeNodeInfo[]>;
-
-   threadTreeState.set([
-      new TreeNodeInfo(TreeNodeType.Root, "THREADING", { folderId: "root", id: "" }, { childNodes: [...get(threadTreeState)] }),
-   ]);
-
-   promptTreeState.set([
-      new TreeNodeInfo(TreeNodeType.Root, "PROMPTING", { folderId: "root", id: "" }, { childNodes: get(promptTreeState) }),
-   ]);
+   const viewModel = new ViewModel({ threadTreeState: threadTreeNodeInfos, promptTreeState: promptTreeNodeInfos });
+   const {
+      threadTreeState,
+      promptTreeState,
+      createThreadDialogProxy,
+      createThreadDialogData,
+      createPromptDialogProxy,
+      createPromptDialogData,
+      sureToDeleteDialogProxy,
+   } = viewModel;
 
    //#region thread buttons
 
@@ -49,39 +30,7 @@
 
    const threadFolderNodeAddButton = new ButtonInfo({
       className: addBtnClassName,
-      onClickAction: (treeNodeData: TreeNodeInfoData) => {
-         const beforeConfirm = async () => {
-            const type = get(createThreadDialogData.type);
-            const name = get(createThreadDialogData.name);
-            const res = await (() => {
-               switch (type) {
-                  case TreeNodeType.Content:
-                     return fetchPostThread({ parentId: treeNodeData.id, name });
-                  case TreeNodeType.Folder:
-                     return fetchPostThreadFolder({ parentId: treeNodeData.id, name });
-                  default:
-                     throw new Error("Invalid TreeNodeType");
-               }
-            })();
-
-            if (!res.success) {
-               const nameIssue = res.issues.find((issue) => issue.type === CreateDialogEntriesIssue.Name)?.message ?? "";
-               createThreadDialogData.nameIssue.set(nameIssue);
-               return false;
-            }
-
-            const { data } = res;
-            const newTreeNode = new TreeNodeInfo(type, data.name, {
-               id: data._id,
-               folderId: data.parentId,
-            });
-            threadTreeState.update((current) => addNodeToMultipleNodes(treeNodeData.id, current, newTreeNode));
-
-            return true;
-         };
-
-         createThreadDialogProxy.showModalAndWaitTillClosed({ beforeConfirm });
-      },
+      onClickAction: (data: TreeNodeInfoData) => viewModel.addItemToThreadFolderNode(data),
    });
 
    const threadTreeRootNodeButtons = [threadFolderNodeAddButton];
@@ -91,16 +40,7 @@
       new ButtonInfo({
          className: removeBtnClassName,
          style: removeBtnStyle,
-         onClickAction: (data: TreeNodeInfoData) => {
-            const { confirmed } = sureToDeleteDialogProxy.showModalAndWaitTillClosed();
-            confirmed.then(() => {
-               fetchDeleteThreadFolder({ _id: data.id, parentId: data.folderId })
-                  .then(() => {
-                     threadTreeState.update((current) => removeNodeFromMultipleNodes(data.id, current));
-                  })
-                  .catch((err) => console.error("ERROR WHILE FETCHING:", err));
-            });
-         },
+         onClickAction: (data: TreeNodeInfoData) => viewModel.removeThreadFolderNode(data),
       }),
    ];
 
@@ -109,16 +49,7 @@
       new ButtonInfo({
          className: removeBtnClassName,
          style: removeBtnStyle,
-         onClickAction: (data: TreeNodeInfoData) => {
-            const { confirmed } = sureToDeleteDialogProxy.showModalAndWaitTillClosed();
-            confirmed.then(() => {
-               fetchDeleteThread({ _id: data.id, parentId: data.folderId })
-                  .then(() => {
-                     threadTreeState.update((current) => removeNodeFromMultipleNodes(data.id, current));
-                  })
-                  .catch((err) => console.error("ERROR WHILE FETCHING:", err));
-            });
-         },
+         onClickAction: (data: TreeNodeInfoData) => viewModel.removeThreadContentNode(data),
       }),
    ];
 
@@ -128,39 +59,7 @@
 
    const promptFolderNodeAddButton = new ButtonInfo({
       className: addBtnClassName,
-      onClickAction: (treeNodeData: TreeNodeInfoData) => {
-         const beforeConfirm = async () => {
-            const type = get(createPromptDialogData.type);
-            const name = get(createPromptDialogData.name);
-            const res = await (async () => {
-               switch (type) {
-                  case TreeNodeType.Content:
-                     return fetchPostPrompt({ parentId: treeNodeData.id, name });
-                  case TreeNodeType.Folder:
-                     return fetchPostPromptFolder({ parentId: treeNodeData.id, name });
-                  default:
-                     throw new Error("Invalid TreeNodeType");
-               }
-            })();
-
-            if (!res.success) {
-               const nameIssue = res.issues.find((issue) => issue.type === CreateDialogEntriesIssue.Name)?.message ?? "";
-               createPromptDialogData.nameIssue.set(nameIssue);
-               return false;
-            }
-
-            const { data } = res;
-            const newTreeNode = new TreeNodeInfo(type, data.name, {
-               id: data._id,
-               folderId: data.parentId,
-            });
-            promptTreeState.update((current) => addNodeToMultipleNodes(treeNodeData.id, current, newTreeNode));
-
-            return true;
-         };
-
-         createPromptDialogProxy.showModalAndWaitTillClosed({ beforeConfirm });
-      },
+      onClickAction: (data: TreeNodeInfoData) => viewModel.addItemToPromptFolderNode(data),
    });
 
    const promptTreeRootNodeButtons = [promptFolderNodeAddButton];
@@ -170,16 +69,7 @@
       new ButtonInfo({
          className: removeBtnClassName,
          style: removeBtnStyle,
-         onClickAction: (data: TreeNodeInfoData) => {
-            const { confirmed } = sureToDeleteDialogProxy.showModalAndWaitTillClosed();
-            confirmed.then(() => {
-               fetchDeletePromptFolder({ parentId: data.folderId, _id: data.id })
-                  .then(() => {
-                     promptTreeState.update((current) => removeNodeFromMultipleNodes(data.id, current));
-                  })
-                  .catch((err) => console.error("ERROR WHILE FETCHING:", err));
-            });
-         },
+         onClickAction: (data: TreeNodeInfoData) => viewModel.removePromptFolderNode(data),
       }),
    ];
 
@@ -188,16 +78,7 @@
       new ButtonInfo({
          className: removeBtnClassName,
          style: removeBtnStyle,
-         onClickAction: (data: TreeNodeInfoData) => {
-            const { confirmed } = sureToDeleteDialogProxy.showModalAndWaitTillClosed();
-            confirmed.then(() => {
-               fetchDeletePrompt({ parentId: data.folderId, _id: data.id })
-                  .then(() => {
-                     promptTreeState.update((current) => removeNodeFromMultipleNodes(data.id, current));
-                  })
-                  .catch((err) => console.error("ERROR WHILE FETCHING:", err));
-            });
-         },
+         onClickAction: (data: TreeNodeInfoData) => viewModel.removePromptContentNode(data),
       }),
    ];
 

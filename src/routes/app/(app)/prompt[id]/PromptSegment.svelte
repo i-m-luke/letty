@@ -1,7 +1,7 @@
 <script lang="ts">
-   import { ChatCompletionRequestMessageRoleEnum } from "openai";
    import type PromptSegmentState from "./PromptSegmentState";
    import { Select } from "$lib/components/Select";
+   import { ChatCompletionRequestMessageRoleEnum } from "./ChatCompletionRequestMessageRoleEnum";
 
    export let state: PromptSegmentState;
    let role: ChatCompletionRequestMessageRoleEnum = ChatCompletionRequestMessageRoleEnum.User;

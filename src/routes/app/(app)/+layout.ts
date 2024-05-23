@@ -46,8 +46,8 @@ export function load({ data }): LayoutLoadData {
   ];
 
   return {
-    threadTreeState: writable(threadTreeNodeInfo),
-    promptTreeState: writable(promptTreeNodeInfo),
+    threadTreeState: threadTreeNodeInfo,
+    promptTreeState: promptTreeNodeInfo,
   };
 }
 

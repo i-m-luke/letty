@@ -29,7 +29,7 @@
          <!-- left-panel -->
          <div class="basis-1/6">
             <div class={mainPanelStyle}>
-               <AppMainTree promptTreeState={data.promptTreeState} threadTreeState={data.threadTreeState} />
+               <AppMainTree promptTreeNodeInfos={data.promptTreeState} threadTreeNodeInfos={data.threadTreeState} />
             </div>
          </div>
 

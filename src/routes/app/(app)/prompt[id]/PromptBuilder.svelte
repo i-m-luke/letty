@@ -1,7 +1,7 @@
 <script lang="ts">
    import type PromptSegmentState from "./PromptSegmentState";
    import PromptSegment from "./PromptSegment.svelte";
-   import { ChatCompletionRequestMessageRoleEnum } from "openai";
+   import { ChatCompletionRequestMessageRoleEnum } from "./ChatCompletionRequestMessageRoleEnum";
    import type { Writable } from "svelte/store";
 
    export let state: Writable<PromptSegmentState[]>;

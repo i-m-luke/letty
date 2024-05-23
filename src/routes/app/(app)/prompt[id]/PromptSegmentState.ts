@@ -1,4 +1,4 @@
-import type { ChatCompletionRequestMessageRoleEnum } from "openai";
+import type { ChatCompletionRequestMessageRoleEnum } from "./ChatCompletionRequestMessageRoleEnum";
 
 type PromptSegmentState = {
   role: ChatCompletionRequestMessageRoleEnum;
