@@ -15,7 +15,7 @@
    const viewModel = new ViewModel({ threadTreeState: threadTreeNodeInfos, promptTreeState: promptTreeNodeInfos });
    const {
       threadTreeState,
-      promptTreeState,
+      promptTreeState, // KEEP!: Prompting is disabled only temporarily
       createThreadDialogProxy,
       createThreadDialogData,
       createPromptDialogProxy,
@@ -65,6 +65,7 @@
       onClickAction: (data: TreeNodeInfoData) => viewModel.addItemToPromptFolderNode(data),
    });
 
+   // KEEP!: Prompting is disabled only temporarily
    const promptTreeRootNodeButtons = [promptFolderNodeAddButton];
    const promptFolderNodeButtons = [
       promptFolderNodeAddButton,
@@ -76,6 +77,7 @@
       }),
    ];
 
+   // KEEP!: Prompting is disabled only temporarily
    const promptContentNodeButtons = [
       // PROMPT NODE REMOVE BUTTON
       new ButtonInfo({
