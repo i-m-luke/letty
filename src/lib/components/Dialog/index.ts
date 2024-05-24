@@ -19,6 +19,7 @@ export enum DialogEventType {
   Confirmed = "confirmed",
   Canceled = "canceled",
   Show = "show",
+  Close = "close",
 }
 
 export class DialogProxyError extends Error {}

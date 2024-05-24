@@ -37,14 +37,8 @@
          : toggleIsOpen;
 </script>
 
-<div class="node-container">
+<div class="flex-col">
    <div class="flex flex-row justify-start space-x-2">
-      {#if type !== TreeNodeType.Root}
-         <div class="connection-container">
-            <div class="connection" />
-         </div>
-      {/if}
-
       {#if type === TreeNodeType.Folder || type === TreeNodeType.Root}
          <span class={folderClassName} />
       {/if}
@@ -65,20 +59,18 @@
    </div>
 
    {#if isOpen}
-      <div class="child-nodes" in:fade={{ duration: 1000 }}>
-         {#each nodeInfo.childNodes as childNode}
-            <!-- TODO - Animace: Položky stromu se budou postupně zobrazovat  -->
+      <div class="flex-col flex-auto ml-5">
+         {#each nodeInfo.childNodes as childNode, index}
+            <!-- Animace způsobuje, že se nové přiadný uzel zobrazuje se zpožděním -->
+            <!-- <div in:fade={{ delay: getDelay(index), duration: 250 }}> -->
             <svelte:self {nodeOnClickAction} nodeInfo={childNode} {contentNodeButtons} {folderNodeButtons} {rootNodeButtons} />
+            <!-- </div> -->
          {/each}
       </div>
    {/if}
 </div>
 
 <style>
-   span {
-      transition: 0.3s ease-in-out;
-   }
-
    span:hover {
       color: rgb(119, 125, 168);
       cursor: pointer;
@@ -90,33 +82,5 @@
 
    button:hover {
       color: rgb(119, 125, 168);
-   }
-
-   .node-container,
-   .child-nodes {
-      display: flex;
-      flex-direction: column;
-   }
-
-   .child-nodes {
-      margin-left: 24px;
-   }
-
-   .parent-node {
-      display: flex;
-      flex-direction: row;
-   }
-
-   .connection-container {
-      width: 2%;
-   }
-
-   .connection {
-      position: relative;
-      right: 0px;
-      width: 50%;
-      height: 50%;
-      border: 1px solid black;
-      border-width: 0px 0px 1px 1px;
    }
 </style>

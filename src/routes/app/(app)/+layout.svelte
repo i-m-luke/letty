@@ -27,14 +27,14 @@
       <!-- mid-panel -->
       <div class="h-full flex flex-row space-x-4">
          <!-- left-panel -->
-         <div class="basis-1/6">
+         <div>
             <div class={mainPanelStyle}>
                <AppMainTree promptTreeNodeInfos={data.promptTreeState} threadTreeNodeInfos={data.threadTreeState} />
             </div>
          </div>
 
          <!-- main-panel -->
-         <div class={styles.build(mainPanelStyle, "basis-5/6")}>
+         <div class={styles.build(mainPanelStyle, "w-full")}>
             <div class="p-4 rounded">
                <!-- WORKSPACE SLOT -->
                <slot />

@@ -9,6 +9,8 @@
    import { ViewModel } from "./ViewModel";
    import { onDestroy } from "svelte";
 
+   // NOTE: PROMPTING IS DISABLED (commented out) UNTIL THREADING IS COMPLETE ()
+
    export let threadTreeNodeInfos: TreeNodeInfo[];
    export let promptTreeNodeInfos: TreeNodeInfo[];
 
@@ -22,8 +24,6 @@
       createPromptDialogData,
       sureToDeleteDialogProxy,
    } = viewModel;
-
-   // NOTE: PROMPTING IS DISABLED (commented out) UNTIL THREADING IS COMPLETE ()
 
    //#region thread buttons
 
@@ -92,7 +92,7 @@
    onDestroy(() => viewModel.dispose()); // dispose stores subscriptions
 </script>
 
-<div class="w-full grid place-items-center">
+<div class="w-full grid">
    <div>
       {#if $threadTreeState.length > 0}
          <Tree

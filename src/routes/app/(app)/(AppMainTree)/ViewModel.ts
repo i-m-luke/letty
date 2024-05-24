@@ -20,16 +20,18 @@ import {
   removeNodeFromMultipleNodes,
 } from "./$logic";
 import { CreateDialogEntriesIssue } from "./CreateDialogEntriesIssue";
+import { PostThread } from "$types";
 
 export class ViewModel extends ViewModelBase {
   readonly threadTreeState = writable<TreeNodeInfo[]>();
   readonly promptTreeState = writable<TreeNodeInfo[]>();
 
-  readonly createThreadDialogProxy: DialogProxy = new DialogProxy();
-  readonly createThreadDialogData: CreateDialogData = new CreateDialogData();
+  readonly createThreadDialogProxy = new DialogProxy();
   readonly createPromptDialogProxy = new DialogProxy();
-  readonly createPromptDialogData = new CreateDialogData();
   readonly sureToDeleteDialogProxy = new DialogProxy();
+
+  readonly createPromptDialogData = new CreateDialogData();
+  readonly createThreadDialogData = new CreateDialogData();
 
   constructor(props: ViewModelProps) {
     super();

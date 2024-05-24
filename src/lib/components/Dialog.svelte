@@ -3,6 +3,8 @@ Pokud se někdy podaří zprovoznit import svelte komponent, tak zvážit navrá
 
 <script lang="ts">
    import { onMount } from "svelte";
+   import { slide } from "svelte/transition";
+   import { circOut } from "svelte/easing";
    import { DialogButtonType, DialogEventType, type DialogProxy } from "./Dialog";
    import Button from "./Button.svelte";
    import styles from "$styles";
@@ -16,6 +18,8 @@ Pokud se někdy podaří zprovoznit import svelte komponent, tak zvážit navrá
    export let setDefaultValues = () => {};
    export let buttons: { type: DialogButtonType; text: string }[];
    export let title: string = "";
+
+   let isOpen = false;
 
    const btnEventTypeByBtnType = new Map<DialogButtonType, DialogEventType>([
       [DialogButtonType.Cancel, DialogEventType.Cancel],
@@ -34,22 +38,31 @@ Pokud se někdy podaří zprovoznit import svelte komponent, tak zvážit navrá
 
    onMount(() => {
       proxy.init(dialog);
-      dialog.addEventListener(DialogEventType.Show, setDefaultValues);
-      dialog.addEventListener("cancel", () => proxy.dispatchEvent(new Event(DialogEventType.Cancel)));
+      dialog.addEventListener(DialogEventType.Show, () => {
+         setDefaultValues();
+         isOpen = true;
+      });
+      dialog.addEventListener("close", () => {
+         proxy.dispatchEvent(new Event(DialogEventType.Cancel));
+         isOpen = false;
+      });
    });
 </script>
 
-<!-- TODO - Animace při close: dialog zajede zpátky nahoru (opačná animace jako při zobrazení) -->
 <dialog class={dialogStyle} bind:this={dialog}>
-   <div class="h-full justify-even items-center flex flex-col space-y-2">
-      {#if title !== ""}<span class="text-[2rem] font-normal italic">{":: " + title + " ::"}</span>{/if}
-      <slot />
-      <div class="w-full p-2 grid grid-flow-col justify-stretch space-x-20">
-         {#each buttons as { type, text }}
-            <Button on:click={() => proxy.dispatchEvent(new Event(getEventType(type)))} {text} />
-         {/each}
+   {#if isOpen}
+      <div class="h-full justify-even items-center flex flex-col space-y-2" transition:slide={{ duration: 750, easing: circOut }}>
+         {#if title !== ""}
+            <span class="text-[2rem] font-normal italic">{title}</span>
+         {/if}
+         <slot />
+         <div class="w-full p-2 grid grid-flow-col justify-stretch space-x-20">
+            {#each buttons as { type, text }}
+               <Button on:click={() => proxy.dispatchEvent(new Event(getEventType(type)))} {text} />
+            {/each}
+         </div>
       </div>
-   </div>
+   {/if}
 </dialog>
 
 <style>
@@ -70,27 +83,9 @@ Pokud se někdy podaří zprovoznit import svelte komponent, tak zvážit navrá
       }
    }
 
-   @keyframes dialog {
-      0% {
-         top: -50%;
-      }
-
-      100% {
-         top: 0;
-      }
-   }
-
    dialog::backdrop {
       backdrop-filter: blur(0.7px);
       background-color: rgba(0, 0, 0, 0.04);
       animation: backdrop 0.75s ease;
-   }
-
-   dialog {
-      animation: dialog 0.75s ease;
-   }
-
-   .dialog-close {
-      animation: dialog 0.75s reverse;
    }
 </style>

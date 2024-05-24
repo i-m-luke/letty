@@ -1,26 +1,27 @@
 <script lang="ts">
-   import QADisplay from "./QADisplay.svelte";
-   import type QAItem from "./QAItem";
-   import QArea from "./QArea.svelte";
-
-   // TODO: REWORK
-   // TODO: Fixnout update UI (data se po kliku na uzel nemění)
-   let qaItems: QAItem[] = [];
 </script>
 
-<div class="container">
-   <form>
-      <QADisplay {qaItems} />
-      <QArea />
-      <button formAction="/app?/send-message">{"<< SEND MESSAGE >>"}</button>
+<div class="flex flex-col space-y-4 w-full">
+   <div class="flex flex-col flex-grow">
+      <div class="flex-grow">
+         <span class="float-left p-4 bg-white rounded-3xl">
+            {"question..."}
+         </span>
+      </div>
+      <div class="flex-grow">
+         <span class="float-right p-4 bg-white rounded-3xl">
+            {"answer..."}
+         </span>
+      </div>
+   </div>
+
+   <div class="flex-grow border border-t-5 border-white" />
+   <form method="POST" class="flex space-x-4 flex-row w-full">
+      <textarea
+         name="message"
+         class="flex-grow p-4 bg-transparent border border-5 border-white rounded-lg"
+         placeholder="message..."
+      />
+      <button class="fa-solid fa-comment-dots" style="font-size: 2rem" formaction="?/send-message" />
    </form>
 </div>
-
-<style>
-   .container {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-   }
-</style>
