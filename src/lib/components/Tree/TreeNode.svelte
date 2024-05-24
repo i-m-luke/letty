@@ -37,7 +37,7 @@
          : toggleIsOpen;
 </script>
 
-<div class="flex-col">
+<div class="flex flex-col">
    <div class="flex flex-row justify-start space-x-2">
       {#if type === TreeNodeType.Folder || type === TreeNodeType.Root}
          <span class={folderClassName} />
@@ -47,7 +47,7 @@
 
       {#each buttons as { text, className, style, onClickAction, formActionName }}
          <button
-            class={styles.build(className ?? "", "text-transparent bg-clip-text bg-cyan-800")}
+            class={styles.build(className ?? "", styles.class.iconButton)}
             style={style ?? ""}
             type="button"
             formaction={formActionName}
@@ -59,7 +59,7 @@
    </div>
 
    {#if isOpen}
-      <div class="flex-col flex-auto ml-5">
+      <div class="flex flex-col ml-5">
          {#each nodeInfo.childNodes as childNode, index}
             <!-- Animace způsobuje, že se nové přiadný uzel zobrazuje se zpožděním -->
             <!-- <div in:fade={{ delay: getDelay(index), duration: 250 }}> -->
@@ -74,13 +74,5 @@
    span:hover {
       color: rgb(119, 125, 168);
       cursor: pointer;
-   }
-
-   button {
-      transition: 0.3s ease-in-out;
-   }
-
-   button:hover {
-      color: rgb(119, 125, 168);
    }
 </style>

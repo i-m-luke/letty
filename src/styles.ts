@@ -9,10 +9,12 @@ Object.freeze(colors);
 type Classes = {
   mainPanel: string;
   thinBorderSize: string;
+  iconButton: string;
 };
 const classes: Readonly<Classes> = {
   mainPanel: `bg-[rgba(255,255,255,0.3)] p-4 rounded shadow-md backdrop-blur-lg`,
   thinBorderSize: "0.1rem",
+  iconButton: "text-transparent bg-clip-text bg-cyan-900 hover:bg-cyan-500",
 };
 Object.freeze(classes);
 

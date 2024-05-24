@@ -5,9 +5,9 @@
 
 <div class="w-full h-screen grid place-items-center bg-slate-900">
    <div class="h-1/2">
-      <p class="big-text text-teal-200">... Comming soon ...</p>
+      <p class="big-text text-teal-200">... comming soon ...</p>
       <div class="grid place-items-center">
-         <button class="small-text text-teal-400" on:click={() => goto("./")}>&gt &gt R E T U R N &lt &lt</button>
+         <button class="small-text text-teal-400" on:click={() => goto("../")}>&gt &gt R E T U R N &lt &lt</button>
       </div>
    </div>
 </div>
