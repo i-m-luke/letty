@@ -1,5 +1,5 @@
 <script lang="ts">
-   import { fade } from "svelte/transition";
+   import { fade, slide } from "svelte/transition";
    import { TreeNodeType, type TreeNodeInfo, type TreeNodeInfoData } from "./";
    import type ButtonInfo from "$lib/components/ButtonInfo";
    import styles from "$styles";
@@ -37,15 +37,22 @@
          : toggleIsOpen;
 </script>
 
-<div class="flex flex-col">
-   <div class="flex flex-row justify-start space-x-2">
-      {#if type === TreeNodeType.Folder || type === TreeNodeType.Root}
-         <span class={folderClassName} />
-      {/if}
+<div class="flex flex-col" transition:slide>
+   <div class="flex flex-row space-x-2">
+      <div class="grid place-items-center pb-[0.1rem]">
+         {#if type === TreeNodeType.Folder || type === TreeNodeType.Root}
+            <span class={styles.build(folderClassName)} />
+         {:else}
+            <span class="fa-solid fa-angles-right" />
+         {/if}
+      </div>
 
-      <span on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent} class="underline">{nodeInfo.text}</span>
+      <span class="hover:cursor-pointer hover:text-slate-500" on:click={nodeOnClickEvent} on:keypress={nodeOnClickEvent}
+         >{nodeInfo.text}</span
+      >
 
       {#each buttons as { text, className, style, onClickAction, formActionName }}
+         <!-- TODO: Udělat komponentu IconButton? -->
          <button
             class={styles.build(className ?? "", styles.class.iconButton)}
             style={style ?? ""}
@@ -59,7 +66,7 @@
    </div>
 
    {#if isOpen}
-      <div class="flex flex-col ml-5">
+      <div class="ml-5">
          {#each nodeInfo.childNodes as childNode, index}
             <!-- Animace způsobuje, že se nové přiadný uzel zobrazuje se zpožděním -->
             <!-- <div in:fade={{ delay: getDelay(index), duration: 250 }}> -->
@@ -69,10 +76,3 @@
       </div>
    {/if}
 </div>
-
-<style>
-   span:hover {
-      color: rgb(119, 125, 168);
-      cursor: pointer;
-   }
-</style>

@@ -27,7 +27,7 @@
       <!-- mid-panel -->
       <div class="h-full flex flex-row space-x-4">
          <!-- left-panel -->
-         <div>
+         <div class="min-w-[fit-content]">
             <div class={mainPanelStyle}>
                <AppMainTree promptTreeNodeInfos={data.promptTreeState} threadTreeNodeInfos={data.threadTreeState} />
             </div>

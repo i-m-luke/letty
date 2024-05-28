@@ -92,7 +92,7 @@
    onDestroy(() => viewModel.dispose()); // dispose stores subscriptions
 </script>
 
-<div class="w-full grid">
+<div class="w-full flex flex-col flex-nowrap flex-grow">
    <div>
       {#if $threadTreeState.length > 0}
          <Tree
