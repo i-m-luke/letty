@@ -1,3 +1,7 @@
+export async function load() {
+  return { messages: [{ question: "...", answer: "..." }] };
+}
+
 export const actions = {
   "send-message": async ({ request }) => {
     // TODO: Napojit na funkce z "src/ai-interface

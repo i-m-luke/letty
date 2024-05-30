@@ -1,29 +1,40 @@
 <script lang="ts">
    import { enhance } from "$app/forms";
+   import { writable, type Writable } from "svelte/store";
    import styles from "$styles";
+   import type { Message } from "./Message";
+   import type { PageLoadData } from "./PageLoadData";
+
+   export let data: PageLoadData;
 
    export let form: {
       answer: string;
       question: string;
    };
 
-   $: answer = form?.answer ?? "...";
-   $: question = form?.question ?? "...";
+   const messages: Writable<Message[]> = writable(data.messages);
+
+   $: {
+      const newForm = form;
+      messages.update((current) => [...current, { question: newForm?.question, answer: newForm?.answer }]);
+   }
 </script>
 
 <div class="flex flex-col space-y-4 w-full">
-   <div class="flex flex-col flex-grow">
-      <div class="flex-grow">
-         <span class="float-left p-4 bg-white rounded-3xl">
-            {question}
-         </span>
+   {#each $messages as { question, answer }}
+      <div class="flex flex-col flex-grow">
+         <div class="flex-grow">
+            <span class="float-left p-4 bg-white rounded-3xl">
+               {question}
+            </span>
+         </div>
+         <div class="flex-grow">
+            <span class="float-right p-4 bg-white rounded-3xl">
+               {answer}
+            </span>
+         </div>
       </div>
-      <div class="flex-grow">
-         <span class="float-right p-4 bg-white rounded-3xl">
-            {answer}
-         </span>
-      </div>
-   </div>
+   {/each}
 
    <div class="flex-grow border border-t-5 border-white" />
    <form method="POST" class="flex space-x-4 flex-row w-full" use:enhance>
