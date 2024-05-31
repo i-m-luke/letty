@@ -1,5 +1,9 @@
 export async function load() {
-  return { messages: [{ question: "...", answer: "..." }] };
+  return {
+    messages: [
+      { question: "...default question...", answer: "...default answer..." },
+    ],
+  };
 }
 
 export const actions = {
@@ -7,7 +11,7 @@ export const actions = {
     // TODO: Napojit na funkce z "src/ai-interface
     // TODO: Uložit data do DB
     const formData = await request.formData();
-    const rawData = Object.fromEntries(formData);
+    const rawData = Object.fromEntries(formData); // ZOD?
     return {
       question: rawData?.message,
       answer: "some answer",

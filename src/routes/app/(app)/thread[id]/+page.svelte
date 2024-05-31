@@ -15,10 +15,13 @@
    const messages: Writable<Message[]> = writable(data.messages);
 
    $: {
-      const newForm = form;
-      messages.update((current) => [...current, { question: newForm?.question, answer: newForm?.answer }]);
+      if (form) {
+         messages.update((current) => [...current, { question: form?.question, answer: form?.answer }]);
+      }
    }
 </script>
+
+<!-- TODO: Přepracovat z formactions na HTTP metody (formactions jsou v tomto případě nevhodné) -->
 
 <div class="flex flex-col space-y-4 w-full">
    {#each $messages as { question, answer }}
